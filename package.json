@@ -1,0 +1,29 @@
+{
+  "name": "persobuilder-fearless-sync",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node package/scripts/dev.mjs",
+    "dev:api": "node src/server/index.ts",
+    "build": "node package/scripts/release.mjs",
+    "release": "node package/scripts/release.mjs",
+    "preview": "vite preview --config package/vite.config.ts --configLoader runner",
+    "test": "vitest run --config package/vitest.config.ts --configLoader runner",
+    "test:e2e": "playwright test --config package/playwright.config.ts"
+  },
+  "dependencies": {
+    "lucide-preact": "1.16.0",
+    "preact": "10.29.8"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@preact/preset-vite": "2.10.6",
+    "@testing-library/preact": "^3.2.4",
+    "@types/node": "^24.13.6",
+    "jsdom": "^30.1.1",
+    "typescript": "5.9.3",
+    "vite": "7.3.6",
+    "vitest": "^5.0.1"
+  }
+}

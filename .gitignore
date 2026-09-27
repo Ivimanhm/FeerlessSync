@@ -1,0 +1,38 @@
+# Dependencias y archivos generados
+node_modules/
+dist/
+.npm-cache/
+.vite/
+coverage/
+*.tsbuildinfo
+*.log
+
+# Configuración privada y datos locales
+.env
+.env.*
+!.env.example
+.dev.vars*
+src/server/data/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.sqlite-shm
+*.sqlite-wal
+*.sqlite3-shm
+*.sqlite3-wal
+
+# Pruebas y referencias locales
+.sites-reference/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# Editor y sistema operativo
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini

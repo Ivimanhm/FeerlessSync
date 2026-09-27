@@ -1,0 +1,42 @@
+
+
+.history-panel { margin-top: 16px; padding: 10px 19px 15px; }
+.history-panel-header { margin-bottom: 10px; }
+.table-scroll { overflow-x: auto; border: 1px solid #2c4a5b; border-radius: 9px; }
+.history-table { width: 100%; border-collapse: collapse; color: #dce3ec; font-size: 13px; }
+.history-table th { height: 35px; padding: 0 15px; background: rgba(13, 35, 48, .81); border-right: 1px solid #1b3545; color: #d7e0ec; text-align: left; font-weight: 650; white-space: nowrap; }
+.history-table th:last-child, .history-table td:last-child { border-right: 0; }
+.sort-button { height: 100%; display: inline-flex; align-items: center; gap: 11px; padding: 0; color: inherit; background: transparent; border: 0; font-weight: inherit; }
+.sort-button:hover { color: var(--gold); }
+.history-table td { height: 36px; padding: 2px 15px; border-top: 1px solid #1c3544; border-right: 1px solid #1a3443; white-space: nowrap; }
+.history-table tbody tr { background: rgba(7, 23, 32, .48); transition: background .15s; }
+.history-table tbody tr:hover { background: rgba(28, 63, 82, .48); }
+.history-table th:nth-child(1) { width: 14%; padding-left: 30px; }
+.history-table th:nth-child(2) { width: 18%; }
+.history-table th:nth-child(3) { width: 14%; }
+.history-table th:nth-child(4) { width: 23%; }
+.history-table th:nth-child(5) { width: 19%; }
+.history-table td:first-child { padding-left: 32px; }
+.game-number { min-width: 52px; height: 26px; display: inline-grid; place-items: center; color: #bde5ff; border: 1px solid #235477; border-radius: 7px; background: linear-gradient(180deg, #153c55, #102e42); font-size: 14px; }
+.table-champion, .team-cell, .role-cell { display: inline-flex; align-items: center; gap: 15px; }
+.table-champion img { width: 29px; height: 29px; object-fit: cover; border-radius: 5px; background: #243b4a; }
+.table-champion strong { font-weight: 650; color: #fff; }
+.team-gem { width: 17px; height: 27px; clip-path: polygon(50% 0, 100% 43%, 74% 100%, 26% 100%, 0 43%); }
+.team-gem--blue { background: linear-gradient(90deg, #1596dc, #5cc8ff); }
+.team-gem--red { background: linear-gradient(90deg, #e33254, #ff6873); }
+.role-mark { width: 25px; display: inline-block; color: #a7b8cb; font-size: 25px; font-weight: 800; text-align: center; line-height: 1; }
+.role-mark--jg { font-size: 27px; }
+.role-mark--sup { font-size: 23px; }
+.used-panel { margin-top: 16px; padding: 18px 20px; }
+.used-panel h2 { margin: 0; color: var(--gold); font-size: 20px; }
+.used-panel p { margin: 8px 0; color: var(--text-secondary); font-size: 13px; }
+.used-id-grid { display: flex; flex-wrap: wrap; gap: 8px; margin: 15px 0; }
+.used-id-grid span { border: 1px solid #32546a; border-radius: 5px; background: #0f2939; padding: 6px 9px; color: #bce5ff; font-size: 13px; }
+.read-only-note { padding-top: 12px; border-top: 1px solid var(--border); }
+@media (max-width: 780px) {
+  .history-table { min-width: 850px; }
+}
+@media (max-width: 540px) {
+  .history-panel { padding-left: 12px; padding-right: 12px; }
+}
+

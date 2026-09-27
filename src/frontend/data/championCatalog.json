@@ -1,0 +1,1085 @@
+{
+  "version": "15.2.1",
+  "count": 170,
+  "champions": [
+    {
+      "id": 266,
+      "name": "Aatrox",
+      "asset": "Aatrox",
+      "roles": [
+        "TOP"
+      ]
+    },
+    {
+      "id": 103,
+      "name": "Ahri",
+      "asset": "Ahri",
+      "roles": [
+        "MID"
+      ]
+    },
+    {
+      "id": 84,
+      "name": "Akali",
+      "asset": "Akali",
+      "roles": [
+        "MID",
+        "TOP"
+      ]
+    },
+    {
+      "id": 166,
+      "name": "Akshan",
+      "asset": "Akshan",
+      "roles": [
+        "MID",
+        "TOP"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Alistar",
+      "asset": "Alistar",
+      "roles": [
+        "SUP"
+      ]
+    },
+    {
+      "id": 799,
+      "name": "Ambessa",
+      "asset": "Ambessa",
+      "roles": []
+    },
+    {
+      "id": 32,
+      "name": "Amumu",
+      "asset": "Amumu",
+      "roles": [
+        "JG",
+        "SUP"
+      ]
+    },
+    {
+      "id": 34,
+      "name": "Anivia",
+      "asset": "Anivia",
+      "roles": [
+        "MID"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Annie",
+      "asset": "Annie",
+      "roles": [
+        "MID",
+        "SUP"
+      ]
+    },
+    {
+      "id": 523,
+      "name": "Aphelios",
+      "asset": "Aphelios",
+      "roles": [
+        "ADC"
+      ]
+    },
+    {
+      "id": 22,
+      "name": "Ashe",
+      "asset": "Ashe",
+      "roles": [
+        "ADC",
+        "SUP"
+      ]
+    },
+    {
+      "id": 136,
+      "name": "Aurelion Sol",
+      "asset": "AurelionSol",
+      "roles": [
+        "MID"
+      ]
+    },
+    {
+      "id": 893,
+      "name": "Aurora",
+      "asset": "Aurora",
+      "roles": []
+    },
+    {
+      "id": 268,
+      "name": "Azir",
+      "asset": "Azir",
+      "roles": [
+        "MID"
+      ]
+    },
+    {
+      "id": 432,
+      "name": "Bardo",
+      "asset": "Bard",
+      "roles": [
+        "SUP"
+      ]
+    },
+    {
+      "id": 200,
+      "name": "Bel'Veth",
+      "asset": "Belveth",
+      "roles": [
+        "JG"
+      ]
+    },
+    {
+      "id": 53,
+      "name": "Blitzcrank",
+      "asset": "Blitzcrank",
+      "roles": [
+        "SUP"
+      ]
+    },
+    {
+      "id": 63,
+      "name": "Brand",
+      "asset": "Brand",
+      "roles": [
+        "MID",
+        "SUP",
+        "JG"
+      ]
+    },
+    {
+      "id": 201,
+      "name": "Braum",
+      "asset": "Braum",
+      "roles": [
+        "SUP"
+      ]
+    },
+    {
+      "id": 233,
+      "name": "Briar",
+      "asset": "Briar",
+      "roles": []
+    },
+    {
+      "id": 51,
+      "name": "Caitlyn",
+      "asset": "Caitlyn",
+      "roles": [
+        "ADC"
+      ]
+    },
+    {
+      "id": 164,
+      "name": "Camille",
+      "asset": "Camille",
+      "roles": [
+        "TOP"
+      ]
+    },
+    {
+      "id": 69,
+      "name": "Cassiopeia",
+      "asset": "Cassiopeia",
+      "roles": [
+        "MID",
+        "TOP"
+      ]
+    },
+    {
+      "id": 31,
+      "name": "Cho'Gath",
+      "asset": "Chogath",
+      "roles": [
+        "TOP",
+        "MID"
+      ]
+    },
+    {
+      "id": 42,
+      "name": "Corki",
+      "asset": "Corki",
+      "roles": [
+        "MID",
+        "ADC"
+      ]
+    },
+    {
+      "id": 122,
+      "name": "Darius",
+      "asset": "Darius",
+      "roles": [
+        "TOP"
+      ]
+    },
+    {
+      "id": 131,
+      "name": "Diana",
+      "asset": "Diana",
+      "roles": [
+        "JG",
+        "MID"
+      ]
+    },
+    {
+      "id": 119,
+      "name": "Draven",
+      "asset": "Draven",
+      "roles": []
+    },
+    {
+      "id": 36,
+      "name": "Dr. Mundo",
+      "asset": "DrMundo",
+      "roles": []
+    },
+    {
+      "id": 245,
+      "name": "Ekko",
+      "asset": "Ekko",
+      "roles": []
+    },
+    {
+      "id": 60,
+      "name": "Elise",
+      "asset": "Elise",
+      "roles": []
+    },
+    {
+      "id": 28,
+      "name": "Evelynn",
+      "asset": "Evelynn",
+      "roles": []
+    },
+    {
+      "id": 81,
+      "name": "Ezreal",
+      "asset": "Ezreal",
+      "roles": []
+    },
+    {
+      "id": 9,
+      "name": "Fiddlesticks",
+      "asset": "Fiddlesticks",
+      "roles": []
+    },
+    {
+      "id": 114,
+      "name": "Fiora",
+      "asset": "Fiora",
+      "roles": []
+    },
+    {
+      "id": 105,
+      "name": "Fizz",
+      "asset": "Fizz",
+      "roles": []
+    },
+    {
+      "id": 3,
+      "name": "Galio",
+      "asset": "Galio",
+      "roles": []
+    },
+    {
+      "id": 41,
+      "name": "Gangplank",
+      "asset": "Gangplank",
+      "roles": []
+    },
+    {
+      "id": 86,
+      "name": "Garen",
+      "asset": "Garen",
+      "roles": []
+    },
+    {
+      "id": 150,
+      "name": "Gnar",
+      "asset": "Gnar",
+      "roles": []
+    },
+    {
+      "id": 79,
+      "name": "Gragas",
+      "asset": "Gragas",
+      "roles": []
+    },
+    {
+      "id": 104,
+      "name": "Graves",
+      "asset": "Graves",
+      "roles": []
+    },
+    {
+      "id": 887,
+      "name": "Gwen",
+      "asset": "Gwen",
+      "roles": []
+    },
+    {
+      "id": 120,
+      "name": "Hecarim",
+      "asset": "Hecarim",
+      "roles": []
+    },
+    {
+      "id": 74,
+      "name": "Heimerdinger",
+      "asset": "Heimerdinger",
+      "roles": []
+    },
+    {
+      "id": 910,
+      "name": "Hwei",
+      "asset": "Hwei",
+      "roles": []
+    },
+    {
+      "id": 420,
+      "name": "Illaoi",
+      "asset": "Illaoi",
+      "roles": []
+    },
+    {
+      "id": 39,
+      "name": "Irelia",
+      "asset": "Irelia",
+      "roles": []
+    },
+    {
+      "id": 427,
+      "name": "Ivern",
+      "asset": "Ivern",
+      "roles": []
+    },
+    {
+      "id": 40,
+      "name": "Janna",
+      "asset": "Janna",
+      "roles": []
+    },
+    {
+      "id": 59,
+      "name": "Jarvan IV",
+      "asset": "JarvanIV",
+      "roles": []
+    },
+    {
+      "id": 24,
+      "name": "Jax",
+      "asset": "Jax",
+      "roles": []
+    },
+    {
+      "id": 126,
+      "name": "Jayce",
+      "asset": "Jayce",
+      "roles": []
+    },
+    {
+      "id": 202,
+      "name": "Jhin",
+      "asset": "Jhin",
+      "roles": []
+    },
+    {
+      "id": 222,
+      "name": "Jinx",
+      "asset": "Jinx",
+      "roles": []
+    },
+    {
+      "id": 145,
+      "name": "Kai'Sa",
+      "asset": "Kaisa",
+      "roles": []
+    },
+    {
+      "id": 429,
+      "name": "Kalista",
+      "asset": "Kalista",
+      "roles": []
+    },
+    {
+      "id": 43,
+      "name": "Karma",
+      "asset": "Karma",
+      "roles": []
+    },
+    {
+      "id": 30,
+      "name": "Karthus",
+      "asset": "Karthus",
+      "roles": []
+    },
+    {
+      "id": 38,
+      "name": "Kassadin",
+      "asset": "Kassadin",
+      "roles": []
+    },
+    {
+      "id": 55,
+      "name": "Katarina",
+      "asset": "Katarina",
+      "roles": []
+    },
+    {
+      "id": 10,
+      "name": "Kayle",
+      "asset": "Kayle",
+      "roles": []
+    },
+    {
+      "id": 141,
+      "name": "Kayn",
+      "asset": "Kayn",
+      "roles": []
+    },
+    {
+      "id": 85,
+      "name": "Kennen",
+      "asset": "Kennen",
+      "roles": []
+    },
+    {
+      "id": 121,
+      "name": "Kha'Zix",
+      "asset": "Khazix",
+      "roles": []
+    },
+    {
+      "id": 203,
+      "name": "Kindred",
+      "asset": "Kindred",
+      "roles": []
+    },
+    {
+      "id": 240,
+      "name": "Kled",
+      "asset": "Kled",
+      "roles": []
+    },
+    {
+      "id": 96,
+      "name": "Kog'Maw",
+      "asset": "KogMaw",
+      "roles": []
+    },
+    {
+      "id": 897,
+      "name": "K'Sante",
+      "asset": "KSante",
+      "roles": []
+    },
+    {
+      "id": 7,
+      "name": "LeBlanc",
+      "asset": "Leblanc",
+      "roles": []
+    },
+    {
+      "id": 64,
+      "name": "Lee Sin",
+      "asset": "LeeSin",
+      "roles": []
+    },
+    {
+      "id": 89,
+      "name": "Leona",
+      "asset": "Leona",
+      "roles": []
+    },
+    {
+      "id": 876,
+      "name": "Lillia",
+      "asset": "Lillia",
+      "roles": []
+    },
+    {
+      "id": 127,
+      "name": "Lissandra",
+      "asset": "Lissandra",
+      "roles": []
+    },
+    {
+      "id": 236,
+      "name": "Lucian",
+      "asset": "Lucian",
+      "roles": []
+    },
+    {
+      "id": 117,
+      "name": "Lulu",
+      "asset": "Lulu",
+      "roles": []
+    },
+    {
+      "id": 99,
+      "name": "Lux",
+      "asset": "Lux",
+      "roles": []
+    },
+    {
+      "id": 54,
+      "name": "Malphite",
+      "asset": "Malphite",
+      "roles": []
+    },
+    {
+      "id": 90,
+      "name": "Malzahar",
+      "asset": "Malzahar",
+      "roles": []
+    },
+    {
+      "id": 57,
+      "name": "Maokai",
+      "asset": "Maokai",
+      "roles": []
+    },
+    {
+      "id": 11,
+      "name": "Maestro Yi",
+      "asset": "MasterYi",
+      "roles": []
+    },
+    {
+      "id": 800,
+      "name": "Mel",
+      "asset": "Mel",
+      "roles": []
+    },
+    {
+      "id": 902,
+      "name": "Milio",
+      "asset": "Milio",
+      "roles": []
+    },
+    {
+      "id": 21,
+      "name": "Miss Fortune",
+      "asset": "MissFortune",
+      "roles": []
+    },
+    {
+      "id": 62,
+      "name": "Wukong",
+      "asset": "MonkeyKing",
+      "roles": []
+    },
+    {
+      "id": 82,
+      "name": "Mordekaiser",
+      "asset": "Mordekaiser",
+      "roles": []
+    },
+    {
+      "id": 25,
+      "name": "Morgana",
+      "asset": "Morgana",
+      "roles": []
+    },
+    {
+      "id": 950,
+      "name": "Naafiri",
+      "asset": "Naafiri",
+      "roles": []
+    },
+    {
+      "id": 267,
+      "name": "Nami",
+      "asset": "Nami",
+      "roles": []
+    },
+    {
+      "id": 75,
+      "name": "Nasus",
+      "asset": "Nasus",
+      "roles": []
+    },
+    {
+      "id": 111,
+      "name": "Nautilus",
+      "asset": "Nautilus",
+      "roles": []
+    },
+    {
+      "id": 518,
+      "name": "Neeko",
+      "asset": "Neeko",
+      "roles": []
+    },
+    {
+      "id": 76,
+      "name": "Nidalee",
+      "asset": "Nidalee",
+      "roles": []
+    },
+    {
+      "id": 895,
+      "name": "Nilah",
+      "asset": "Nilah",
+      "roles": []
+    },
+    {
+      "id": 56,
+      "name": "Nocturne",
+      "asset": "Nocturne",
+      "roles": []
+    },
+    {
+      "id": 20,
+      "name": "Nunu y Willump",
+      "asset": "Nunu",
+      "roles": []
+    },
+    {
+      "id": 2,
+      "name": "Olaf",
+      "asset": "Olaf",
+      "roles": []
+    },
+    {
+      "id": 61,
+      "name": "Orianna",
+      "asset": "Orianna",
+      "roles": []
+    },
+    {
+      "id": 516,
+      "name": "Ornn",
+      "asset": "Ornn",
+      "roles": []
+    },
+    {
+      "id": 80,
+      "name": "Pantheon",
+      "asset": "Pantheon",
+      "roles": []
+    },
+    {
+      "id": 78,
+      "name": "Poppy",
+      "asset": "Poppy",
+      "roles": []
+    },
+    {
+      "id": 555,
+      "name": "Pyke",
+      "asset": "Pyke",
+      "roles": []
+    },
+    {
+      "id": 246,
+      "name": "Qiyana",
+      "asset": "Qiyana",
+      "roles": []
+    },
+    {
+      "id": 133,
+      "name": "Quinn",
+      "asset": "Quinn",
+      "roles": []
+    },
+    {
+      "id": 497,
+      "name": "Rakan",
+      "asset": "Rakan",
+      "roles": []
+    },
+    {
+      "id": 33,
+      "name": "Rammus",
+      "asset": "Rammus",
+      "roles": []
+    },
+    {
+      "id": 421,
+      "name": "Rek'Sai",
+      "asset": "RekSai",
+      "roles": []
+    },
+    {
+      "id": 526,
+      "name": "Rell",
+      "asset": "Rell",
+      "roles": []
+    },
+    {
+      "id": 888,
+      "name": "Renata Glasc",
+      "asset": "Renata",
+      "roles": []
+    },
+    {
+      "id": 58,
+      "name": "Renekton",
+      "asset": "Renekton",
+      "roles": []
+    },
+    {
+      "id": 107,
+      "name": "Rengar",
+      "asset": "Rengar",
+      "roles": []
+    },
+    {
+      "id": 92,
+      "name": "Riven",
+      "asset": "Riven",
+      "roles": []
+    },
+    {
+      "id": 68,
+      "name": "Rumble",
+      "asset": "Rumble",
+      "roles": []
+    },
+    {
+      "id": 13,
+      "name": "Ryze",
+      "asset": "Ryze",
+      "roles": []
+    },
+    {
+      "id": 360,
+      "name": "Samira",
+      "asset": "Samira",
+      "roles": []
+    },
+    {
+      "id": 113,
+      "name": "Sejuani",
+      "asset": "Sejuani",
+      "roles": []
+    },
+    {
+      "id": 235,
+      "name": "Senna",
+      "asset": "Senna",
+      "roles": []
+    },
+    {
+      "id": 147,
+      "name": "Seraphine",
+      "asset": "Seraphine",
+      "roles": []
+    },
+    {
+      "id": 875,
+      "name": "Sett",
+      "asset": "Sett",
+      "roles": []
+    },
+    {
+      "id": 35,
+      "name": "Shaco",
+      "asset": "Shaco",
+      "roles": []
+    },
+    {
+      "id": 98,
+      "name": "Shen",
+      "asset": "Shen",
+      "roles": []
+    },
+    {
+      "id": 102,
+      "name": "Shyvana",
+      "asset": "Shyvana",
+      "roles": []
+    },
+    {
+      "id": 27,
+      "name": "Singed",
+      "asset": "Singed",
+      "roles": []
+    },
+    {
+      "id": 14,
+      "name": "Sion",
+      "asset": "Sion",
+      "roles": []
+    },
+    {
+      "id": 15,
+      "name": "Sivir",
+      "asset": "Sivir",
+      "roles": []
+    },
+    {
+      "id": 72,
+      "name": "Skarner",
+      "asset": "Skarner",
+      "roles": []
+    },
+    {
+      "id": 901,
+      "name": "Smolder",
+      "asset": "Smolder",
+      "roles": []
+    },
+    {
+      "id": 37,
+      "name": "Sona",
+      "asset": "Sona",
+      "roles": []
+    },
+    {
+      "id": 16,
+      "name": "Soraka",
+      "asset": "Soraka",
+      "roles": []
+    },
+    {
+      "id": 50,
+      "name": "Swain",
+      "asset": "Swain",
+      "roles": []
+    },
+    {
+      "id": 517,
+      "name": "Sylas",
+      "asset": "Sylas",
+      "roles": []
+    },
+    {
+      "id": 134,
+      "name": "Syndra",
+      "asset": "Syndra",
+      "roles": []
+    },
+    {
+      "id": 223,
+      "name": "Tahm Kench",
+      "asset": "TahmKench",
+      "roles": []
+    },
+    {
+      "id": 163,
+      "name": "Taliyah",
+      "asset": "Taliyah",
+      "roles": []
+    },
+    {
+      "id": 91,
+      "name": "Talon",
+      "asset": "Talon",
+      "roles": []
+    },
+    {
+      "id": 44,
+      "name": "Taric",
+      "asset": "Taric",
+      "roles": []
+    },
+    {
+      "id": 17,
+      "name": "Teemo",
+      "asset": "Teemo",
+      "roles": []
+    },
+    {
+      "id": 412,
+      "name": "Thresh",
+      "asset": "Thresh",
+      "roles": []
+    },
+    {
+      "id": 18,
+      "name": "Tristana",
+      "asset": "Tristana",
+      "roles": []
+    },
+    {
+      "id": 48,
+      "name": "Trundle",
+      "asset": "Trundle",
+      "roles": []
+    },
+    {
+      "id": 23,
+      "name": "Tryndamere",
+      "asset": "Tryndamere",
+      "roles": []
+    },
+    {
+      "id": 4,
+      "name": "Twisted Fate",
+      "asset": "TwistedFate",
+      "roles": []
+    },
+    {
+      "id": 29,
+      "name": "Twitch",
+      "asset": "Twitch",
+      "roles": []
+    },
+    {
+      "id": 77,
+      "name": "Udyr",
+      "asset": "Udyr",
+      "roles": []
+    },
+    {
+      "id": 6,
+      "name": "Urgot",
+      "asset": "Urgot",
+      "roles": []
+    },
+    {
+      "id": 110,
+      "name": "Varus",
+      "asset": "Varus",
+      "roles": []
+    },
+    {
+      "id": 67,
+      "name": "Vayne",
+      "asset": "Vayne",
+      "roles": []
+    },
+    {
+      "id": 45,
+      "name": "Veigar",
+      "asset": "Veigar",
+      "roles": []
+    },
+    {
+      "id": 161,
+      "name": "Vel'Koz",
+      "asset": "Velkoz",
+      "roles": []
+    },
+    {
+      "id": 711,
+      "name": "Vex",
+      "asset": "Vex",
+      "roles": []
+    },
+    {
+      "id": 254,
+      "name": "Vi",
+      "asset": "Vi",
+      "roles": []
+    },
+    {
+      "id": 234,
+      "name": "Viego",
+      "asset": "Viego",
+      "roles": []
+    },
+    {
+      "id": 112,
+      "name": "Viktor",
+      "asset": "Viktor",
+      "roles": []
+    },
+    {
+      "id": 8,
+      "name": "Vladimir",
+      "asset": "Vladimir",
+      "roles": []
+    },
+    {
+      "id": 106,
+      "name": "Volibear",
+      "asset": "Volibear",
+      "roles": []
+    },
+    {
+      "id": 19,
+      "name": "Warwick",
+      "asset": "Warwick",
+      "roles": []
+    },
+    {
+      "id": 498,
+      "name": "Xayah",
+      "asset": "Xayah",
+      "roles": []
+    },
+    {
+      "id": 101,
+      "name": "Xerath",
+      "asset": "Xerath",
+      "roles": []
+    },
+    {
+      "id": 5,
+      "name": "Xin Zhao",
+      "asset": "XinZhao",
+      "roles": []
+    },
+    {
+      "id": 157,
+      "name": "Yasuo",
+      "asset": "Yasuo",
+      "roles": []
+    },
+    {
+      "id": 777,
+      "name": "Yone",
+      "asset": "Yone",
+      "roles": []
+    },
+    {
+      "id": 83,
+      "name": "Yorick",
+      "asset": "Yorick",
+      "roles": []
+    },
+    {
+      "id": 350,
+      "name": "Yuumi",
+      "asset": "Yuumi",
+      "roles": []
+    },
+    {
+      "id": 154,
+      "name": "Zac",
+      "asset": "Zac",
+      "roles": []
+    },
+    {
+      "id": 238,
+      "name": "Zed",
+      "asset": "Zed",
+      "roles": []
+    },
+    {
+      "id": 221,
+      "name": "Zeri",
+      "asset": "Zeri",
+      "roles": []
+    },
+    {
+      "id": 115,
+      "name": "Ziggs",
+      "asset": "Ziggs",
+      "roles": []
+    },
+    {
+      "id": 26,
+      "name": "Zilean",
+      "asset": "Zilean",
+      "roles": []
+    },
+    {
+      "id": 142,
+      "name": "Zoe",
+      "asset": "Zoe",
+      "roles": []
+    },
+    {
+      "id": 143,
+      "name": "Zyra",
+      "asset": "Zyra",
+      "roles": []
+    }
+  ]
+}
