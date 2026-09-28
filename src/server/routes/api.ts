@@ -193,8 +193,12 @@ export function createApiHandler(repository: SeriesRepository, options: ApiOptio
         : json({ success: false, error: 'internal_error' }, 500);
     }
     const origin = request.headers.get('Origin');
-    const allowedOrigins = Array.isArray(options.allowedOrigin) ? options.allowedOrigin : [options.allowedOrigin];
-    if (origin && allowedOrigins.includes(origin)) {
+    const allowedOrigins = options.allowedOrigin === undefined
+      ? ['*']
+      : Array.isArray(options.allowedOrigin) ? options.allowedOrigin : [options.allowedOrigin];
+    if (origin && allowedOrigins.includes('*')) {
+      response.headers.set('Access-Control-Allow-Origin', '*');
+    } else if (origin && allowedOrigins.includes(origin)) {
       response.headers.set('Access-Control-Allow-Origin', origin);
       response.headers.set('Vary', 'Origin');
     }

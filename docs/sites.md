@@ -13,8 +13,11 @@ y los 170 retratos son archivos estáticos; no requieren R2.
    solicita que compruebe la compatibilidad de `dist/`, las Pages Functions y el
    enlace D1 `DB`. La documentación de Sites no promete que todos los patrones de
    servidor sean compatibles.
-2. Aprovisiona D1 con el nombre de enlace `DB` y aplica `migrations/0001_initial.sql`
-   antes de aceptar tráfico. La API devuelve 503 si falta el enlace o el esquema.
+2. Aprovisiona D1 con el nombre de enlace `DB`. La primera petición a la API prepara
+   el esquema automáticamente: crea las tablas en una base nueva o migra el esquema
+   anterior de Sites conservando las series y partidas. Si la base ya tiene el esquema
+   actual, lo detecta sin volver a crear ni borrar tablas. `migrations/0001_initial.sql`
+   queda disponible para instalaciones que prefieran aplicar el esquema manualmente.
 3. En **Sites → Más acciones → Configuración**, añade el secreto
    `FEARLESS_ADMIN_TOKEN`. Usa una clave larga generada por un gestor de contraseñas.
    Para crear o corregir series mediante la API, añade también un secreto distinto
@@ -44,10 +47,15 @@ La API Node y SQLite sigue disponible para desarrollo local mediante `npm run de
 El frontend usa `/api` del mismo origen tanto en desarrollo (proxy de Vite) como en
 Sites. Deja `VITE_API_BASE_URL` sin definir en Sites para usar esa ruta.
 
-La compilación local y la ruta API se han comprobado, pero la compatibilidad de la
-función con el runtime de Sites se confirma al importar y crear una versión alojada.
-Si Sites rechaza el formato de la función o la migración, hay que adaptar esos puntos
-antes de publicar.
+La función `functions/api/[[path]].ts` usa el mismo manejador API que el servidor local.
+Las respuestas API y el health permiten CORS desde cualquier origen; las rutas de
+escritura y borrado siguen protegidas por Bearer token. CORS permite que una app Tauri
+u otra app web llame a la API, pero no sustituye la autenticación.
+
+La integración desplegada se verificó con `GET /api/health` (200), preflight CORS
+(204, incluyendo `Authorization`) y lectura de los datos existentes. Los cambios del
+repo se comprueban automáticamente en cada push/PR a `develop` y `main` mediante
+GitHub Actions (tests, TypeScript y build).
 
 Referencias: [ChatGPT Sites](https://learn.chatgpt.com/docs/sites),
 [Pages Functions](https://developers.cloudflare.com/pages/functions/),

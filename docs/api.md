@@ -1,6 +1,6 @@
 # API de Fearless Sync
 
-Todas las rutas están bajo `/api` y usan JSON. En desarrollo, la API escucha por defecto en `http://127.0.0.1:8787` y guarda sus datos en SQLite (`src/server/data/fearless.db`). La entrada preparada para Sites reutiliza las mismas rutas y guarda datos en D1 con el enlace `DB`. Su funcionamiento alojado debe validarse al importar el proyecto.
+Todas las rutas están bajo `/api` y usan JSON. En el despliegue, la API y `/api/health` aceptan llamadas CORS desde cualquier origen (`Access-Control-Allow-Origin: *`); no se habilitan credenciales de navegador. La API local restringe CORS a los orígenes de desarrollo configurados. Las escrituras siguen necesitando Bearer token. En desarrollo, la API escucha por defecto en `http://127.0.0.1:8787` y guarda sus datos en SQLite (`src/server/data/fearless.db`). La entrada preparada para Sites reutiliza las mismas rutas y guarda datos en D1 con el enlace `DB`. Su funcionamiento alojado debe validarse al importar el proyecto.
 
 | Método | Ruta | Uso |
 | --- | --- | --- |
@@ -47,7 +47,7 @@ Para cambiar un ganador, envía `{"winner":"blue"}`, `{"winner":"red"}` o `{"win
 - Las rutas POST, PATCH, PUT y DELETE de partidas individuales exigen `Authorization: Bearer <FEARLESS_API_TOKEN>`.
 - Las dos rutas que borran una serie o todas sus partidas exigen `Authorization: Bearer <FEARLESS_ADMIN_TOKEN>`.
 - En la API local, si FEARLESS_ADMIN_TOKEN no está definida, se usa FEARLESS_API_TOKEN. En Sites la clave de administrador es independiente y obligatoria.
-- Las claves se configuran en el servidor o como secretos alojados en Sites. Nunca se incluyen en `VITE_*`, archivos públicos ni en el código frontend.
+- Las claves se configuran en el servidor o como secretos alojados en Sites. Nunca se incluyen en `VITE_*`, archivos públicos ni en el código frontend. CORS no mantiene secretos: cualquier cliente con la clave válida puede invocar las rutas protegidas.
 - `seriesId` puede tener hasta 128 caracteres: empieza por una letra o un número y después admite letras, números, puntos, guiones y guiones bajos. `count` está reservado.
 - `gameNumber` debe ser un entero positivo. `limit` admite de 1 a 100 y `offset` debe ser no negativo.
 - Un error devuelve un estado HTTP apropiado y JSON con `success: false` y un campo `error` estable. Sin la clave configurada, una escritura o un borrado responde `503`.

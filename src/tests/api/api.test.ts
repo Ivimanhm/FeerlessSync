@@ -262,16 +262,42 @@ describe('API local de series', () => {
   });
 
   it('sirve health y preflight CORS', async () => {
-    const { handler } = setup();
-    const health = await handler(new Request('http://localhost/api/health'));
+    const { repository } = setup();
+    const handler = createApiHandler(repository, { writeToken: token });
+    const health = await handler(new Request('http://localhost/api/health', {
+      headers: { Origin: 'https://tauri-app.example' },
+    }));
     expect(health.status).toBe(200);
     expect(await health.json()).toMatchObject({ database: 'online' });
+    expect(health.headers.get('Access-Control-Allow-Origin')).toBe('*');
 
     const options = await handler(new Request('http://localhost/api/health', {
-      method: 'OPTIONS', headers: { Origin: 'http://localhost:5173' },
+      method: 'OPTIONS', headers: {
+        Origin: 'tauri://localhost',
+        'Access-Control-Request-Method': 'POST',
+        'Access-Control-Request-Headers': 'authorization, content-type',
+      },
     }));
     expect(options.status).toBe(204);
-    expect(options.headers.get('Access-Control-Allow-Origin')).toBe('http://localhost:5173');
+    expect(options.headers.get('Access-Control-Allow-Origin')).toBe('*');
+    expect(options.headers.get('Access-Control-Allow-Headers')).toContain('Authorization');
+    expect(options.headers.get('Access-Control-Allow-Methods')).toContain('POST');
+  });
+
+  it('mantiene la lista de orígenes permitidos cuando se configura explícitamente', async () => {
+    const { repository } = setup();
+    const restricted = createApiHandler(repository, {
+      writeToken: token,
+      allowedOrigin: 'https://app.example',
+    });
+    const denied = await restricted(new Request('http://localhost/api/health', {
+      headers: { Origin: 'https://other.example' },
+    }));
+    const allowed = await restricted(new Request('http://localhost/api/health', {
+      headers: { Origin: 'https://app.example' },
+    }));
+    expect(denied.headers.get('Access-Control-Allow-Origin')).toBeNull();
+    expect(allowed.headers.get('Access-Control-Allow-Origin')).toBe('https://app.example');
   });
 
   it('responde 503 cuando la base de datos deja de estar disponible', async () => {
