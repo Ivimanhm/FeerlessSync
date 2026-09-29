@@ -47,13 +47,13 @@ Los cinco IDs de cada equipo se envían en este orden: **TOP, JG, MID, ADC, SUP*
 
 - Cada partida pertenece a una serie. La pareja `(seriesId, gameNumber)` es única.
 - Cada equipo tiene exactamente cinco campeones. No se repiten IDs entre equipos ni entre partidas de una misma serie.
-- Crear series y partidas, y corregir equipos, no requiere token.
-- Asignar ganadores, borrar partidas, borrar una serie o vaciarla exige `Authorization: Bearer <FEARLESS_ADMIN_TOKEN>`.
+- Crear series y partidas no requiere token.
+- Corregir equipos, asignar ganadores, borrar partidas, borrar una serie o vaciarla exige `Authorization: Bearer <FEARLESS_ADMIN_TOKEN>`.
 - La clave de administrador es independiente y obligatoria tanto en la API local como en Sites. La ruta de validación también la exige.
 - Las claves se configuran en el servidor o como secretos alojados en Sites. Nunca se incluyen en `VITE_*`, archivos públicos ni en el código frontend. CORS no mantiene secretos: cualquier cliente con la clave válida puede invocar las rutas protegidas.
 - `seriesId` puede tener hasta 128 caracteres: empieza por una letra o un número y después admite letras, números, puntos, guiones y guiones bajos. `count` está reservado.
 - `gameNumber` debe ser un entero positivo. `limit` admite de 1 a 100 y `offset` debe ser no negativo.
-- Un error devuelve un estado HTTP apropiado y JSON con `success: false` y un campo `error` estable. Sin la clave configurada, una escritura o un borrado responde `503`.
+- Un error devuelve un estado HTTP apropiado y JSON con `success: false` y un campo `error` estable. Sin la clave configurada, una operación administrativa responde `503`.
 - El borrado de una partida libera sus campeones. El borrado de una serie elimina también partidas y eventos mediante claves foráneas.
 - Los eventos se guardan en la misma transacción que la operación que registran.
 
