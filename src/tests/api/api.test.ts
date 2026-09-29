@@ -1,4 +1,207 @@
-YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíïN¸N‹Z–‹­¦ëeŠw¬Ô¼¼Ù¥Ñ•ÍÐµ•¹Ù¥É½¹µ•¹Ð¹½‘”)¥µÁ½ÉÐì…™Ñ•É… °‘•ÍÉ¥‰”°•áÁ•Ð°¥Ðô™É½´€Ù¥Ñ•ÍÐœì)¥µÁ½ÉÐì…Ñ…‰…Í•Må¹Œô™É½´€¹½‘”éÍÅ±¥Ñ”œì)¥µÁ½ÉÐìµ­‘Ñ•µÁMå¹Œ°ÉµMå¹Œô™É½´€¹½‘”é™Ìœì)¥µÁ½ÉÐìÑµÁ‘¥Èô™É½´€¹½‘”é½Ìœì)¥µÁ½ÉÐì©½¥¸ô™É½´€¹½‘”éÁ…Ñ œì)¥µÁ½ÉÐìÉ•…Ñ•Á¥!…¹‘±•Èô™É½´€œ¸¸¼¸¸½Í•ÉÙ•È½É½ÕÑ•Ì½…Á¤¹ÑÌœì)¥µÁ½ÉÐìMÅ±¥Ñ•M•É¥•ÍI•Á½Í¥Ñ½Éäô™É½´€œ¸¸¼¸¸½Í•ÉÙ•È½É•Á½Í¥Ñ½É¥•Ì½ÍÅ±¥Ñ•I•Á½Í¥Ñ½Éä¹ÑÌœì)¥µÁ½ÉÐìÉ•…Ñ•1½…±M•ÉÙ•Èô™É½´€œ¸¸¼¸¸½Í•ÉÙ•È½¹½‘•M•ÉÙ•È¹ÑÌœì)¥µÁ½ÉÐÑåÁ”ì¡…µÁ¥½¹…Ñ…±½AÉ½Ù¥‘•Èô™É½´€œ¸¸¼¸¸½Í•ÉÙ•È½ÑåÁ•Ì¹ÑÌœì()½¹ÍÐ‘…Ñ…‰…Í•Ìè…Ñ…‰…Í•Må¹mt€ômtì)½¹ÍÐÑ•µÁ½É…Éå¥É•Ñ½É¥•ÌèÍÑÉ¥¹mt€ômtì)½¹ÍÐÑ½­•¸€ô€¥¹Ù…±¥µ…‘µ¥¸µÑ½­•¸œì)½¹ÍÐ…‘µ¥¹Q½­•¸€ô€±½…°µÑ•ÍÐµ…‘µ¥¸œì()…™Ñ•É…   ¤€ôøì(€™½È€¡½¹ÍÐ‘…Ñ…‰…Í”½˜‘…Ñ…‰…Í•Ì¹ÍÁ±¥” À¤¤‘…Ñ…‰…Í”¹±½Í” ¤ì(€™½È€¡½¹ÍÐ‘¥É•Ñ½Éä½˜Ñ•µÁ½É…Éå¥É•Ñ½É¥•Ì¹ÍÁ±¥” À¤¤ÉµMå¹Œ¡‘¥É•Ñ½Éä°ìÉ•ÕÉÍ¥Ù”èÑÉÕ”°™½É”èÑÉÕ”ô¤ì)ô¤ì()™Õ¹Ñ¥½¸Í•ÑÕÀ¡…Ñ…±½AÉ½Ù¥‘•Èè¡…µÁ¥½¹…Ñ…±½AÉ½Ù¥‘•È€ôì•Ñ…Ñ…±½œè…Íå¹Œ€ ¤€ôø€¡ìÙ•ÉÍ¥½¸è€Ñ•ÍÐ´Äœ°¡…µÁ¥½¹%‘ÌèÉÉ…ä¹™É½´¡ì±•¹Ñ è€ÔÀÀô°€¡|°¥¹‘•à¤€ôø¥¹‘•à€¬€Ä¤ô¤ô¤ì(€½¹ÍÐ‘…Ñ…‰…Í”€ô¹•Ü…Ñ…‰…Í•Må¹Œ œéµ•µ½Éäèœ¤ì(€‘…Ñ…‰…Í•Ì¹ÁÕÍ ¡‘…Ñ…‰…Í”¤ì(€½¹ÍÐÉ•Á½Í¥Ñ½Éä€ô¹•ÜMÅ±¥Ñ•M•É¥•ÍI•Á½Í¥Ñ½Éä¡‘…Ñ…‰…Í”¤ì(€½¹ÍÐ¡…¹‘±•È€ôÉ•…Ñ•Á¥!…¹‘±•È¡É•Á½Í¥Ñ½Éä°ì…‘µ¥¹Q½­•¸°…±±½Ý•‘=É¥¥¸è€¡ÑÑÀè¼½±½…±¡½ÍÐèÔÄÜÌœ°…Ñ…±½AÉ½Ù¥‘•Èô¤ì(€½¹ÍÐ…±°€ô€¡Á…Ñ èÍÑÉ¥¹œ°µ•Ñ¡½€ô€Pœ°‰½‘äüèÕ¹­¹½Ý¸°…ÕÑ¡½É¥é•è‰½½±•…¸ð€…‘µ¥¸œ€ô™…±Í”¤€ôø¡…¹‘±•È¡¹•ÜI•ÅÕ•ÍÐ¡¡ÑÑÀè¼½±½…±¡½ÍÐ‘íÁ…Ñ¡õ€°ì(€€€µ•Ñ¡½°(€€€¡•…‘•ÉÌèì(€€€€€€¸¸¸¡‰½‘ä€„ôôÕ¹‘•™¥¹•€üì€½¹Ñ•¹ÐµQåÁ”œè€…ÁÁ±¥…Ñ¥½¸½©Í½¸œô€èíô¤°(€€€€€€¸¸¸¡…ÕÑ¡½É¥é•€üìÕÑ¡½É¥é…Ñ¥½¸è	•…É•È€‘í…ÕÑ¡½É¥é•€ôôô€…‘µ¥¸œ€ü…‘µ¥¹Q½­•¸€èÑ½­•¹õ€ô€èíô¤°(€€€ô°(€€€‰½‘äè‰½‘ä€ôôôÕ¹‘•™¥¹•€üÕ¹‘•™¥¹•€è)M=8¹ÍÑÉ¥¹¥™ä¡‰½‘ä¤°(€ô¤¤ì(€É•ÑÕÉ¸ì‘…Ñ…‰…Í”°É•Á½Í¥Ñ½Éä°¡…¹‘±•È°…±°ôì)ô()½¹ÍÐ™¥ÉÍÑ…µ”€ôì(€…µ•9Õµ‰•Èè€Ä°(€‰±Õ•Q•…´èlÄÀÌ°€ØÐ°€Ü°€ÈÈÈ°€ÐÄÉt°(€É•‘Q•…´èlÈØØ°€ÈÔÐ°€ÈÌà°€àÄ°€ÄÄÅt°)ôì)½¹ÍÐÍ•½¹‘…µ”€ôì…µ•9Õµ‰•Èè€È°‰±Õ•Q•…´èlÈÀ°€ÈÄ°€ÈÈ°€ÈÌ°€ÈÑt°É•‘Q•…´èlÈÔ°€ÈØ°€ÈÜ°€Èà°€Èåtôì()‘•ÍÉ¥‰” A$±½…°‘”Í•É¥•Ìœ°€ ¤€ôøì(€¥Ð Õ•¹Ñ„Í•É¥•ÌÁ•ÉÍ¥ÍÑ¥‘…ÌäÁ•Éµ¥Ñ”É•…É±…ÌÍ¥¸Ñ½­•¸œ°…Íå¹Œ€ ¤€ôøì(€€€½¹ÍÐì…±°ô€ôÍ•ÑÕÀ ¤ì(€€€•áÁ•Ð¡…Ý…¥Ð€¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½½Õ¹Ðœ¤¤¹©Í½¸ ¤¤¹Ñ½ÅÕ…°¡ìÍÕ•ÍÌèÑÉÕ”°½Õ¹Ðè€Àô¤ì((€€€½¹ÍÐÉ•…Ñ•€ô…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ìœ°€A=MPœ°ìÍ•É¥•Í%è€™•…É±•ÍÌ´ÀÀÄœô¤ì(€€€•áÁ•Ð¡É•…Ñ•¹ÍÑ…ÑÕÌ¤¹Ñ½	” ÈÀÄ¤ì(€€€•áÁ•Ð¡…Ý…¥ÐÉ•…Ñ•¹©Í½¸ ¤¤¹Ñ½5…Ñ¡=‰©•Ð¡ìÍÕ•ÍÌèÑÉÕ”°Í•É¥•Í%è€™•…É±•ÍÌ´ÀÀÄœô¤ì(€€€•áÁ•Ð¡…Ý…¥Ð€¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½½Õ¹Ðœ¤¤¹©Í½¸ ¤¤¹Ñ½ÅÕ…°¡ìÍÕ•ÍÌèÑÉÕ”°½Õ¹Ðè€Äô¤ì((€€€½¹ÍÐ‘ÕÁ±¥…Ñ”€ô…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ìœ°€A=MPœ°ìÍ•É¥•Í%è€™•…É±•ÍÌ´ÀÀÄœô°ÑÉÕ”¤ì(€€€•áÁ•Ð¡‘ÕÁ±¥…Ñ”¹ÍÑ…ÑÕÌ¤¹Ñ½	” ÐÀä¤ì(€€€•áÁ•Ð¡…Ý…¥Ð‘ÕÁ±¥…Ñ”¹©Í½¸ ¤¤¹Ñ½5…Ñ¡=‰©•Ð¡ìÍÕ•ÍÌè™…±Í”°•ÉÉ½Èè€Í•É¥•Í}…±É•…‘å}•á¥ÍÑÌœô¤ì(€€€•áÁ•Ð¡…Ý…¥Ð€¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½½Õ¹Ðœ¤¤¹©Í½¸ ¤¤¹Ñ½ÅÕ…°¡ìÍÕ•ÍÌèÑÉÕ”°½Õ¹Ðè€Äô¤ì((€€€…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ìœ°€A=MPœ°ìÍ•É¥•Í%è€™•…É±•ÍÌ´ÀÀÈœô°ÑÉÕ”¤ì(€€€•áÁ•Ð¡…Ý…¥Ð€¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½½Õ¹Ðœ¤¤¹©Í½¸ ¤¤¹Ñ½ÅÕ…°¡ìÍÕ•ÍÌèÑÉÕ”°½Õ¹Ðè€Èô¤ì(€ô¤ì((€¥Ð ½¹Í•ÉÙ„±…ÌÍ•É¥•Ìä•°É•Õ•¹Ñ¼…°É•…‰É¥È±„‰…Í”‘”‘…Ñ½Ìœ°€ ¤€ôøì(€€€½¹ÍÐ‘¥É•Ñ½Éä€ôµ­‘Ñ•µÁMå¹Œ¡©½¥¸¡ÑµÁ‘¥È ¤°€™•…É±•ÍÌµ…Á¤µÑ•ÍÐ´œ¤¤ì(€€€Ñ•µÁ½É…Éå¥É•Ñ½É¥•Ì¹ÁÕÍ ¡‘¥É•Ñ½Éä¤ì(€€€½¹ÍÐÁ…Ñ €ô©½¥¸¡‘¥É•Ñ½Éä°€™•…É±•ÍÌ¹‘ˆœ¤ì(€€€½¹ÍÐ™¥ÉÍÐ€ô¹•Ü…Ñ…‰…Í•Må¹Œ¡Á…Ñ ¤ì(€€€½¹ÍÐÉ•Á½Í¥Ñ½Éä€ô¹•ÜMÅ±¥Ñ•M•É¥•ÍI•Á½Í¥Ñ½Éä¡™¥ÉÍÐ¤ì(€€€É•Á½Í¥Ñ½Éä¹É•…Ñ•M•É¥•Ì ½¹”œ¤ì(€€€É•Á½Í¥Ñ½Éä¹É•…Ñ•M•É¥•Ì ÑÝ¼œ¤ì(€€€™¥ÉÍÐ¹±½Í” ¤ì((€€€½¹ÍÐÉ•½Á•¹•€ô¹•Ü…Ñ…‰…Í•Må¹Œ¡Á…Ñ ¤ì(€€€‘…Ñ…‰…Í•Ì¹ÁÕÍ ¡É•½Á•¹•¤ì(€€€½¹ÍÐÁ•ÉÍ¥ÍÑ•€ô¹•ÜMÅ±¥Ñ•M•É¥•ÍI•Á½Í¥Ñ½Éä¡É•½Á•¹•¤ì(€€€•áÁ•Ð¡Á•ÉÍ¥ÍÑ•¹½Õ¹ÑM•É¥•Ì ¤¤¹Ñ½	” È¤ì(€€€•áÁ•Ð¡Á•ÉÍ¥ÍÑ•¹•ÑM•É¥•Ì ½¹”œ¤ü¹Í•É¥•Í%¤¹Ñ½	” ½¹”œ¤ì(€€€•áÁ•Ð¡Á•ÉÍ¥ÍÑ•¹±¥ÍÑÙ•¹ÑÌ ½¹”œ°€ÈÀ°€À¤¹¥Ñ•µÍlÁt¹ÑåÁ”¤¹Ñ½	” Í•É¥•Í}É•…Ñ•œ¤ì(€ô¤ì((€¥Ð Õ…É‘„Á…ÉÑ¥‘…Ì°±•”…µÁ•½¹•ÌÕÍ…‘½ÌäÉ•¡…é„‘ÕÁ±¥…‘½Ìœ°…Íå¹Œ€ ¤€ôøì(€€€½¹ÍÐì…±°ô€ôÍ•ÑÕÀ ¤ì(€€€…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ìœ°€A=MPœ°ìÍ•É¥•Í%è€Í•É¥•Ìµ„œô°ÑÉÕ”¤ì(€€€½¹ÍÐÉ•…Ñ•€ô…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½Í•É¥•Ìµ„½…µ•Ìœ°€A=MPœ°™¥ÉÍÑ…µ”¤ì(€€€•áÁ•Ð¡É•…Ñ•¹ÍÑ…ÑÕÌ¤¹Ñ½	” ÈÀÄ¤ì(€€€•áÁ•Ð¡…Ý…¥ÐÉ•…Ñ•¹©Í½¸ ¤¤¹Ñ½5…Ñ¡=‰©•Ð¡ìÍÕ•ÍÌèÑÉÕ”°…µ•9Õµ‰•Èè€Ä°Ý¥¹¹•Èè¹Õ±°ô¤ì((€€€½¹ÍÐÍ•É¥•Ì€ô…Ý…¥Ð€¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½Í•É¥•Ìµ„œ¤¤¹©Í½¸ ¤…Ìì…µ•ÌèÕ¹­¹½Ý¹mtìÕÍ•‘¡…µÁ¥½¹Ìè¹Õµ‰•Émtôì(€€€•áÁ•Ð¡Í•É¥•Ì¹…µ•Ì¤¹Ñ½!…Ù•1•¹Ñ  Ä¤ì(€€€•áÁ•Ð¡Í•É¥•Ì¹ÕÍ•‘¡…µÁ¥½¹Ì¤¹Ñ½ÅÕ…°¡l¸¸¹™¥ÉÍÑ…µ”¹‰±Õ•Q•…´°€¸¸¹™¥ÉÍÑ…µ”¹É•‘Q•…µt¤ì(€€€•áÁ•Ð¡…Ý…¥Ð€¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½Í•É¥•Ìµ„½ÕÍ•µ¡…µÁ¥½¹Ìœ¤¤¹©Í½¸ ¤¤¹Ñ½ÅÕ…°¡ìÍÕ•ÍÌèÑÉÕ”°ÕÍ•‘¡…µÁ¥½¹ÌèÍ•É¥•Ì¹ÕÍ•‘¡…µÁ¥½¹Ìô¤ì((€€€½¹ÍÐ‘ÕÁ±¥…Ñ•9Õµ‰•È€ô…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½Í•É¥•Ìµ„½…µ•Ìœ°€A=MPœ°™¥ÉÍÑ…µ”°ÑÉÕ”¤ì(€€€•áÁ•Ð¡…Ý…¥Ð‘ÕÁ±¥…Ñ•9Õµ‰•È¹©Í½¸ ¤¤¹Ñ½5…Ñ¡=‰©•Ð¡ìÍÕ•ÍÌè™…±Í”°•ÉÉ½Èè€…µ•}¹Õµ‰•É}•á¥ÍÑÌœô¤ì((€€€½¹ÍÐÉ•ÕÍ•‘¡…µÁ¥½¸€ô…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½Í•É¥•Ìµ„½…µ•Ìœ°€A=MPœ°ì(€€€€€…µ•9Õµ‰•Èè€È°‰±Õ•Q•…´èlÄÀÌ°€Ä°€È°€Ì°€Ñt°É•‘Q•…´èlÔ°€Ø°€à°€ä°€ÄÁt°(€€€ô°ÑÉÕ”¤ì(€€€•áÁ•Ð¡É•ÕÍ•‘¡…µÁ¥½¸¹ÍÑ…ÑÕÌ¤¹Ñ½	” ÐÀä¤ì(€€€•áÁ•Ð¡…Ý…¥ÐÉ•ÕÍ•‘¡…µÁ¥½¸¹©Í½¸ ¤¤¹Ñ½5…Ñ¡=‰©•Ð¡ìÍÕ•ÍÌè™…±Í”°•ÉÉ½Èè€¡…µÁ¥½¹}…±É•…‘å}ÕÍ•œô¤ì(€€€•áÁ•Ð ¡…Ý…¥Ð€¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½Í•É¥•Ìµ„œ¤¤¹©Í½¸ ¤…Ìì…µ•ÌèÕ¹­¹½Ý¹mtô¤¹…µ•Ì¤¹Ñ½!…Ù•1•¹Ñ  Ä¤ì(€ô¤ì((€¥Ð Ù…±¥‘„•ÅÕ¥Á½Ì°%äÍ•É¥”¥¹•á¥ÍÑ•¹Ñ”œ°…Íå¹Œ€ ¤€ôøì(€€€½¹ÍÐì…±°ô€ôÍ•ÑÕÀ ¤ì(€€€½¹ÍÐ¥¹Ù…±¥‘%€ô…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ìœ°€A=MPœ°ìÍ•É¥•Í%è€½Õ¹Ðœô°ÑÉÕ”¤ì(€€€•áÁ•Ð¡¥¹Ù…±¥‘%¹ÍÑ…ÑÕÌ¤¹Ñ½	” ÐÀÀ¤ì(€€€•áÁ•Ð¡…Ý…¥Ð¥¹Ù…±¥‘%¹©Í½¸ ¤¤¹Ñ½5…Ñ¡=‰©•Ð¡ì•ÉÉ½Èè€¥¹Ù…±¥‘}Í•É¥•Í}¥œô¤ì((€€€…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ìœ°€A=MPœ°ìÍ•É¥•Í%è€Í•É¥•Ìµ„œô°ÑÉÕ”¤ì(€€€½¹ÍÐ‘ÕÁ±¥…Ñ•¡…µÁ¥½¸€ô…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½Í•É¥•Ìµ„½…µ•Ìœ°€A=MPœ°ì(€€€€€€¸¸¹™¥ÉÍÑ…µ”°É•‘Q•…´èlÄÀÌ°€ÈÔÐ°€ÈÌà°€àÄ°€ÄÄÅt°(€€€ô°ÑÉÕ”¤ì(€€€•áÁ•Ð¡‘ÕÁ±¥…Ñ•¡…µÁ¥½¸¹ÍÑ…ÑÕÌ¤¹Ñ½	” ÐÀÀ¤ì(€€€•áÁ•Ð¡…Ý…¥Ð‘ÕÁ±¥…Ñ•¡…µÁ¥½¸¹©Í½¸ ¤¤¹Ñ½5…Ñ¡=‰©•Ð¡ì•ÉÉ½Èè€‘ÕÁ±¥…Ñ•}¡…µÁ¥½¸œô¤ì((€€€½¹ÍÐ¥¹Ù…±¥‘Q•…´€ô…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½Í•É¥•Ìµ„½…µ•Ìœ°€A=MPœ°ì€¸¸¹™¥ÉÍÑ…µ”°‰±Õ•Q•…´èlÄ°€Étô°ÑÉÕ”¤ì(€€€•áÁ•Ð¡…Ý…¥Ð¥¹Ù…±¥‘Q•…´¹©Í½¸ ¤¤¹Ñ½5…Ñ¡=‰©•Ð¡ì•ÉÉ½Èè€¥¹Ù…±¥‘}Ñ•…µÌœô¤ì((€€€½¹ÍÐµ¥ÍÍ¥¹œ€ô…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½…‰Í•¹Ð½…µ•Ìœ°€A=MPœ°™¥ÉÍÑ…µ”°ÑÉÕ”¤ì(€€€•áÁ•Ð¡µ¥ÍÍ¥¹œ¹ÍÑ…ÑÕÌ¤¹Ñ½	” ÐÀÐ¤ì(€€€•áÁ•Ð¡…Ý…¥Ðµ¥ÍÍ¥¹œ¹©Í½¸ ¤¤¹Ñ½5…Ñ¡=‰©•Ð¡ì•ÉÉ½Èè€Í•É¥•Í}¹½Ñ}™½Õ¹œô¤ì(€ô¤ì((€¥Ð ±¥ÍÑ„Í•É¥•Ì½¸Á…¥¹…§Í¸ä±…Ì‰½ÉÉ„½¸ÍÕÌÁ…ÉÑ¥‘…Ìœ°…Íå¹Œ€ ¤€ôøì(€€€½¹ÍÐì…±°°‘…Ñ…‰…Í”ô€ôÍ•ÑÕÀ ¤ì(€€€™½È€¡½¹ÍÐÍ•É¥•Í%½˜l…±Á¡„œ°€‰•Ñ„œ°€…µµ„t¤ì(€€€€€•áÁ•Ð ¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ìœ°€A=MPœ°ìÍ•É¥•Í%ô°ÑÉÕ”¤¤¹ÍÑ…ÑÕÌ¤¹Ñ½	” ÈÀÄ¤ì(€€€ô(€€€…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½‰•Ñ„½…µ•Ìœ°€A=MPœ°™¥ÉÍÑ…µ”°ÑÉÕ”¤ì(€€€½¹ÍÐÁ…”€ô…Ý…¥Ð€¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ìý±¥µ¥ÐôÄ™½™™Í•ÐôÄœ¤¤¹©Í½¸ ¤…ÌìÍ•É¥•ÌèÉÉ…äñìÍ•É¥•Í%èÍÑÉ¥¹œì…µ•Í½Õ¹Ðè¹Õµ‰•ÈôøìÑ½Ñ…°è¹Õµ‰•Èì±¥µ¥Ðè¹Õµ‰•Èì½™™Í•Ðè¹Õµ‰•Èôì(€€€•áÁ•Ð¡Á…”¤¹Ñ½5…Ñ¡=‰©•Ð¡ìÑ½Ñ…°è€Ì°±¥µ¥Ðè€Ä°½™™Í•Ðè€Äô¤ì(€€€•áÁ•Ð¡Á…”¹Í•É¥•Ì¤¹Ñ½!…Ù•1•¹Ñ  Ä¤ì(€€€½¹ÍÐ…±°€ô…Ý…¥Ð€¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ìý±¥µ¥ÐôÌœ¤¤¹©Í½¸ ¤…ÌìÍ•É¥•ÌèÉÉ…äñìÍ•É¥•Í%èÍÑÉ¥¹œì…µ•Í½Õ¹Ðè¹Õµ‰•Èôøôì(€€€•áÁ•Ð¡…±°¹Í•É¥•Ì¹™¥¹ ¡¥Ñ•´¤€ôø¥Ñ•´¹Í•É¥•Í%€ôôô€‰•Ñ„œ¤ü¹…µ•Í½Õ¹Ð¤¹Ñ½	” Ä¤ì(€€€•áÁ•Ð ¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ìý±¥µ¥ÐôÄÀÄœ¤¤¹ÍÑ…ÑÕÌ¤¹Ñ½	” ÐÀÀ¤ì(€€€•áÁ•Ð ¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ìý½™™Í•Ðô´Äœ¤¤¹ÍÑ…ÑÕÌ¤¹Ñ½	” ÐÀÀ¤ì((€€€•áÁ•Ð ¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½‰•Ñ„œ°€1Qœ¤¤¹ÍÑ…ÑÕÌ¤¹Ñ½	” ÐÀÄ¤ì(€€€•áÁ•Ð ¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½‰•Ñ„œ°€1Qœ°Õ¹‘•™¥¹•°ÑÉÕ”¤¤¹ÍÑ…ÑÕÌ¤¹Ñ½	” ÐÀÄ¤ì(€€€•áÁ•Ð ¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½‰•Ñ„œ°€1Qœ°Õ¹‘•™¥¹•°€…‘µ¥¸œ¤¤¹ÍÑ…ÑÕÌ¤¹Ñ½	” ÈÀÀ¤ì(€€€•áÁ•Ð¡…Ý…¥Ð€¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½½Õ¹Ðœ¤¤¹©Í½¸ ¤¤¹Ñ½ÅÕ…°¡ìÍÕ•ÍÌèÑÉÕ”°½Õ¹Ðè€Èô¤ì(€€€•áÁ•Ð ¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½‰•Ñ„œ¤¤¹ÍÑ…ÑÕÌ¤¹Ñ½	” ÐÀÐ¤ì(€€€•áÁ•Ð ¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½‰•Ñ„œ°€1Qœ°Õ¹‘•™¥¹•°€…‘µ¥¸œ¤¤¹ÍÑ…ÑÕÌ¤¹Ñ½	” ÐÀÐ¤ì(€€€½¹ÍÐ½ÉÁ¡…¹…µ•Ì€ô‘…Ñ…‰…Í”¹ÁÉ•Á…É” M1P=U9P ¨¤L½Õ¹ÐI=4…µ•Ì]!IÍ•É¥•Í}¥€ô€üœ¤¹•Ð ‰•Ñ„œ¤…Ìì½Õ¹Ðè¹Õµ‰•Èôì(€€€•áÁ•Ð¡½ÉÁ¡…¹…µ•Ì¹½Õ¹Ð¤¹Ñ½	” À¤ì(€€€½¹ÍÐ½ÉÁ¡…¹Ù•¹ÑÌ€ô‘…Ñ…‰…Í”¹ÁÉ•Á…É” M1P=U9P ¨¤L½Õ¹ÐI=4•Ù•¹ÑÌ]!IÍ•É¥•Í}¥€ô€üœ¤¹•Ð ‰•Ñ„œ¤…Ìì½Õ¹Ðè¹Õµ‰•Èôì(€€€•áÁ•Ð¡½ÉÁ¡…¹Ù•¹ÑÌ¹½Õ¹Ð¤¹Ñ½	” À¤ì(€ô¤ì((€¥Ð ½¹ÍÕ±Ñ„°½ÉÉ¥”ä‰½ÉÉ„Á…ÉÑ¥‘…Ìµ…¹Ñ•¹¥•¹‘¼±…ÌÉ•±…Ì•…É±•ÍÌœ°…Íå¹Œ€ ¤€ôøì(€€€½¹ÍÐì…±°ô€ôÍ•ÑÕÀ ¤ì(€€€…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ìœ°€A=MPœ°ìÍ•É¥•Í%è€Á±…å½™™Ìœô°ÑÉÕ”¤ì(€€€…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½Á±…å½™™Ì½…µ•Ìœ°€A=MPœ°Í•½¹‘…µ”°ÑÉÕ”¤ì(€€€…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½Á±…å½™™Ì½…µ•Ìœ°€A=MPœ°™¥ÉÍÑ…µ”°ÑÉÕ”¤ì(€€€½¹ÍÐ…µ•Ì€ô…Ý…¥Ð€¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½Á±…å½™™Ì½…µ•Ìœ¤¤¹©Í½¸ ¤…Ìì…µ•ÌèÉÉ…äñì…µ•9Õµ‰•Èè¹Õµ‰•Èôøôì(€€€•áÁ•Ð¡…µ•Ì¹…µ•Ì¹µ…À ¡…µ”¤€ôø…µ”¹…µ•9Õµ‰•È¤¤¹Ñ½ÅÕ…°¡lÄ°€Ét¤ì(€€€•áÁ•Ð¡…Ý…¥Ð€¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½Á±…å½™™Ì½…µ•Ì¼Äœ¤¤¹©Í½¸ ¤¤¹Ñ½5…Ñ¡=‰©•Ð¡ì…µ•9Õµ‰•Èè€Ä°‰±Õ•Q•…´è™¥ÉÍÑ…µ”¹‰±Õ•Q•…´ô¤ì(€€€•áÁ•Ð ¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½Á±…å½™™Ì½…µ•Ì¼ääœ¤¤¹ÍÑ…ÑÕÌ¤¹Ñ½	” ÐÀÐ¤ì(€€€•áÁ•Ð ¡…Ý…¥Ð…±° œ½…Á¤½Í•É¥•Ì½Á±…å½™™Ì½…µ—]:âÚ$z{-®éÜj×nner_changed', 'winner_changed']);
+// @vitest-environment node
+import { afterEach, describe, expect, it } from 'vitest';
+import { DatabaseSync } from 'node:sqlite';
+import { mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { createApiHandler } from '../../server/routes/api.ts';
+import { SqliteSeriesRepository } from '../../server/repositories/sqliteRepository.ts';
+import { createLocalServer } from '../../server/nodeServer.ts';
+import type { ChampionCatalogProvider } from '../../server/types.ts';
+
+const databases: DatabaseSync[] = [];
+const temporaryDirectories: string[] = [];
+const token = 'invalid-admin-token';
+const adminToken = 'local-test-admin';
+
+afterEach(() => {
+  for (const database of databases.splice(0)) database.close();
+  for (const directory of temporaryDirectories.splice(0)) rmSync(directory, { recursive: true, force: true });
+});
+
+function setup(catalogProvider: ChampionCatalogProvider = { getCatalog: async () => ({ version: 'test-1', championIds: Array.from({ length: 500 }, (_, index) => index + 1) }) }) {
+  const database = new DatabaseSync(':memory:');
+  databases.push(database);
+  const repository = new SqliteSeriesRepository(database);
+  const handler = createApiHandler(repository, { adminToken, allowedOrigin: 'http://localhost:5173', catalogProvider });
+  const call = (path: string, method = 'GET', body?: unknown, authorized: boolean | 'admin' = false) => handler(new Request(`http://localhost${path}`, {
+    method,
+    headers: {
+      ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+      ...(authorized ? { Authorization: `Bearer ${authorized === 'admin' ? adminToken : token}` } : {}),
+    },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  }));
+  return { database, repository, handler, call };
+}
+
+const firstGame = {
+  gameNumber: 1,
+  blueTeam: [103, 64, 7, 222, 412],
+  redTeam: [266, 254, 238, 81, 111],
+};
+const secondGame = { gameNumber: 2, blueTeam: [20, 21, 22, 23, 24], redTeam: [25, 26, 27, 28, 29] };
+
+describe('API local de series', () => {
+  it('cuenta series persistidas y permite crearlas sin token', async () => {
+    const { call } = setup();
+    expect(await (await call('/api/series/count')).json()).toEqual({ success: true, count: 0 });
+
+    const created = await call('/api/series', 'POST', { seriesId: 'fearless-001' });
+    expect(created.status).toBe(201);
+    expect(await created.json()).toMatchObject({ success: true, seriesId: 'fearless-001' });
+    expect(await (await call('/api/series/count')).json()).toEqual({ success: true, count: 1 });
+
+    const duplicate = await call('/api/series', 'POST', { seriesId: 'fearless-001' }, true);
+    expect(duplicate.status).toBe(409);
+    expect(await duplicate.json()).toMatchObject({ success: false, error: 'series_already_exists' });
+    expect(await (await call('/api/series/count')).json()).toEqual({ success: true, count: 1 });
+
+    await call('/api/series', 'POST', { seriesId: 'fearless-002' }, true);
+    expect(await (await call('/api/series/count')).json()).toEqual({ success: true, count: 2 });
+  });
+
+  it('conserva las series y el recuento al reabrir la base de datos', () => {
+    const directory = mkdtempSync(join(tmpdir(), 'fearless-api-test-'));
+    temporaryDirectories.push(directory);
+    const path = join(directory, 'fearless.db');
+    const first = new DatabaseSync(path);
+    const repository = new SqliteSeriesRepository(first);
+    repository.createSeries('one');
+    repository.createSeries('two');
+    first.close();
+
+    const reopened = new DatabaseSync(path);
+    databases.push(reopened);
+    const persisted = new SqliteSeriesRepository(reopened);
+    expect(persisted.countSeries()).toBe(2);
+    expect(persisted.getSeries('one')?.seriesId).toBe('one');
+    expect(persisted.listEvents('one', 20, 0).items[0].type).toBe('series_created');
+  });
+
+  it('guarda partidas, lee campeones usados y rechaza duplicados', async () => {
+    const { call } = setup();
+    await call('/api/series', 'POST', { seriesId: 'series-a' }, true);
+    const created = await call('/api/series/series-a/games', 'POST', firstGame);
+    expect(created.status).toBe(201);
+    expect(await created.json()).toMatchObject({ success: true, gameNumber: 1, winner: null });
+
+    const series = await (await call('/api/series/series-a')).json() as { games: unknown[]; usedChampions: number[] };
+    expect(series.games).toHaveLength(1);
+    expect(series.usedChampions).toEqual([...firstGame.blueTeam, ...firstGame.redTeam]);
+    expect(await (await call('/api/series/series-a/used-champions')).json()).toEqual({ success: true, usedChampions: series.usedChampions });
+
+    const duplicateNumber = await call('/api/series/series-a/games', 'POST', firstGame, true);
+    expect(await duplicateNumber.json()).toMatchObject({ success: false, error: 'game_number_exists' });
+
+    const reusedChampion = await call('/api/series/series-a/games', 'POST', {
+      gameNumber: 2, blueTeam: [103, 1, 2, 3, 4], redTeam: [5, 6, 8, 9, 10],
+    }, true);
+    expect(reusedChampion.status).toBe(409);
+    expect(await reusedChampion.json()).toMatchObject({ success: false, error: 'champion_already_used' });
+    expect((await (await call('/api/series/series-a')).json() as { games: unknown[] }).games).toHaveLength(1);
+  });
+
+  it('valida equipos, ID y serie inexistente', async () => {
+    const { call } = setup();
+    const invalidId = await call('/api/series', 'POST', { seriesId: 'count' }, true);
+    expect(invalidId.status).toBe(400);
+    expect(await invalidId.json()).toMatchObject({ error: 'invalid_series_id' });
+
+    await call('/api/series', 'POST', { seriesId: 'series-a' }, true);
+    const duplicateChampion = await call('/api/series/series-a/games', 'POST', {
+      ...firstGame, redTeam: [103, 254, 238, 81, 111],
+    }, true);
+    expect(duplicateChampion.status).toBe(400);
+    expect(await duplicateChampion.json()).toMatchObject({ error: 'duplicate_champion' });
+
+    const invalidTeam = await call('/api/series/series-a/games', 'POST', { ...firstGame, blueTeam: [1, 2] }, true);
+    expect(await invalidTeam.json()).toMatchObject({ error: 'invalid_teams' });
+
+    const missing = await call('/api/series/absent/games', 'POST', firstGame, true);
+    expect(missing.status).toBe(404);
+    expect(await missing.json()).toMatchObject({ error: 'series_not_found' });
+  });
+
+  it('lista series con paginaciÃ³n y las borra con sus partidas', async () => {
+    const { call, database } = setup();
+    for (const seriesId of ['alpha', 'beta', 'gamma']) {
+      expect((await call('/api/series', 'POST', { seriesId }, true)).status).toBe(201);
+    }
+    await call('/api/series/beta/games', 'POST', firstGame, true);
+    const page = await (await call('/api/series?limit=1&offset=1')).json() as { series: Array<{ seriesId: string; gamesCount: number }>; total: number; limit: number; offset: number };
+    expect(page).toMatchObject({ total: 3, limit: 1, offset: 1 });
+    expect(page.series).toHaveLength(1);
+    const all = await (await call('/api/series?limit=3')).json() as { series: Array<{ seriesId: string; gamesCount: number }> };
+    expect(all.series.find((item) => item.seriesId === 'beta')?.gamesCount).toBe(1);
+    expect((await call('/api/series?limit=101')).status).toBe(400);
+    expect((await call('/api/series?offset=-1')).status).toBe(400);
+
+    expect((await call('/api/series/beta', 'DELETE')).status).toBe(401);
+    expect((await call('/api/series/beta', 'DELETE', undefined, true)).status).toBe(401);
+    expect((await call('/api/series/beta', 'DELETE', undefined, 'admin')).status).toBe(200);
+    expect(await (await call('/api/series/count')).json()).toEqual({ success: true, count: 2 });
+    expect((await call('/api/series/beta')).status).toBe(404);
+    expect((await call('/api/series/beta', 'DELETE', undefined, 'admin')).status).toBe(404);
+    const orphanGames = database.prepare('SELECT COUNT(*) AS count FROM games WHERE series_id = ?').get('beta') as { count: number };
+    expect(orphanGames.count).toBe(0);
+    const orphanEvents = database.prepare('SELECT COUNT(*) AS count FROM events WHERE series_id = ?').get('beta') as { count: number };
+    expect(orphanEvents.count).toBe(0);
+  });
+
+  it('consulta, corrige y borra partidas manteniendo las reglas Fearless', async () => {
+    const { call } = setup();
+    await call('/api/series', 'POST', { seriesId: 'playoffs' }, true);
+    await call('/api/series/playoffs/games', 'POST', secondGame, true);
+    await call('/api/series/playoffs/games', 'POST', firstGame, true);
+    const games = await (await call('/api/series/playoffs/games')).json() as { games: Array<{ gameNumber: number }> };
+    expect(games.games.map((game) => game.gameNumber)).toEqual([1, 2]);
+    expect(await (await call('/api/series/playoffs/games/1')).json()).toMatchObject({ gameNumber: 1, blueTeam: firstGame.blueTeam });
+    expect((await call('/api/series/playoffs/games/99')).status).toBe(404);
+    expect((await call('/api/series/playoffs/games/0')).status).toBe(400);
+
+    const gamePath = '/api/series/playoffs/games/1';
+    expect((await call(gamePath, 'PATCH', { blueTeam: secondGame.blueTeam })).status).toBe(401);
+    expect((await call(gamePath, 'PATCH', { blueTeam: secondGame.blueTeam }, true)).status).toBe(401);
+    const conflict = await call(gamePath, 'PATCH', { blueTeam: secondGame.blueTeam }, 'admin');
+    expect(conflict.status).toBe(409);
+    expect(await conflict.json()).toMatchObject({ error: 'champion_already_used' });
+    expect((await call(gamePath, 'PATCH', { blueTeam: [30, 31] }, 'admin')).status).toBe(400);
+    const corrected = await call(gamePath, 'PATCH', { blueTeam: [30, 31, 32, 33, 34] }, 'admin');
+    expect(corrected.status).toBe(200);
+    expect(await corrected.json()).toMatchObject({ blueTeam: [30, 31, 32, 33, 34], redTeam: firstGame.redTeam });
+    const afterCorrection = await (await call('/api/series/playoffs/used-champions')).json() as { usedChampions: number[] };
+    expect(afterCorrection.usedChampions).not.toContain(103);
+
+    expect((await call(gamePath, 'DELETE')).status).toBe(401);
+    expect((await call(gamePath, 'DELETE', undefined, true)).status).toBe(401);
+    expect((await call(gamePath, 'DELETE', undefined, 'admin')).status).toBe(200);
+    expect((await call(gamePath)).status).toBe(404);
+    const afterDelete = await (await call('/api/series/playoffs/used-champions')).json() as { usedChampions: number[] };
+    expect(afterDelete.usedChampions).not.toContain(266);
+    expect(afterDelete.usedChampions).toContain(20);
+    expect((await call('/api/series/playoffs/games', 'POST', { ...firstGame, gameNumber: 3 }, true)).status).toBe(201);
+    const events = await (await call('/api/series/playoffs/events')).json() as { events: Array<{ type: string }> };
+    expect(events.events.map((event) => event.type)).toEqual([
+      'series_created', 'game_created', 'game_created', 'game_updated', 'game_deleted', 'game_created',
+    ]);
+  });
+
+  it('asigna ganador y guarda un historial cronolÃ³gico sin alterar campeones', async () => {
+    const { call } = setup();
+    await call('/api/series', 'POST', { seriesId: 'final' }, true);
+    await call('/api/series/final/games', 'POST', firstGame, true);
+    const usedBefore = await (await call('/api/series/final/used-champions')).json();
+    const winnerPath = '/api/series/final/games/1/winner';
+    expect((await call(winnerPath, 'PUT', { winner: 'blue' })).status).toBe(401);
+    expect((await call(winnerPath, 'PUT', { winner: 'blue' }, true)).status).toBe(401);
+    expect((await call(winnerPath, 'PUT', { winner: 'green' }, 'admin')).status).toBe(400);
+    expect(await (await call(winnerPath, 'PUT', { winner: 'blue' }, 'admin')).json()).toMatchObject({ winner: 'blue' });
+    expect(await (await call(winnerPath, 'PUT', { winner: null }, 'admin')).json()).toMatchObject({ winner: null });
+    expect(await (await call('/api/series/final/used-champions')).json()).toEqual(usedBefore);
+
+    const events = await (await call('/api/series/final/events')).json() as { events: Array<{ type: string }>; total: number };
+    expect(events.events.map((event) => event.type)).toEqual(['series_created', 'game_created', 'winner_changed', 'winner_changed']);
     expect(events.total).toBe(4);
     const page = await (await call('/api/series/final/events?limit=2&offset=1')).json() as { events: Array<{ type: string }>; total: number };
     expect(page.events.map((event) => event.type)).toEqual(['game_created', 'winner_changed']);
