@@ -1,0 +1,55 @@
+.history-panel { margin-top: 16px; padding: 16px 19px 20px; }
+.history-panel-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+.history-sort { display: inline-flex; align-items: center; gap: 9px; padding: 8px 12px; color: #d7e0ec; border: 1px solid #355568; border-radius: 8px; background: #102c3d; cursor: pointer; white-space: nowrap; }
+.history-sort:hover { color: var(--gold); border-color: var(--gold); }
+.history-games { display: grid; gap: 16px; }
+.history-game { overflow: hidden; border: 1px solid #2c4a5b; border-radius: 10px; background: rgba(7, 23, 32, .48); }
+.history-game-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 13px 16px; }
+.history-game-header h3 { margin: 0 0 4px; color: #fff; font-size: 17px; }
+.history-game-header time { color: var(--text-secondary); font-size: 12px; }
+.history-winner-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.winner-status { display: inline-flex; align-items: center; gap: 7px; padding: 6px 10px; border: 1px solid #51606b; border-radius: 999px; color: #c8d3dc; font-size: 12px; white-space: nowrap; }
+.winner-status--blue { border-color: #2679a6; color: #9cdbff; background: #123a52; }
+.winner-status--red { border-color: #ac4960; color: #ffb1bc; background: #4a1c2b; }
+.winner-edit, .winner-save { padding: 8px 11px; border: 1px solid #5580a0; border-radius: 7px; color: #d5ecff; background: #15344a; font-size: 12px; cursor: pointer; }
+.winner-edit:hover, .winner-save:hover { border-color: #8ec7ec; background: #1d4864; }
+.winner-save { padding: 10px 15px; font-size: 13px; }
+.winner-save:disabled { opacity: .5; cursor: not-allowed; }
+.winner-options { margin: 18px 0 0; padding: 0; border: 0; }
+.winner-options legend { margin-bottom: 6px; color: #dce3ec; font-size: 13px; }
+.winner-modal .winner-options label { display: flex; align-items: center; gap: 10px; margin: 0; padding: 9px 10px; border-radius: 6px; cursor: pointer; }
+.winner-modal .winner-options label:has(input:checked) { background: #16384e; }
+.winner-modal .winner-options input { width: 16px; height: 16px; margin: 0; accent-color: #78bbeb; }
+.table-scroll { overflow-x: auto; }
+.history-table { width: 100%; border-collapse: collapse; color: #dce3ec; font-size: 13px; }
+.history-table th, .history-table td { border-top: 1px solid #1c3544; text-align: left; }
+.history-table thead th { padding: 10px 16px; background: rgba(13, 35, 48, .81); color: #d7e0ec; font-weight: 650; white-space: nowrap; }
+.history-table thead th:first-child { width: 125px; }
+.history-table thead th:nth-child(2), .history-table thead th:nth-child(3) { width: calc((100% - 125px) / 2); }
+.history-table .team-heading--blue { color: #9cdbff; }
+.history-table .team-heading--red { color: #ffb1bc; }
+.history-table tbody th { padding: 6px 16px; color: #f1f5f8; font-weight: 650; white-space: nowrap; }
+.history-table td { padding: 6px 16px; }
+.history-table td + td { border-left: 1px solid #1a3443; }
+.history-table tbody tr:hover { background: rgba(28, 63, 82, .48); }
+.history-champion { display: inline-flex; align-items: center; gap: 9px; min-height: 32px; }
+.history-champion img { width: 29px; height: 29px; object-fit: cover; border-radius: 5px; background: #243b4a; }
+.history-champion strong { color: #fff; font-weight: 650; }
+.history-champion small { color: var(--text-secondary); font-size: 11px; }
+.history-missing-champion { color: var(--text-secondary); }
+.role-mark { width: 27px; display: inline-block; margin-right: 8px; color: #a7b8cb; font-size: 23px; font-weight: 800; text-align: center; line-height: 1; vertical-align: middle; }
+.role-mark--jg { font-size: 25px; }
+.role-mark--sup { font-size: 21px; }
+.used-panel { margin-top: 16px; padding: 18px 20px; }
+.used-panel h2 { margin: 0; color: var(--gold); font-size: 20px; }
+.used-panel p { margin: 8px 0; color: var(--text-secondary); font-size: 13px; }
+.used-id-grid { display: flex; flex-wrap: wrap; gap: 8px; margin: 15px 0; }
+.used-id-grid span { border: 1px solid #32546a; border-radius: 5px; background: #0f2939; padding: 6px 9px; color: #bce5ff; font-size: 13px; }
+.read-only-note { padding-top: 12px; border-top: 1px solid var(--border); }
+@media (max-width: 780px) {
+  .history-table { min-width: 620px; }
+}
+@media (max-width: 540px) {
+  .history-panel { padding-left: 12px; padding-right: 12px; }
+  .history-game-header { align-items: flex-start; flex-direction: column; gap: 10px; }
+}

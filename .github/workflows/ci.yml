@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [develop, main]
+  pull_request:
+    branches: [develop, main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Run tests
+        run: npm test
+      - name: Typecheck and build
+        run: npm run build
+
+  tag_release:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Create version tag
+        shell: bash
+        env:
+          RELEASE_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        run: |
+          version=$(node -p "require('./package.json').version")
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid release version: $version" >&2
+            exit 1
+          fi
+          if git show-ref --verify --quiet "refs/tags/$version"; then
+            tagged_commit="$(git rev-parse "refs/tags/$version^{commit}")"
+            if [[ "$tagged_commit" == "$GITHUB_SHA" ]]; then
+              echo "Tag $version already points to this commit."
+              exit 0
+            fi
+            if [[ "$RELEASE_COMMIT_MESSAGE" == "Rebuild release $version:"* ]]; then
+              git config user.name "github-actions[bot]"
+              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+              git tag -fa "$version" "$GITHUB_SHA" -m "Fearless Sync $version"
+              git push --force origin "refs/tags/$version"
+              exit 0
+            fi
+            echo "Tag $version already exists on another commit." >&2
+            exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$version" "$GITHUB_SHA" -m "Fearless Sync $version"
+          git push origin "refs/tags/$version"
