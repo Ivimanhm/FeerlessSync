@@ -46,9 +46,11 @@ El frontend usa `/api` del mismo origen tanto en desarrollo (proxy de Vite) como
 Sites. Deja `VITE_API_BASE_URL` sin definir en Sites para usar esa ruta.
 
 El Worker de `src/server/worker.ts` usa el mismo manejador API que el servidor local.
-Las respuestas API y el health permiten CORS desde cualquier origen; las rutas de
-escritura y borrado siguen protegidas por Bearer token. CORS permite que una app Tauri
-u otra app web llame a la API, pero no sustituye la autenticación.
+Las respuestas API y el health permiten CORS desde cualquier origen. Crear series y
+partidas es público y no requiere token. Las operaciones administrativas, incluida la
+corrección de equipos, siguen protegidas por `FEARLESS_ADMIN_TOKEN`. CORS permite que
+una app Tauri u otra app web llame a la API, pero no sustituye la autenticación de esas
+operaciones.
 
 La integración desplegada se verificó con `GET /api/health` (200), preflight CORS
 (204, incluyendo `Authorization`) y lectura de los datos existentes. Los cambios del

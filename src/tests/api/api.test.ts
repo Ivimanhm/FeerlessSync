@@ -161,11 +161,13 @@ describe('API local de series', () => {
     expect((await call('/api/series/playoffs/games/0')).status).toBe(400);
 
     const gamePath = '/api/series/playoffs/games/1';
+    expect((await call(gamePath, 'PATCH', { blueTeam: secondGame.blueTeam })).status).toBe(401);
+    expect((await call(gamePath, 'PATCH', { blueTeam: secondGame.blueTeam }, true)).status).toBe(401);
     const conflict = await call(gamePath, 'PATCH', { blueTeam: secondGame.blueTeam }, 'admin');
     expect(conflict.status).toBe(409);
     expect(await conflict.json()).toMatchObject({ error: 'champion_already_used' });
     expect((await call(gamePath, 'PATCH', { blueTeam: [30, 31] }, 'admin')).status).toBe(400);
-    const corrected = await call(gamePath, 'PATCH', { blueTeam: [30, 31, 32, 33, 34] });
+    const corrected = await call(gamePath, 'PATCH', { blueTeam: [30, 31, 32, 33, 34] }, 'admin');
     expect(corrected.status).toBe(200);
     expect(await corrected.json()).toMatchObject({ blueTeam: [30, 31, 32, 33, 34], redTeam: firstGame.redTeam });
     const afterCorrection = await (await call('/api/series/playoffs/used-champions')).json() as { usedChampions: number[] };
@@ -339,7 +341,7 @@ describe('API local de series', () => {
       });
       expect(createGame.status).toBe(201);
       const corrected = await fetch(`${base}/api/series/http-series/games/1`, {
-        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        method: 'PATCH', headers: { Authorization: `Bearer ${adminToken}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ blueTeam: [30, 31, 32, 33, 34] }),
       });
       expect(await corrected.json()).toMatchObject({ blueTeam: [30, 31, 32, 33, 34] });

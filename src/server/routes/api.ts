@@ -154,6 +154,7 @@ export function createApiHandler(repository: SeriesRepository, options: ApiOptio
           return json({ success: true, seriesId, ...await databaseCall(() => repository.getGame(seriesId, gameNumber)) });
         }
         if (parts.length === 5 && method === 'PATCH') {
+          requireAdmin(request, options.adminToken ?? '');
           const body = await bodyObject(request);
           if ((!('blueTeam' in body) && !('redTeam' in body)) || 'gameNumber' in body || 'winner' in body) {
             throw new ApiFault(400, 'invalid_body', 'Indica blueTeam o redTeam para corregir la partida.');

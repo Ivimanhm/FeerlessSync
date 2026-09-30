@@ -89,7 +89,7 @@ npm.cmd run dev
 La web consulta `fearless-001` al abrirse. Con `VITE_API_BASE_URL` configurada,
 las series y partidas se crean mediante la API y persisten en `src/server/data/fearless.db`.
 
-Cuando la serie tenga partidas, la web muestra «Borrar partidas» y «Eliminar serie». La primera acción requiere la clave de administrador y escribir `BORRAR`; conserva la serie. La segunda requiere la misma clave y escribir el ID exacto; elimina la serie, sus partidas y eventos. FEARLESS_ADMIN_TOKEN se configura por separado en la API local y en Sites; sin ella, las acciones administrativas responden 503. La clave se envía en `Authorization` durante la petición y se limpia del diálogo al cerrarlo.
+Cuando la serie tenga partidas, la web muestra «Borrar partidas» y «Eliminar serie». La primera acción requiere la clave de administrador y escribir `BORRAR`; conserva la serie. La segunda requiere la misma clave y escribir el ID exacto; elimina la serie, sus partidas y eventos. FEARLESS_ADMIN_TOKEN se configura por separado en la API local y en Sites; sin ella, las acciones administrativas responden 503. La clave se envía en `Authorization` durante la petición y se limpia del diálogo al cerrarlo. Crear series y partidas por API es público y no requiere token; corregir equipos y asignar ganadores sí requieren la clave.
 
 `VITE_API_BASE_URL` puede apuntar a otra API autorizada. El mock solo se activa
 en desarrollo cuando no hay URL de API configurada; la compilación de Sites
@@ -98,7 +98,7 @@ consulta la API del mismo origen.
 ## Páginas y catálogo
 
 - Inicio (`#/`): búsqueda, estado, fecha, administración, estadísticas y campeones disponibles. La rejilla ocupa la altura libre de la ventana cuando hay suficientes resultados y mantiene su scroll propio; no hay tabla de historial.
-- Historial (`#/historial`): una tabla por partida, con ambos equipos ordenados por TOP, JG, MID, ADC y SUP y el ganador. Permite seleccionar, cambiar o quitar el ganador con la clave de escritura de la API.
+- Historial (`#/historial`): una tabla por partida, con ambos equipos ordenados por TOP, JG, MID, ADC y SUP y el ganador. Permite seleccionar, cambiar o quitar el ganador con la clave de administrador.
 
 El catálogo visual y los 173 retratos están incluidos en `src/frontend/`. La interfaz usa las versiones JPG optimizadas de los retratos, `Logo-small.png` y `landscape.jpg`; conserva los PNG originales como fuente. El Worker incluye estas imágenes optimizadas en el build para servirlas sin depender de un CDN externo. La instantánea visual indica la versión 16.18.1 de [Riot Data Dragon](https://developer.riotgames.com/docs/lol#data-dragon). La página no necesita Internet para mostrar las imágenes ni filtrar el catálogo local. La ruta API `/availability` consulta un catálogo remoto actualizado y sí necesita acceso HTTP a Riot. Cada equipo guardado usa el orden TOP, JG, MID, ADC y SUP; Historial muestra esas posiciones por índice. Los nombres, retratos y posiciones iniciales proceden de `PersoBuilder/src/frontend/public/champions.json` (conjunto generado el 14 de septiembre de 2026). Para que el filtro también muestre flex picks, las posiciones se ampliaron con los [listados por posición de OP.GG](https://op.gg/lol/champions) del parche 16.19. El filtro es una instantánea más amplia que el JSON de PersoBuilder y puede variar con el metajuego.
 
