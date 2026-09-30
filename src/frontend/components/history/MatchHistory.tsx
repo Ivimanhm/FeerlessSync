@@ -2,6 +2,7 @@ import { ChevronsUpDown, Clock3, Trophy } from 'lucide-preact';
 import { useMemo, useState } from 'preact/hooks';
 import type { Game, PlayedChampion, Role, TeamSide } from '../../types/fearless';
 import WinnerDialog from './WinnerDialog';
+import PortraitImage from '../champions/PortraitImage';
 
 interface MatchHistoryProps {
   games: Game[];
@@ -18,21 +19,21 @@ function championAt(game: Game, team: TeamSide, role: Role): PlayedChampion | un
   return game.champions.find((champion) => champion.team === team && champion.role === role);
 }
 
-function ChampionCell({ champion }: { champion: PlayedChampion | undefined }) {
+function ChampionCell({ champion, side, eager }: { champion: PlayedChampion | undefined; side: TeamSide; eager: boolean }) {
   if (!champion) return <span class="history-missing-champion">—</span>;
-  return <span class="history-champion">
-    {champion.imageUrl && <img src={champion.imageUrl} alt="" loading="lazy" />}
+  return <span class={'history-champion history-champion--' + side}>
+    {side === 'blue' && <PortraitImage key={`${champion.championId}:${champion.imageUrl}`} name={champion.championName} src={champion.imageUrl} eager={eager} />}
     <strong>{champion.championName}</strong>
-    <small>#{champion.championId}</small>
+    {side === 'red' && <PortraitImage key={`${champion.championId}:${champion.imageUrl}`} name={champion.championName} src={champion.imageUrl} eager={eager} />}
   </span>;
 }
 
 export default function MatchHistory({ games, seriesId, onWinnerChanged }: MatchHistoryProps) {
-  const [ascending, setAscending] = useState(true);
+  const [ascending, setAscending] = useState(false);
   const [selectedGameNumber, setSelectedGameNumber] = useState<number | null>(null);
   const selectedGame = games.find((game) => game.gameNumber === selectedGameNumber);
   const sortedGames = useMemo(
-    () => [...games].sort((a, b) => ascending ? a.gameNumber - b.gameNumber : b.gameNumber - a.gameNumber),
+    () => [...games].sort((a, b) => (ascending ? 1 : -1) * (Date.parse(a.date) - Date.parse(b.date) || a.gameNumber - b.gameNumber)),
     [games, ascending],
   );
 
@@ -41,12 +42,12 @@ export default function MatchHistory({ games, seriesId, onWinnerChanged }: Match
     <section class="content-panel history-panel" aria-labelledby="history-heading">
       <div class="panel-header history-panel-header">
         <div class="panel-title"><Clock3 size={27} strokeWidth={1.9} aria-hidden="true" /><h2 id="history-heading"><span>Historial</span> de partidas jugadas</h2></div>
-        <button class="history-sort" type="button" onClick={() => setAscending(!ascending)} aria-label="Ordenar por Partida">
-          Partida <ChevronsUpDown size={16} strokeWidth={1.5} aria-hidden="true" />
+        <button class="history-sort" type="button" onClick={() => setAscending(!ascending)} aria-label="Cambiar orden del historial" title={ascending ? 'Más antiguas primero' : 'Más recientes primero'}>
+          {ascending ? 'Más antiguas primero' : 'Más recientes primero'} <ChevronsUpDown size={16} strokeWidth={1.5} aria-hidden="true" />
         </button>
       </div>
       <div class="history-games">
-        {sortedGames.map((game) => <article class="history-game" key={game.gameNumber} aria-labelledby={'game-heading-' + game.gameNumber}>
+        {sortedGames.map((game, index) => <article class="history-game" key={game.gameNumber} aria-labelledby={'game-heading-' + game.gameNumber}>
           <header class="history-game-header">
             <div>
               <h3 id={'game-heading-' + game.gameNumber}>Partida {game.gameNumber}</h3>
@@ -65,14 +66,14 @@ export default function MatchHistory({ games, seriesId, onWinnerChanged }: Match
           <div class="table-scroll">
             <table class="history-table" aria-label={'Partida ' + game.gameNumber + ': equipos por posición'}>
               <thead><tr>
-                <th scope="col">Posición</th>
-                <th scope="col" class="team-heading--blue">Equipo Azul</th>
-                <th scope="col" class="team-heading--red">Equipo Rojo</th>
+                <th scope="col" class="team-heading--blue"><span class="history-team-heading"><span class="history-team-gem" />Equipo Azul</span></th>
+                <th scope="col" class="history-position-heading"><span class="sr-only">Posición</span></th>
+                <th scope="col" class="team-heading--red"><span class="history-team-heading"><span class="history-team-gem" />Equipo Rojo</span></th>
               </tr></thead>
               <tbody>{roleOrder.map((role) => <tr key={role}>
-                <th scope="row"><span class={'role-mark role-mark--' + role.toLowerCase()}>{roleSymbols[role]}</span>{role}</th>
-                <td><ChampionCell champion={championAt(game, 'blue', role)} /></td>
-                <td><ChampionCell champion={championAt(game, 'red', role)} /></td>
+                <td><ChampionCell champion={championAt(game, 'blue', role)} side="blue" eager={index === 0} /></td>
+                <th scope="row" class="history-position"><img src={'/icons/roles/' + roleAssets[role] + '.svg'} alt="" /><small>{role}</small></th>
+                <td><ChampionCell champion={championAt(game, 'red', role)} side="red" eager={index === 0} /></td>
               </tr>)}</tbody>
             </table>
           </div>
@@ -84,6 +85,6 @@ export default function MatchHistory({ games, seriesId, onWinnerChanged }: Match
   );
 }
 
-const roleSymbols: Record<Role, string> = {
-  TOP: '◩', JG: '♆', MID: '◩', ADC: '◪', SUP: '✣',
+const roleAssets: Record<Role, string> = {
+  TOP: 'top', JG: 'jungle', MID: 'mid', ADC: 'adc', SUP: 'support',
 };

@@ -24,6 +24,10 @@ button, input, select { font: inherit; }
 button { cursor: pointer; }
 button:disabled { cursor: wait; }
 button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.portrait-image { position: relative; display: inline-grid; place-items: center; flex: 0 0 auto; overflow: hidden; background: linear-gradient(135deg, #1d3546, #10212d 50%, #273447); }
+.portrait-image-fallback { display: grid; place-items: center; width: 100%; height: 100%; color: #e6c879; font-size: 14px; font-weight: 700; letter-spacing: 1px; }
+.portrait-image img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .16s ease-out; }
+.portrait-image--loaded img { opacity: 1; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
 .app-shell { min-height: 100vh; display: grid; grid-template-columns: 290px minmax(0, 1fr); background: #020b12; }
@@ -56,7 +60,10 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
 .sidebar--collapsed .nav-item { justify-content: center; padding: 0; }
 .sidebar--collapsed .nav-item--active::before { left: -9px; }
 
-.app-main { min-width: 0; min-height: 100vh; background: linear-gradient(180deg, rgba(3, 11, 18, .25), rgba(3, 11, 18, .15)), url('/landscape.png') center top / cover fixed; }
+.app-main { min-width: 0; min-height: 100vh; background: linear-gradient(180deg, rgba(3, 11, 18, .25), rgba(3, 11, 18, .15)), url('/landscape.jpg') center top / cover fixed; }
+.mock-banner { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; padding: 10px 14px; border: 1px solid rgba(244, 195, 77, .45); border-radius: 9px; background: rgba(40, 31, 10, .86); color: #f8e7b6; font-size: 13px; }
+.mock-banner button { flex: 0 0 auto; padding: 6px 10px; border: 1px solid #d9a945; border-radius: 6px; background: rgba(244, 195, 77, .12); color: #ffe5a0; }
+@media (max-width: 650px) { .mock-banner { align-items: flex-start; flex-direction: column; } }
 .topbar { height: 60px; padding: 0 25px 0 39px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(172, 122, 45, .31); background: rgba(3, 11, 17, .52); }
 .topbar-left, .breadcrumb, .header-actions { display: flex; align-items: center; }
 .breadcrumb { gap: 15px; color: #d6dce6; font-size: 15px; }

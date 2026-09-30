@@ -1,8 +1,10 @@
 import type { Champion, FearlessSeries, Game, PlayedChampion, Role, TeamSide } from '../../types/fearless';
 import { getChampionCatalog } from '../championCatalog';
 import { createFearlessApiClient } from './client';
+import { mockMode } from './mode';
+import { clearMockGames, deleteMockSeries, getMockSeries, setMockWinner } from './mockSeries';
 
-interface StoredGame {
+export interface StoredGame {
   gameNumber: number;
   blueTeam: number[];
   redTeam: number[];
@@ -12,7 +14,7 @@ interface StoredGame {
 
 const roleOrder: Role[] = ['TOP', 'JG', 'MID', 'ADC', 'SUP'];
 
-interface StoredSeries {
+export interface StoredSeries {
   seriesId: string;
   updatedAt?: string | null;
   games: StoredGame[];
@@ -78,6 +80,7 @@ export async function getFearlessSeries(seriesId: string): Promise<FearlessSerie
     throw new Error('El identificador de serie está vacío.');
   }
 
+  if (mockMode) return mapStoredSeries(getMockSeries(normalizedId), await getChampionCatalog());
   const baseUrl = import.meta.env.VITE_API_BASE_URL?.trim() || window.location.origin;
   const client = createFearlessApiClient({ baseUrl });
   const [response, catalog] = await Promise.all([client.getSeries(normalizedId), getChampionCatalog()]);
@@ -86,6 +89,7 @@ export async function getFearlessSeries(seriesId: string): Promise<FearlessSerie
 }
 
 export async function clearSeriesGames(seriesId: string, token: string): Promise<number> {
+  if (mockMode) return clearMockGames(seriesId);
   const baseUrl = import.meta.env.VITE_API_BASE_URL?.trim() || window.location.origin;
   const client = createFearlessApiClient({ baseUrl, getAccessToken: () => token });
   const result = await client.clearGames(seriesId);
@@ -98,6 +102,7 @@ export async function clearSeriesGames(seriesId: string, token: string): Promise
 
 /** Saves a game's winner with an admin key kept only for this request. */
 export async function setGameWinner(seriesId: string, gameNumber: number, winner: TeamSide | null, token: string): Promise<void> {
+  if (mockMode) { setMockWinner(seriesId, gameNumber, winner); return; }
   const baseUrl = import.meta.env.VITE_API_BASE_URL?.trim() || window.location.origin;
   const client = createFearlessApiClient({ baseUrl, getAccessToken: () => token });
   const result = await client.setWinner(seriesId, gameNumber, { winner });
@@ -111,6 +116,7 @@ export async function setGameWinner(seriesId: string, gameNumber: number, winner
 
 /** Permanently removes a series using an admin token held only by the caller. */
 export async function deleteFearlessSeries(seriesId: string, token: string): Promise<void> {
+  if (mockMode) { deleteMockSeries(seriesId); return; }
   const baseUrl = import.meta.env.VITE_API_BASE_URL?.trim() || window.location.origin;
   const client = createFearlessApiClient({ baseUrl, getAccessToken: () => token });
   const result = await client.deleteSeries(seriesId);

@@ -1,23 +1,16 @@
-import { Sparkles } from 'lucide-preact';
-import { useState } from 'preact/hooks';
 import type { Champion } from '../../types/fearless';
+import PortraitImage from './PortraitImage';
 
 interface ChampionCardProps {
   champion: Champion;
+  eager?: boolean;
 }
 
-export default function ChampionCard({ champion }: ChampionCardProps) {
-  const [imageFailed, setImageFailed] = useState(false);
-  const initials = champion.name.split(/[ '\-]+/).map((word) => word[0]).join('').slice(0, 2).toUpperCase();
-
+export default function ChampionCard({ champion, eager = false }: ChampionCardProps) {
   return (
     <div class="champion-card" title={`${champion.name} · ${champion.roles.join(', ')}`}>
       <div class="champion-portrait">
-        {champion.imageUrl && !imageFailed ? (
-          <img src={champion.imageUrl} alt="" loading="lazy" onError={() => setImageFailed(true)} />
-        ) : (
-          <span class="portrait-fallback"><Sparkles size={17} strokeWidth={1.4} /><b>{initials}</b></span>
-        )}
+        <PortraitImage key={champion.imageUrl} name={champion.name} src={champion.imageUrl} eager={eager} />
       </div>
       <span class="champion-name">{champion.name}</span>
     </div>

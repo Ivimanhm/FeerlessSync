@@ -15,19 +15,15 @@ Requiere Node.js 24. En la raíz del proyecto:
 
 ```powershell
 npm.cmd ci
-npm.cmd run dev:api
-```
-
-En otra terminal:
-
-```powershell
 npm.cmd run dev
 ```
 
-Vite sirve la web en `http://localhost:5173` y dirige `/api` a la API local en
-`http://127.0.0.1:8787`. Esta API guarda los datos en SQLite. Para operaciones de
-escritura y borrado hay que configurar las claves del proceso del servidor; consulta
-la [guía de desarrollo](docs/README.md). La web no crea datos de muestra.
+Vite sirve la web en `http://localhost:5173` con la serie de ejemplo
+`fearless-001`. Puedes consultar Inicio e Historial, cambiar ganadores y probar
+los borrados con cualquier clave no vacía. Los cambios quedan en el navegador;
+«Restaurar ejemplo» repone los datos iniciales. No hace falta iniciar la API.
+
+Para usar la API local real y SQLite, consulta la [guía de desarrollo](docs/README.md).
 
 ## Compilación y Sites
 
