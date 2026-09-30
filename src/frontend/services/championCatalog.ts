@@ -4,7 +4,7 @@ import type { Champion, Role } from '../types/fearless';
 const catalog: Champion[] = snapshot.champions.map((champion) => ({
   id: champion.id,
   name: champion.name,
-  imageUrl: `/champions/${champion.asset}.png`,
+  imageUrl: `/champions/${champion.asset}.jpg`,
   roles: champion.roles as Role[],
   searchAliases: [champion.asset],
 })).sort((a, b) => a.name.localeCompare(b.name, 'es'));

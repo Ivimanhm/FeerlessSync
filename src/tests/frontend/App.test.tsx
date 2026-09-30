@@ -66,8 +66,9 @@ describe('Fearless Sync', () => {
 
     expect(screen.getByRole('heading', { name: 'Historial de partidas', level: 1 })).toBeTruthy();
     expect(tables).toHaveLength(7);
-    fireEvent.click(screen.getByRole('button', { name: 'Ordenar por Partida' }));
-    expect(screen.getAllByRole('table')[0].getAttribute('aria-label')).toBe('Partida 7: equipos por posición');
+    expect(tables[0].getAttribute('aria-label')).toBe('Partida 7: equipos por posición');
+    fireEvent.click(screen.getByRole('button', { name: 'Cambiar orden del historial' }));
+    expect(screen.getAllByRole('table')[0].getAttribute('aria-label')).toBe('Partida 1: equipos por posición');
   });
 
   it('busca otra serie, ignora IDs vacíos como Sites y permite reintentar errores', async () => {
@@ -137,9 +138,19 @@ describe('Fearless Sync', () => {
 
   it('muestra un placeholder si falla el retrato de un campeón', () => {
     const { container } = render(<ChampionCard champion={{ id: 103, name: 'Ahri', roles: ['MID'], imageUrl: '/inexistente.png' }} />);
+    expect(container.querySelector('.portrait-image-fallback')?.textContent).toBe('A');
+    expect(container.querySelector('.portrait-image--loaded')).toBeNull();
     fireEvent.error(container.querySelector('img')!);
     expect(container.querySelector('img')).toBeNull();
     expect(screen.getByText('A')).toBeTruthy();
+  });
+
+  it('muestra el retrato sobre el placeholder cuando termina de cargar', () => {
+    const { container } = render(<ChampionCard champion={{ id: 103, name: 'Ahri', roles: ['MID'], imageUrl: '/champions/Ahri.jpg' }} eager />);
+    const portrait = container.querySelector('img')!;
+    expect(portrait.getAttribute('loading')).toBe('eager');
+    fireEvent.load(portrait);
+    expect(container.querySelector('.portrait-image--loaded')).toBeTruthy();
   });
 
   it('distingue una serie inexistente de un fallo de conexión', async () => {
@@ -169,7 +180,7 @@ describe('Fearless Sync', () => {
     await waitFor(() => expect(screen.getByRole('status').textContent).toBe('Partidas borradas: 7'));
     fireEvent.click(within(screen.getByRole('navigation', { name: 'Navegación principal' })).getByRole('button', { name: 'Historial' }));
     expect(screen.getByRole('heading', { name: 'Esperando la primera partida' })).toBeTruthy();
-    expect(screen.getByText('Todavía no se han bloqueado campeones.')).toBeTruthy();
+    expect(screen.queryByRole('heading', { name: 'Campeones utilizados' })).toBeNull();
   });
 
   it('mantiene abierto el diálogo y muestra el error de clave de Sites', async () => {
@@ -201,6 +212,17 @@ describe('Fearless Sync', () => {
     expect(within(table).getByRole('row', { name: /TOP/ }).textContent).toContain('Campeón 1');
     expect(within(table).getByRole('row', { name: /TOP/ }).textContent).toContain('Campeón 6');
     expect(screen.getByText('Ganador: Equipo Azul')).toBeTruthy();
+  });
+
+  it('ordena las partidas por fecha reciente incluso si el número no coincide', () => {
+    const games = [
+      { gameNumber: 5, date: '2026-09-23T12:00:00Z', winner: null, champions: [] },
+      { gameNumber: 2, date: '2026-09-25T12:00:00Z', winner: null, champions: [] },
+    ];
+    render(<MatchHistory seriesId="fearless-001" onWinnerChanged={async () => {}} games={games} />);
+    expect(screen.getAllByRole('table')[0].getAttribute('aria-label')).toBe('Partida 2: equipos por posición');
+    fireEvent.click(screen.getByRole('button', { name: 'Cambiar orden del historial' }));
+    expect(screen.getAllByRole('table')[0].getAttribute('aria-label')).toBe('Partida 5: equipos por posición');
   });
 
   it('guarda el ganador desde Historial con la clave de administrador y refresca la partida', async () => {

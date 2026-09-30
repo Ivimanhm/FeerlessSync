@@ -25,7 +25,7 @@ export default function Sidebar({ status, activePage, onNavigate, mobileOpen, on
       {mobileOpen && <button class="sidebar-scrim" type="button" onClick={onCloseMobile} aria-label="Cerrar menú" />}
       <aside class={`sidebar ${mobileOpen ? 'sidebar--open' : ''} ${collapsed ? 'sidebar--collapsed' : ''}`}>
         <div class="sidebar-brand">
-          <img class="brand-mark" src="/Logo.png?v=20260927" alt="" />
+          <img class="brand-mark" src="/Logo-small.png" alt="" width="43" height="43" decoding="async" />
           <div class="brand-copy">
             <strong>PersoBuilder</strong>
             <span>TU DRAFT, MIS REGLAS</span>

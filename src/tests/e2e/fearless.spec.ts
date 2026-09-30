@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
-for (const viewport of [{ width: 1672, height: 941 }, { width: 1366, height: 768 }, { width: 1024, height: 768 }, { width: 390, height: 844 }]) {
-  test(`Inicio muestra cuatro filas y desplaza solo los campeones a ${viewport.width}px`, async ({ page }, testInfo) => {
+for (const viewport of [{ width: 1672, height: 1200 }, { width: 1672, height: 941 }, { width: 1366, height: 768 }, { width: 1024, height: 768 }, { width: 390, height: 844 }]) {
+  test(`Inicio aprovecha la altura disponible a ${viewport.width}×${viewport.height}px`, async ({ page }, testInfo) => {
     await page.setViewportSize(viewport);
     await page.goto('/');
     const scroll = page.getByRole('region', { name: 'Campeones disponibles' });
@@ -12,11 +12,16 @@ for (const viewport of [{ width: 1672, height: 941 }, { width: 1366, height: 768
       const bounds = element.getBoundingClientRect();
       const cards = [...element.querySelectorAll('.champion-card')].map((card) => card.getBoundingClientRect());
       const rows = new Set(cards.filter((card) => card.top >= bounds.top && card.bottom <= bounds.bottom + 1).map((card) => Math.round(card.top)));
-      return { rows: rows.size, height: element.clientHeight, scrollHeight: element.scrollHeight, pageHeight: document.documentElement.scrollHeight, viewport: window.innerHeight };
+      const dashboard = element.closest('.dashboard')!;
+      return { rows: rows.size, height: element.clientHeight, scrollHeight: element.scrollHeight, pageHeight: document.documentElement.scrollHeight, viewport: window.innerHeight, panelBottom: element.closest('.champion-panel')!.getBoundingClientRect().bottom, bottomPadding: parseFloat(getComputedStyle(dashboard).paddingBottom) };
     });
-    expect(metrics.rows).toBe(4);
+    expect(metrics.rows).toBeGreaterThanOrEqual(2);
+    if (viewport.height >= 1100) expect(metrics.rows).toBeGreaterThan(4);
     expect(metrics.scrollHeight).toBeGreaterThan(metrics.height);
-    if (viewport.width >= 781) expect(metrics.pageHeight).toBeLessThanOrEqual(metrics.viewport + 1);
+    if (viewport.width >= 781) {
+      expect(metrics.pageHeight).toBeLessThanOrEqual(metrics.viewport + 1);
+      expect(Math.abs(metrics.viewport - metrics.panelBottom - metrics.bottomPadding)).toBeLessThanOrEqual(2);
+    }
     const before = await page.evaluate(() => ({ scrollY: window.scrollY, heading: document.querySelector('h1')!.getBoundingClientRect().top }));
     await scroll.hover();
     await page.mouse.wheel(0, 420);
@@ -28,6 +33,11 @@ for (const viewport of [{ width: 1672, height: 941 }, { width: 1366, height: 768
     expect(await page.evaluate(() => window.scrollY)).toBe(before.scrollY);
     await scroll.evaluate((element) => { element.scrollTop = 0; });
     await page.screenshot({ path: testInfo.outputPath(`home-${viewport.width}.png`), fullPage: true });
+    if (viewport.width === 1672 && viewport.height === 941) {
+      await page.getByRole('textbox', { name: 'Buscar campeón' }).fill('Akshan');
+      await expect(scroll.locator('.champion-card')).toHaveCount(1);
+      expect(await page.locator('.champion-panel').evaluate((element) => element.getBoundingClientRect().height)).toBeLessThan(250);
+    }
   });
 }
 
@@ -39,7 +49,7 @@ test('consulta los equipos completos y guarda el ganador desde Historial', async
   await expect(topRow).toContainText('Aatrox');
   await expect(topRow).toContainText('Darius');
   await expect(page.getByText('Ganador: Equipo Azul')).toBeVisible();
-  await expect(page.locator('.used-id-grid span')).toHaveCount(20);
+  await expect(page.getByRole('heading', { name: 'Campeones utilizados' })).toHaveCount(0);
   await page.screenshot({ path: testInfo.outputPath('history.png'), fullPage: true });
   await page.getByRole('button', { name: 'Cambiar ganador de la partida 1' }).click();
   const dialog = page.getByRole('dialog');

@@ -10,6 +10,8 @@ import DeleteSeriesDialog from '../components/series/DeleteSeriesDialog';
 import Header from '../components/layout/Header';
 import SeriesSearch from '../components/series/SeriesSearch';
 import Sidebar from '../components/layout/Sidebar';
+import { mockMode } from '../services/api/mode';
+import { resetMockSeries } from '../services/api/mockSeries';
 
 const updatedFormatter = new Intl.DateTimeFormat('es-ES', { dateStyle: 'medium', timeStyle: 'short' });
 
@@ -39,6 +41,10 @@ export default function App() {
       <div class="app-main">
         <Header activePage={page} onOpenMobile={() => setMobileMenuOpen(true)} onGoHome={() => navigate('Inicio')} />
         <main class={`dashboard ${page === 'Inicio' ? 'dashboard--home' : ''}`}>
+          {mockMode && <div class="mock-banner" role="note">
+            <span><strong>Vista local de ejemplo.</strong> Los cambios se guardan solo en este navegador. Para probar las acciones, escribe cualquier clave de administrador.</span>
+            <button type="button" onClick={() => { resetMockSeries(); setSearchId('fearless-001'); void loadSeries('fearless-001'); }}>Restaurar ejemplo</button>
+          </div>}
           <div class="page-heading">
             <h1>{page === 'Inicio' ? 'Fearless Sync' : 'Historial de partidas'}</h1>
             <p>{page === 'Inicio' ? 'Gestiona tus series de partidas y analiza los campeones disponibles.' : 'Consulta las partidas recientes de tu serie Fearless.'}</p>

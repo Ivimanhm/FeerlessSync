@@ -9,6 +9,9 @@ const mimeTypes = {
   '.css': 'text/css; charset=utf-8',
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
+  '.svg': 'image/svg+xml',
+  '.jpg': 'image/jpeg',
+  '.png': 'image/png',
 };
 const files = new Map([['/', path.join(dist, 'index.html')]]);
 for (const assetPath of assetPaths) {
@@ -17,6 +20,14 @@ for (const assetPath of assetPaths) {
     throw new Error(`Invalid or missing built asset: ${assetPath}`);
   }
   files.set(assetPath, filename);
+}
+for (const role of ['top', 'jungle', 'mid', 'adc', 'support']) {
+  files.set(`/icons/roles/${role}.svg`, path.join(dist, 'icons', 'roles', `${role}.svg`));
+}
+files.set('/Logo-small.png', path.join(dist, 'Logo-small.png'));
+files.set('/landscape.jpg', path.join(dist, 'landscape.jpg'));
+for (const filename of fs.readdirSync(path.join(dist, 'champions')).filter((name) => name.endsWith('.jpg'))) {
+  files.set(`/champions/${filename}`, path.join(dist, 'champions', filename));
 }
 
 const entries = [...files].map(([url, filename]) => {

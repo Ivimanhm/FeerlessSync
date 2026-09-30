@@ -16,7 +16,7 @@ src/
       layout/        # Cabecera y menú lateral
       champions/     # Rejilla y tarjetas de campeones
       series/        # Búsqueda, estadísticas y borrado
-      history/       # Tabla de partidas y campeones usados
+      history/       # Tablas de partidas y edición de ganadores
       ui/            # Marca, indicadores y tarjetas comunes
     services/
       api/           # Cliente HTTP y consultas de series
@@ -61,31 +61,46 @@ package-lock.json
 
 ## Ejecución local
 
-Instala dependencias con `npm.cmd ci`. En una terminal PowerShell inicia la API:
+Instala dependencias con `npm.cmd ci` y arranca la vista local de ejemplo:
+
+```powershell
+npm.cmd run dev
+```
+
+Abre `http://localhost:5173`. La serie `fearless-001` trae tres partidas de muestra.
+La navegación, los filtros, el cambio de ganador y los borrados funcionan sin API.
+Escribe cualquier clave no vacía en los diálogos. Los cambios se guardan en el
+almacenamiento local del navegador y «Restaurar ejemplo» repone la serie.
+
+Para trabajar con la API real, inicia el servidor en una terminal PowerShell:
 
 ```powershell
 $env:FEARLESS_ADMIN_TOKEN = 'clave-admin-local'
 npm.cmd run dev:api
 ```
 
-En otra terminal arranca la web:
+En otra terminal arranca la web apuntando a esa API:
 
 ```powershell
+$env:VITE_API_BASE_URL = 'http://127.0.0.1:8787'
 npm.cmd run dev
 ```
 
-La web consulta `fearless-001` al abrirse. Vite dirige `/api` al servidor local `http://127.0.0.1:8787`. No se cargan datos de ejemplo automáticamente: las series y partidas se crean mediante la API. Los datos persisten en `src/server/data/fearless.db`.
+La web consulta `fearless-001` al abrirse. Con `VITE_API_BASE_URL` configurada,
+las series y partidas se crean mediante la API y persisten en `src/server/data/fearless.db`.
 
 Cuando la serie tenga partidas, la web muestra «Borrar partidas» y «Eliminar serie». La primera acción requiere la clave de administrador y escribir `BORRAR`; conserva la serie. La segunda requiere la misma clave y escribir el ID exacto; elimina la serie, sus partidas y eventos. FEARLESS_ADMIN_TOKEN se configura por separado en la API local y en Sites; sin ella, las acciones administrativas responden 503. La clave se envía en `Authorization` durante la petición y se limpia del diálogo al cerrarlo.
 
-Puedes definir `VITE_API_BASE_URL` para apuntar a otra API autorizada. Sin esa variable se usa el mismo origen. La aplicación consulta siempre la API; no incluye modo de demostración ni series de ejemplo.
+`VITE_API_BASE_URL` puede apuntar a otra API autorizada. El mock solo se activa
+en desarrollo cuando no hay URL de API configurada; la compilación de Sites
+consulta la API del mismo origen.
 
 ## Páginas y catálogo
 
-- Inicio (`#/`): búsqueda, estado, fecha, administración, estadísticas y campeones disponibles. Cuatro filas visibles con scroll propio; no hay tabla de historial.
-- Historial (`#/historial`): una tabla por partida, con ambos equipos ordenados por TOP, JG, MID, ADC y SUP, el ganador y los IDs bloqueados. Permite seleccionar, cambiar o quitar el ganador con la clave de escritura de la API.
+- Inicio (`#/`): búsqueda, estado, fecha, administración, estadísticas y campeones disponibles. La rejilla ocupa la altura libre de la ventana cuando hay suficientes resultados y mantiene su scroll propio; no hay tabla de historial.
+- Historial (`#/historial`): una tabla por partida, con ambos equipos ordenados por TOP, JG, MID, ADC y SUP y el ganador. Permite seleccionar, cambiar o quitar el ganador con la clave de escritura de la API.
 
-El catálogo visual y los 173 retratos están incluidos en `src/frontend/`. La instantánea visual indica la versión 16.18.1 de [Riot Data Dragon](https://developer.riotgames.com/docs/lol#data-dragon). La página no necesita Internet para mostrar las imágenes ni filtrar el catálogo local. La ruta API `/availability` consulta un catálogo remoto actualizado y sí necesita acceso HTTP a Riot. Cada equipo guardado usa el orden TOP, JG, MID, ADC y SUP; Historial muestra esas posiciones por índice. Los nombres, retratos y posiciones iniciales proceden de `PersoBuilder/src/frontend/public/champions.json` (conjunto generado el 14 de septiembre de 2026). Para que el filtro también muestre flex picks, las posiciones se ampliaron con los [listados por posición de OP.GG](https://op.gg/lol/champions) del parche 16.19. El filtro es una instantánea más amplia que el JSON de PersoBuilder y puede variar con el metajuego.
+El catálogo visual y los 173 retratos están incluidos en `src/frontend/`. La interfaz usa las versiones JPG optimizadas de los retratos, `Logo-small.png` y `landscape.jpg`; conserva los PNG originales como fuente. El Worker incluye estas imágenes optimizadas en el build para servirlas sin depender de un CDN externo. La instantánea visual indica la versión 16.18.1 de [Riot Data Dragon](https://developer.riotgames.com/docs/lol#data-dragon). La página no necesita Internet para mostrar las imágenes ni filtrar el catálogo local. La ruta API `/availability` consulta un catálogo remoto actualizado y sí necesita acceso HTTP a Riot. Cada equipo guardado usa el orden TOP, JG, MID, ADC y SUP; Historial muestra esas posiciones por índice. Los nombres, retratos y posiciones iniciales proceden de `PersoBuilder/src/frontend/public/champions.json` (conjunto generado el 14 de septiembre de 2026). Para que el filtro también muestre flex picks, las posiciones se ampliaron con los [listados por posición de OP.GG](https://op.gg/lol/champions) del parche 16.19. El filtro es una instantánea más amplia que el JSON de PersoBuilder y puede variar con el metajuego.
 
 ## Verificación
 

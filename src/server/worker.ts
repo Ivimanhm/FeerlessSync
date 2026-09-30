@@ -6,6 +6,7 @@ import { staticAssets } from './staticAssets.generated.ts';
 interface SiteEnvironment {
   DB?: D1DatabaseLike;
   FEARLESS_ADMIN_TOKEN?: string;
+  ASSETS?: { fetch(request: Request): Promise<Response> };
 }
 
 function serveEmbeddedAsset(pathname: string): Response | undefined {
@@ -15,17 +16,26 @@ function serveEmbeddedAsset(pathname: string): Response | undefined {
   return new Response(bytes, {
     headers: {
       'Content-Type': asset.type,
-      'Cache-Control': pathname === '/' ? 'no-cache' : 'public, max-age=31536000, immutable',
+      'Cache-Control': pathname === '/' ? 'no-cache' : pathname.startsWith('/assets/') ? 'public, max-age=31536000, immutable' : 'public, max-age=86400',
     },
   });
 }
 
-async function servePublicAsset(pathname: string): Promise<Response> {
+async function servePublicAsset(request: Request, env: SiteEnvironment): Promise<Response> {
+  const pathname = new URL(request.url).pathname;
   if (!/^\/(?:Logo\.png|landscape\.png|champions\/[A-Za-z0-9]+\.png)$/.test(pathname)) {
     return new Response('Not found', { status: 404 });
   }
+  if (env.ASSETS) {
+    try {
+      const local = await env.ASSETS.fetch(request);
+      if (local.ok) return local;
+    } catch { /* Fall back to the existing public asset source. */ }
+  }
   const upstream = new URL(`https://cdn.jsdelivr.net/gh/Ivimanhm/FeerlessSync@1.0.0/src/frontend/public${pathname}`);
-  const response = await fetch(upstream);
+  let response: Response;
+  try { response = await fetch(upstream); }
+  catch { return new Response('Image unavailable', { status: 503 }); }
   if (!response.ok) return new Response('Not found', { status: 404 });
   const headers = new Headers(response.headers);
   headers.set('Cache-Control', 'public, max-age=86400');
@@ -79,7 +89,7 @@ export default {
     const embedded = serveEmbeddedAsset(pathname);
     if (embedded) return embedded;
     if (pathname === '/Logo.png' || pathname === '/landscape.png' || pathname.startsWith('/champions/')) {
-      return servePublicAsset(pathname);
+      return servePublicAsset(request, env);
     }
     if (request.method === 'GET' || request.method === 'HEAD') {
       return serveEmbeddedAsset('/') ?? new Response('Not found', { status: 404 });

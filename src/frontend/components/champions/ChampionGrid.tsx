@@ -28,7 +28,7 @@ export default function ChampionGrid({ champions, totalCount }: ChampionGridProp
   ), [champions, normalizedQuery, role]);
 
   return (
-    <section class="content-panel champion-panel" aria-labelledby="champions-heading">
+    <section class={`content-panel champion-panel${filtered.length <= 24 ? ' champion-panel--compact' : ''}`} aria-labelledby="champions-heading">
       <div class="panel-header champion-panel-header">
         <div class="panel-title">
           <Shuffle size={27} strokeWidth={1.7} aria-hidden="true" />
@@ -52,7 +52,7 @@ export default function ChampionGrid({ champions, totalCount }: ChampionGridProp
       </div>
       <div class="champion-scroll" ref={scrollArea} role="region" aria-label="Campeones disponibles" tabIndex={0}>
       {filtered.length ? (
-        <div class="champion-grid">{filtered.map((champion) => <ChampionCard key={champion.id} champion={champion} />)}</div>
+        <div class="champion-grid">{filtered.map((champion, index) => <ChampionCard key={champion.id} champion={champion} eager={index < 24} />)}</div>
       ) : (
         <div class="empty-champions">No hay campeones que coincidan con la búsqueda.</div>
       )}
