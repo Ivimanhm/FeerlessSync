@@ -7,6 +7,8 @@ Todas las rutas están bajo `/api` y usan JSON. En Sites, la API y `/api/health`
 | GET | `/api/health` | Comprobar API y base de datos (`200` o `503`). |
 | GET | `/api/admin/validate` | Validar el Admin Token; devuelve `{ "valid": true }` solo con una clave válida. |
 | OPTIONS | `/api/*` | Preflight CORS. |
+| GET | `/api/fearless` | Consultar la única serie Fearless activa y sus campeones disponibles. |
+| POST | `/api/fearless` | Guardar una partida en la serie activa y archivarla si quedan menos de diez campeones. |
 | POST | `/api/series` | Crear una serie vacía con `seriesId` único. |
 | GET | `/api/series?limit=20&offset=0` | Listar series con paginación, número de partidas y última actualización. |
 | GET | `/api/series/count` | Contar las series guardadas sin devolver el listado. |
@@ -21,6 +23,7 @@ Todas las rutas están bajo `/api` y usan JSON. En Sites, la API y `/api/health`
 | PUT | `/api/series/{seriesId}/games/{gameNumber}/winner` | Asignar `blue`, `red` o `null` sin cambiar equipos. |
 | GET | `/api/series/{seriesId}/used-champions` | Leer IDs únicos usados. |
 | GET | `/api/series/{seriesId}/availability` | Leer usados y disponibles desde un catálogo completo y versionado. |
+| POST | `/api/series/{seriesId}/prepare` | Obtener la serie para la siguiente partida; crear una continuación si quedan menos de diez campeones. |
 | GET | `/api/series/{seriesId}/events?limit=20&offset=0` | Consultar eventos cronológicos de auditoría. |
 
 La interfaz solo consulta series y ofrece las dos acciones de borrado cuando la serie tiene partidas. Crear series, registrar partidas, corregir equipos y asignar ganadores se hace mediante la API. No se crean series de muestra al iniciar.
@@ -74,3 +77,87 @@ El frontend consulta la API del mismo origen por defecto; Vite dirige `/api` a l
 `count` es un entero no negativo y cuenta las series persistidas. No existe estado de cierre, así que todas las series guardadas se consideran activas. Si la base de datos falla, responde `503` con `{"success":false,"error":"database_unavailable"}`. La misma ruta está conectada al Worker D1 de Sites.
 
 La web calcula la disponibilidad visual con su catálogo local de 173 campeones. La ruta API `/availability` usa el catálogo remoto de Riot, que puede tener un número distinto de campeones y devolver `503` si la consulta externa falla.
+
+## Endpoint fijo Fearless para PersoBuilder
+
+PersoBuilder usa siempre **`/api/fearless`**, con una única serie activa compartida
+por todas las apps. El servidor guarda en SQLite o D1 qué serie está activa y qué
+series ya se archivaron. Las series creadas manualmente son independientes de
+este flujo.
+
+1. `GET /api/fearless` devuelve la serie activa con `games`, `usedChampions`,
+   `availableChampions`, `availableChampionsCount`, `catalogVersion`,
+   `totalChampions`, `nextGameNumber`, `minimumChampionsPerGame` y `canStartGame`.
+   Si no existe una activa, la crea automáticamente. La respuesta no se almacena
+   en caché.
+2. La app prepara la partida usando esos campeones.
+3. Al confirmar, envía `POST /api/fearless` con los equipos, el `nextGameNumber`
+   recibido como `gameNumber` y el `seriesId` recibido en el GET. El ID se devuelve
+   en el cuerpo para detectar una partida preparada con una serie antigua; la
+   URL es siempre la misma. No necesita token.
+4. Tras guardar, si quedan **10 o más** campeones, mantiene la serie. Si quedan
+   **menos de 10**, la archiva y crea una nueva vacía. La siguiente consulta a
+   `/api/fearless` devuelve automáticamente la nueva serie.
+
+Ejemplo de registro:
+
+```json
+{
+  "seriesId": "fearless-ID-recibido-en-el-GET",
+  "gameNumber": 1,
+  "blueTeam": [103, 64, 7, 222, 412],
+  "redTeam": [266, 254, 238, 81, 111]
+}
+```
+
+El POST devuelve la partida guardada, su `seriesId`, `seriesArchived` y
+`activeSeriesId`. El historial anterior sigue disponible en `/api/series` y
+`/api/series/{seriesId}`. Vaciar una serie archivada no la reactiva; borrar la
+activa permite que la siguiente consulta cree otra. El esquema nuevo se instala
+automáticamente sobre las bases existentes, conservando sus partidas.
+
+La regla usa el catálogo remoto de Riot. Con 173 campeones, se archiva después de
+17 partidas y quedan 3. Si falla el catálogo, responde `503 catalog_unavailable`
+sin crear ni archivar series. Si la app envía una partida para una serie anterior,
+responde `409 fearless_series_changed`; debe consultar Fearless de nuevo. Esta
+ruta valida también que todos los campeones enviados pertenezcan al catálogo.
+
+La consulta inicial puede crear una serie y también archiva una activa que haya
+quedado agotada por registros hechos en las rutas antiguas. No reserva campeones
+frente a otros clientes; los conflictos siguen rechazándose al guardar.
+
+El cliente HTTP incluye `getFearless()` y `createFearlessGame(seriesId, input)`.
+La app PersoBuilder debe integrar estas llamadas en su repositorio. La web de
+este repositorio conserva la búsqueda de series por ID para consultar historiales.
+
+## Ruta anterior de preparación por ID
+
+Para clientes que todavía gestionan IDs explícitos, sigue disponible
+`POST /api/series/{seriesId}/prepare`, sin cuerpo ni token. La serie inicial debe
+existir; se crea con el `POST /api/series` habitual. La decisión usa los IDs
+disponibles del catálogo de Riot, no el número de victorias ni los jugadores:
+
+- Con **10 o más campeones disponibles**, mantiene el ID actual.
+- Con **menos de 10**, crea o reutiliza una serie vacía con otro ID, conservando
+  las partidas de la anterior. Las consultas repetidas y concurrentes reutilizan
+  el mismo ID. Si esa continuación también se agotó, busca la siguiente.
+
+La respuesta incluye `seriesId`, `previousSeriesId` (el ID solicitado),
+`seriesChanged`, `nextGameNumber`, `catalogVersion`, `totalChampions`,
+`usedChampions`, `availableChampions`, `availableChampionsCount`,
+`minimumChampionsPerGame: 10` y `canStartGame: true`.
+
+PersoBuilder debe guardar el `seriesId` devuelto, usar exclusivamente los
+`availableChampions` de esa respuesta para el draft y registrar la partida en
+`POST /api/series/{seriesId}/games` con el `nextGameNumber` recibido. En una serie
+nueva empieza en la partida 1 y todos los campeones vuelven a estar disponibles.
+Con un catálogo de 173 campeones, el cambio ocurre tras 17 partidas, cuando quedan
+3. La operación prepara la serie; no reserva una partida frente a otros clientes.
+
+Si no se puede consultar el catálogo, devuelve `503 catalog_unavailable`; si
+hay IDs usados desconocidos, devuelve `409 unknown_champion_ids`. En esos casos
+no cambia de serie. `/availability` también incluye `availableChampionsCount`,
+`minimumChampionsPerGame` y `canStartGame` para consultar el umbral sin crear nada.
+La web permite seguir consultando el historial por su ID original. Este
+repositorio incluye la API y el método `prepareSeries` del cliente HTTP; la
+integración de la llamada en PersoBuilder debe hacerse en su propio repositorio.

@@ -43,6 +43,118 @@ const firstGame = {
 const secondGame = { gameNumber: 2, blueTeam: [20, 21, 22, 23, 24], redTeam: [25, 26, 27, 28, 29] };
 
 describe('API local de series', () => {
+  it('usa /fearless para consultar y guardar; archiva solo cuando quedan menos de diez', async () => {
+    const championIds = Array.from({ length: 20 }, (_, index) => index + 1);
+    const { call, repository, database } = setup({ getCatalog: async () => ({ version: '20', championIds }) });
+    const initial = await (await call('/api/fearless')).json() as { seriesId: string };
+    expect(initial).toMatchObject({ games: [], availableChampionsCount: 20, nextGameNumber: 1 });
+    expect(await (await call('/api/fearless')).json()).toMatchObject({ seriesId: initial.seriesId });
+    const first = { seriesId: initial.seriesId, gameNumber: 1, blueTeam: [1, 2, 3, 4, 5], redTeam: [6, 7, 8, 9, 10] };
+    expect(await (await call('/api/fearless', 'POST', first)).json()).toMatchObject({ seriesId: initial.seriesId, seriesArchived: false });
+    expect(await (await call('/api/fearless')).json()).toMatchObject({ seriesId: initial.seriesId, availableChampionsCount: 10, nextGameNumber: 2 });
+    const second = { seriesId: initial.seriesId, gameNumber: 2, blueTeam: [11, 12, 13, 14, 15], redTeam: [16, 17, 18, 19, 20] };
+    const saved = await call('/api/fearless', 'POST', second);
+    expect(saved.status).toBe(201);
+    expect(await saved.json()).toMatchObject({ seriesId: initial.seriesId, seriesArchived: true });
+    const next = await (await call('/api/fearless')).json() as { seriesId: string };
+    expect(next.seriesId).not.toBe(initial.seriesId);
+    expect(next).toMatchObject({ availableChampionsCount: 20, usedChampions: [], nextGameNumber: 1 });
+    expect(repository.getSeries(initial.seriesId)?.games).toHaveLength(2);
+    expect(database.prepare('SELECT archived_at FROM fearless_series WHERE series_id = ?').get(initial.seriesId)).toMatchObject({ archived_at: expect.any(String) });
+    expect(await (await call('/api/fearless', 'POST', second)).json()).toMatchObject({ error: 'fearless_series_changed' });
+    expect(repository.getSeries(next.seriesId)?.games).toHaveLength(0);
+    expect((await call('/api/fearless', 'POST', { ...first, seriesId: next.seriesId })).status).toBe(201);
+    const reloaded = createApiHandler(new SqliteSeriesRepository(database), { catalogProvider: { getCatalog: async () => ({ version: '20', championIds }) } });
+    expect(await (await reloaded(new Request('http://localhost/api/fearless'))).json()).toMatchObject({ seriesId: next.seriesId, nextGameNumber: 2 });
+    repository.clearGames(initial.seriesId);
+    expect(await (await call('/api/fearless')).json()).toMatchObject({ seriesId: next.seriesId });
+  });
+
+  it('comparte una única serie activa en consultas simultáneas', async () => {
+    const { call, repository } = setup();
+    const results = await Promise.all(Array.from({ length: 5 }, () => call('/api/fearless')));
+    const bodies = await Promise.all(results.map((response) => response.json())) as Array<{ seriesId: string }>;
+    expect(new Set(bodies.map((body) => body.seriesId)).size).toBe(1);
+    expect(repository.countSeries()).toBe(1);
+  });
+
+  it('no crea series con el catálogo caído y rechaza drafts inválidos', async () => {
+    const offline = setup({ getCatalog: async () => { throw new Error('offline'); } });
+    expect((await offline.call('/api/fearless')).status).toBe(503);
+    expect(offline.repository.countSeries()).toBe(0);
+    const { call, repository } = setup();
+    const initial = await (await call('/api/fearless')).json() as { seriesId: string };
+    expect((await call('/api/fearless', 'POST', firstGame)).status).toBe(400);
+    const unknown = await call('/api/fearless', 'POST', { ...firstGame, seriesId: initial.seriesId, blueTeam: [9999, 1, 2, 3, 4] });
+    expect(await unknown.json()).toMatchObject({ error: 'unknown_champion_ids' });
+    expect(repository.getSeries(initial.seriesId)?.games).toHaveLength(0);
+  });
+
+  it('mantiene la serie con exactamente diez campeones disponibles', async () => {
+    const championIds = Array.from({ length: 20 }, (_, index) => index + 1);
+    const { call, repository } = setup({ getCatalog: async () => ({ version: 'boundary', championIds }) });
+    repository.createSeries('boundary');
+    repository.addGame('boundary', { gameNumber: 1, blueTeam: [1, 2, 3, 4, 5], redTeam: [6, 7, 8, 9, 10] });
+    const result = await call('/api/series/boundary/prepare', 'POST');
+    expect(result.status).toBe(200);
+    expect(await result.json()).toMatchObject({ seriesId: 'boundary', seriesChanged: false, canStartGame: true, availableChampionsCount: 10, nextGameNumber: 2 });
+    expect(repository.countSeries()).toBe(1);
+  });
+
+  it.each(Array.from({ length: 10 }, (_, index) => index))('cambia de serie con %i campeones restantes y reutiliza el nuevo ID', async (remaining) => {
+    const championIds = Array.from({ length: 10 + remaining }, (_, index) => index + 1);
+    const { call, repository } = setup({ getCatalog: async () => ({ version: 'boundary', championIds }) });
+    repository.createSeries('exhausted');
+    repository.addGame('exhausted', { gameNumber: 1, blueTeam: [1, 2, 3, 4, 5], redTeam: [6, 7, 8, 9, 10] });
+    const availability = await (await call('/api/series/exhausted/availability')).json();
+    expect(availability).toMatchObject({ canStartGame: false, availableChampionsCount: remaining });
+    const responses = await Promise.all([call('/api/series/exhausted/prepare', 'POST'), call('/api/series/exhausted/prepare', 'POST')]);
+    expect(responses.map((response) => response.status)).toEqual([200, 200]);
+    const [first, second] = await Promise.all(responses.map((response) => response.json())) as Array<{ seriesId: string }>;
+    expect(first).toMatchObject({ previousSeriesId: 'exhausted', seriesChanged: true, usedChampions: [], availableChampions: championIds, nextGameNumber: 1 });
+    expect(first.seriesId).not.toBe('exhausted');
+    expect(second.seriesId).toBe(first.seriesId);
+    expect(repository.countSeries()).toBe(2);
+    expect(repository.getSeries('exhausted')?.games).toHaveLength(1);
+    expect(await (await call(`/api/series/${first.seriesId}/prepare`, 'POST')).json()).toMatchObject({ seriesId: first.seriesId, seriesChanged: false });
+  });
+
+  it('resuelve continuaciones agotadas y permite reutilizar campeones en la nueva serie', async () => {
+    const championIds = Array.from({ length: 173 }, (_, index) => index + 1);
+    const { call, repository } = setup({ getCatalog: async () => ({ version: '173', championIds }) });
+    repository.createSeries('long-series');
+    for (let gameNumber = 1; gameNumber <= 17; gameNumber++) {
+      const ids = Array.from({ length: 10 }, (_, index) => (gameNumber - 1) * 10 + index + 1);
+      repository.addGame('long-series', { gameNumber, blueTeam: ids.slice(0, 5), redTeam: ids.slice(5) });
+    }
+    const first = await (await call('/api/series/long-series/prepare', 'POST')).json() as { seriesId: string };
+    expect(first).toMatchObject({ seriesChanged: true, availableChampionsCount: 173, nextGameNumber: 1 });
+    for (const game of repository.getSeries('long-series')!.games) {
+      expect((await call(`/api/series/${first.seriesId}/games`, 'POST', game)).status).toBe(201);
+    }
+    const second = await (await call('/api/series/long-series/prepare', 'POST')).json() as { seriesId: string };
+    expect(second.seriesId).not.toBe(first.seriesId);
+    expect(repository.countSeries()).toBe(3);
+    expect(await (await call('/api/series/long-series/prepare', 'POST')).json()).toMatchObject({ seriesId: second.seriesId });
+  });
+
+  it('no crea series cuando falla el catálogo, hay IDs desconocidos o falta la serie', async () => {
+    const offline = setup({ getCatalog: async () => { throw new Error('offline'); } });
+    offline.repository.createSeries('offline');
+    expect((await offline.call('/api/series/offline/prepare', 'POST')).status).toBe(503);
+    expect(offline.repository.countSeries()).toBe(1);
+    expect((await offline.call('/api/series/missing/prepare', 'POST')).status).toBe(404);
+    const invalid = setup({ getCatalog: async () => ({ version: 'small', championIds: [1, 2, 3] }) });
+    invalid.repository.createSeries('small');
+    expect((await invalid.call('/api/series/small/prepare', 'POST')).status).toBe(503);
+    expect(invalid.repository.countSeries()).toBe(1);
+    const unknown = setup({ getCatalog: async () => ({ version: 'unknown', championIds: Array.from({ length: 20 }, (_, index) => index + 1) }) });
+    unknown.repository.createSeries('unknown');
+    unknown.repository.addGame('unknown', firstGame);
+    expect(await (await unknown.call('/api/series/unknown/prepare', 'POST')).json()).toMatchObject({ error: 'unknown_champion_ids' });
+    expect(unknown.repository.countSeries()).toBe(1);
+  });
+
   it('cuenta series persistidas y permite crearlas sin token', async () => {
     const { call } = setup();
     expect(await (await call('/api/series/count')).json()).toEqual({ success: true, count: 0 });

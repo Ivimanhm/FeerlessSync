@@ -2,7 +2,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { DatabaseSync } from 'node:sqlite';
 import { ensureD1Schema } from '../../server/d1Schema.ts';
-import type { D1DatabaseLike, D1StatementLike } from '../../server/repositories/d1Repository.ts';
+import { D1SeriesRepository, type D1DatabaseLike, type D1StatementLike } from '../../server/repositories/d1Repository.ts';
+import { createApiHandler } from '../../server/routes/api.ts';
 
 const databases: DatabaseSync[] = [];
 
@@ -71,6 +72,49 @@ function createD1(): SqliteD1 {
 }
 
 describe('esquema D1 de producción', () => {
+  it('añade el estado Fearless a una base ya migrada y conserva la serie activa al reiniciar', async () => {
+    const db = createD1();
+    await ensureD1Schema(db);
+    await db.prepare('DROP TABLE fearless_series').run();
+    await ensureD1Schema(db);
+    const catalogProvider = { getCatalog: async () => ({ version: '13', championIds: Array.from({ length: 13 }, (_, index) => index + 1) }) };
+    const handler = createApiHandler(new D1SeriesRepository(db), { catalogProvider });
+    const initial = await (await handler(new Request('http://localhost/api/fearless'))).json() as { seriesId: string };
+    const saved = await handler(new Request('http://localhost/api/fearless', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ seriesId: initial.seriesId, gameNumber: 1, blueTeam: [1, 2, 3, 4, 5], redTeam: [6, 7, 8, 9, 10] }),
+    }));
+    expect(saved.status).toBe(201);
+    expect(await saved.json()).toMatchObject({ seriesArchived: true });
+    const next = await (await handler(new Request('http://localhost/api/fearless'))).json() as { seriesId: string };
+    expect(next.seriesId).not.toBe(initial.seriesId);
+    await ensureD1Schema(db);
+    const restarted = createApiHandler(new D1SeriesRepository(db), { catalogProvider });
+    expect(await (await restarted(new Request('http://localhost/api/fearless'))).json()).toMatchObject({ seriesId: next.seriesId, availableChampionsCount: 13 });
+    expect((await new D1SeriesRepository(db).getSeries(initial.seriesId))?.games).toHaveLength(1);
+  });
+
+  it('prepara una nueva serie persistida al agotar campeones y reutiliza su ID', async () => {
+    const db = createD1();
+    await ensureD1Schema(db);
+    const repository = new D1SeriesRepository(db);
+    await repository.createSeries('exhausted');
+    await repository.addGame('exhausted', { gameNumber: 1, blueTeam: [1, 2, 3, 4, 5], redTeam: [6, 7, 8, 9, 10] });
+    const handler = createApiHandler(repository, {
+      catalogProvider: { getCatalog: async () => ({ version: 'test', championIds: Array.from({ length: 13 }, (_, index) => index + 1) }) },
+    });
+    const prepare = () => handler(new Request('http://localhost/api/series/exhausted/prepare', { method: 'POST' }));
+    const responses = await Promise.all([prepare(), prepare()]);
+    expect(responses.map((response) => response.status)).toEqual([200, 200]);
+    const [first, second] = await Promise.all(responses.map((response) => response.json())) as Array<{ seriesId: string }>;
+    expect(first).toMatchObject({ seriesChanged: true, availableChampionsCount: 13, nextGameNumber: 1 });
+    expect(second.seriesId).toBe(first.seriesId);
+    const reloaded = new D1SeriesRepository(db);
+    expect(await reloaded.countSeries()).toBe(2);
+    expect(await reloaded.getSeries(first.seriesId)).toMatchObject({ games: [], usedChampions: [] });
+    expect((await reloaded.getSeries('exhausted'))?.games).toHaveLength(1);
+  });
+
   it('crea el esquema nuevo y es segura al ejecutarse otra vez', async () => {
     const db = createD1();
     await ensureD1Schema(db);

@@ -130,6 +130,20 @@ export function createFearlessApiClient({ baseUrl, getAccessToken }: FearlessApi
       return request(`/series/${encodeURIComponent(seriesId)}/availability`);
     },
 
+    /** Stable endpoint: the server owns the active series and its rollover. */
+    getFearless(): Promise<unknown> {
+      return request('/fearless');
+    },
+
+    createFearlessGame(seriesId: string, input: CreateGameRequest): Promise<unknown> {
+      return request('/fearless', { method: 'POST', body: JSON.stringify({ ...input, seriesId }) });
+    },
+
+    /** Resolves the series and champion pool to use before drafting the next game. */
+    prepareSeries(seriesId: string): Promise<unknown> {
+      return request(`/series/${encodeURIComponent(seriesId)}/prepare`, { method: 'POST' });
+    },
+
     getEvents(seriesId: string, limit = 20, offset = 0): Promise<unknown> {
       return request(`/series/${encodeURIComponent(seriesId)}/events?limit=${limit}&offset=${offset}`);
     },

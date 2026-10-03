@@ -9,6 +9,18 @@ const jsonResponse = (body: unknown, status = 200) => new Response(JSON.stringif
 afterEach(() => vi.unstubAllGlobals());
 
 describe('cliente de API Fearless', () => {
+  it('consulta y registra partidas Fearless usando siempre la misma ruta', async () => {
+    const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(jsonResponse({ success: true }));
+    vi.stubGlobal('fetch', fetchMock);
+    const client = createFearlessApiClient({ baseUrl: 'https://example.test' });
+    await client.getFearless();
+    await client.createFearlessGame('fearless-one', { gameNumber: 1, blueTeam: [1, 2, 3, 4, 5], redTeam: [6, 7, 8, 9, 10] });
+    expect(fetchMock.mock.calls.map(([url, options]) => [url, options?.method ?? 'GET'])).toEqual([
+      ['https://example.test/api/fearless', 'GET'], ['https://example.test/api/fearless', 'POST'],
+    ]);
+    expect(JSON.parse(String(fetchMock.mock.calls[1][1]?.body))).toMatchObject({ seriesId: 'fearless-one', gameNumber: 1 });
+  });
+
   it('comprueba health y diferencia un 503 de un servicio sano', async () => {
     const fetchMock = vi.fn<typeof fetch>()
       .mockResolvedValueOnce(jsonResponse({ success: true }))
@@ -97,6 +109,7 @@ describe('cliente de API Fearless', () => {
     await client.updateGame('serie-1', 3, { blueTeam: [1, 2, 3, 4, 5] });
     await client.setWinner('serie-1', 3, { winner: 'blue' });
     await client.getAvailability('serie-1');
+    await client.prepareSeries('serie-1');
     await client.getEvents('serie-1', 5, 10);
     await client.deleteGame('serie-1', 3);
     await client.deleteSeries('serie-1');
@@ -108,12 +121,13 @@ describe('cliente de API Fearless', () => {
       ['https://example.test/api/series/serie-1/games/3', 'PATCH'],
       ['https://example.test/api/series/serie-1/games/3/winner', 'PUT'],
       ['https://example.test/api/series/serie-1/availability', 'GET'],
+      ['https://example.test/api/series/serie-1/prepare', 'POST'],
       ['https://example.test/api/series/serie-1/events?limit=5&offset=10', 'GET'],
       ['https://example.test/api/series/serie-1/games/3', 'DELETE'],
       ['https://example.test/api/series/serie-1', 'DELETE'],
     ]);
     expect(new Headers(fetchMock.mock.calls[3][1]?.headers).get('Authorization')).toBeNull();
-    for (const index of [4, 7, 8]) {
+    for (const index of [4, 8, 9]) {
       expect(new Headers(fetchMock.mock.calls[index][1]?.headers).get('Authorization')).toBe('Bearer test-token');
     }
   });

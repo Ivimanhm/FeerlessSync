@@ -1,8 +1,10 @@
 import { requireAdmin } from '../services/authentication.ts';
 import { validateGame, seriesIdFrom, gameNumberFrom } from '../services/seriesValidation.ts';
 import { DataDragonCatalogProvider } from '../services/championCatalog.ts';
+import { availableChampionIds, minimumChampionsPerGame, prepareSeries } from '../services/seriesContinuation.ts';
+import { getActiveFearless } from '../services/activeFearless.ts';
 import { ApiFault } from '../errors.ts';
-import type { ChampionCatalogProvider, SeriesRepository } from '../types.ts';
+import type { ChampionCatalog, ChampionCatalogProvider, SeriesRepository } from '../types.ts';
 
 interface ApiOptions {
   adminToken?: string;
@@ -54,6 +56,10 @@ function pagination(url: URL): { limit: number; offset: number } {
 
 export function createApiHandler(repository: SeriesRepository, options: ApiOptions) {
   const catalogProvider = options.catalogProvider ?? new DataDragonCatalogProvider();
+  const getCatalog = async (): Promise<ChampionCatalog> => {
+    try { return await catalogProvider.getCatalog(); }
+    catch { throw new ApiFault(503, 'catalog_unavailable', 'No se pudo consultar el catálogo completo.'); }
+  };
 
   const dispatch = async (request: Request): Promise<Response> => {
     const url = new URL(request.url);
@@ -76,6 +82,38 @@ export function createApiHandler(repository: SeriesRepository, options: ApiOptio
     if (path === '/api/admin/validate' && method === 'GET') {
       requireAdmin(request, options.adminToken ?? '');
       return json({ valid: true });
+    }
+    if (path === '/api/fearless' && method === 'GET') {
+      const catalog = await getCatalog();
+      return json({ success: true, ...await databaseCall(() => getActiveFearless(repository, catalog)) });
+    }
+    if (path === '/api/fearless' && method === 'POST') {
+      const body = await bodyObject(request);
+      // Echo the ID returned with the draft so a delayed submission never lands
+      // in a new series after somebody else has completed the previous one.
+      if (typeof body.seriesId !== 'string') {
+        throw new ApiFault(400, 'invalid_series_id', 'Envía el seriesId recibido al consultar Fearless.');
+      }
+      const expectedSeriesId = seriesIdFrom(body.seriesId);
+      const game = validateGame(body);
+      const catalog = await getCatalog();
+      const active = await databaseCall(() => getActiveFearless(repository, catalog));
+      if (active.seriesId !== expectedSeriesId) {
+        throw new ApiFault(409, 'fearless_series_changed', 'La serie activa cambió. Consulta Fearless antes de preparar otra partida.');
+      }
+      const knownIds = new Set(catalog.championIds);
+      if ([...game.blueTeam, ...game.redTeam].some((id) => !knownIds.has(id))) {
+        throw new ApiFault(400, 'unknown_champion_ids', 'Un campeón no pertenece al catálogo.');
+      }
+      const saved = await databaseCall(() => repository.addGame(active.seriesId, game));
+      const next = await databaseCall(() => getActiveFearless(repository, catalog));
+      return json({
+        success: true,
+        seriesId: active.seriesId,
+        ...saved,
+        seriesArchived: next.seriesId !== active.seriesId,
+        activeSeriesId: next.seriesId,
+      }, 201);
     }
     if (path === '/api/series/count' && method === 'GET') {
       return json({ success: true, count: await databaseCall(() => repository.countSeries()) });
@@ -116,17 +154,25 @@ export function createApiHandler(repository: SeriesRepository, options: ApiOptio
         let catalog;
         try { catalog = await catalogProvider.getCatalog(); }
         catch { throw new ApiFault(503, 'catalog_unavailable', 'No se pudo consultar el catálogo completo.'); }
-        const ids = new Set(catalog.championIds);
-        if (usedChampions.some((id) => !ids.has(id))) {
-          throw new ApiFault(409, 'unknown_champion_ids', 'Hay campeones usados que no aparecen en el catálogo.');
-        }
-        const used = new Set(usedChampions);
+        const availableChampions = availableChampionIds(catalog, usedChampions);
         return json({
           success: true, seriesId, catalogVersion: catalog.version,
           totalChampions: catalog.championIds.length,
           usedChampions,
-          availableChampions: catalog.championIds.filter((id) => !used.has(id)),
+          availableChampions,
+          availableChampionsCount: availableChampions.length,
+          minimumChampionsPerGame,
+          canStartGame: availableChampions.length >= minimumChampionsPerGame,
         });
+      }
+      if (parts.length === 4 && parts[3] === 'prepare' && method === 'POST') {
+        if (!await databaseCall(() => repository.getSeries(seriesId))) {
+          throw new ApiFault(404, 'series_not_found', 'La serie no existe.');
+        }
+        let catalog;
+        try { catalog = await catalogProvider.getCatalog(); }
+        catch { throw new ApiFault(503, 'catalog_unavailable', 'No se pudo consultar el catálogo completo.'); }
+        return json({ success: true, ...await databaseCall(() => prepareSeries(repository, seriesId, catalog)) });
       }
       if (parts.length === 4 && parts[3] === 'events' && method === 'GET') {
         const { limit, offset } = pagination(url);

@@ -57,6 +57,8 @@ export interface SeriesRepository {
   countSeries(): RepositoryResult<number>;
   listSeries(limit: number, offset: number): RepositoryResult<Page<SeriesSummary>>;
   createSeries(seriesId: string): RepositoryResult<StoredSeries>;
+  getOrCreateFearlessSeries(): RepositoryResult<StoredSeries>;
+  archiveFearlessSeries(seriesId: string): RepositoryResult<void>;
   getSeries(seriesId: string): RepositoryResult<StoredSeries | null>;
   deleteSeries(seriesId: string): RepositoryResult<boolean>;
   getUsedChampions(seriesId: string): RepositoryResult<number[] | null>;

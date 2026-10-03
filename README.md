@@ -4,6 +4,10 @@ Aplicación web para consultar series Fearless de League of Legends, revisar par
 ver qué campeones ya se usaron. La API permite crear series, registrar y corregir
 partidas, asignar ganadores y consultar un historial de eventos. Versión **1.0.0**.
 
+PersoBuilder puede usar siempre `/api/fearless`: GET consulta la serie activa y
+POST registra una partida. Cuando quedan menos de diez campeones, el servidor
+archiva la serie conservando su historial y abre automáticamente una nueva.
+
 La interfaz muestra dos páginas: **Inicio**, con búsqueda, estadísticas y los
 campeones disponibles; e **Historial**, con las partidas de la serie. Cuando una
 serie tiene partidas, ofrece acciones para borrar sus partidas o eliminarla por
