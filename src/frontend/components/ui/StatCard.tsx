@@ -1,4 +1,5 @@
 import { ShieldCheck, Shuffle, Sparkles } from 'lucide-preact';
+import OrnamentalFrame from './OrnamentalFrame';
 
 interface StatCardProps {
   kind: 'games' | 'used' | 'available';
@@ -13,6 +14,7 @@ export default function StatCard({ kind, label, value, detail }: StatCardProps) 
   const Icon = iconByKind[kind];
   return (
     <article class={`stat-card stat-card--${kind}`}>
+      <OrnamentalFrame />
       <div class="stat-icon"><Icon size={40} strokeWidth={1.6} aria-hidden="true" /></div>
       <div class="stat-copy">
         <h2>{label}</h2>

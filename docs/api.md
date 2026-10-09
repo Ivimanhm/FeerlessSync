@@ -12,6 +12,7 @@ Todas las rutas están bajo `/api` y usan JSON. En Sites, la API y `/api/health`
 | POST | `/api/series` | Crear una serie vacía con `seriesId` único. |
 | GET | `/api/series?limit=20&offset=0` | Listar series con paginación, número de partidas y última actualización. |
 | GET | `/api/series/count` | Contar las series guardadas sin devolver el listado. |
+| GET | `/api/stats/champions` | Victorias de campeones en todas las series, incluidas las archivadas. |
 | GET | `/api/series/{seriesId}` | Leer serie, partidas en orden, campeones usados y última actualización. |
 | DELETE | `/api/series/{seriesId}` | Borrar serie, partidas y eventos, o `404` si no existe. |
 | POST | `/api/series/{seriesId}/games` | Guardar partida confirmada. |
@@ -26,7 +27,19 @@ Todas las rutas están bajo `/api` y usan JSON. En Sites, la API y `/api/health`
 | POST | `/api/series/{seriesId}/prepare` | Obtener la serie para la siguiente partida; crear una continuación si quedan menos de diez campeones. |
 | GET | `/api/series/{seriesId}/events?limit=20&offset=0` | Consultar eventos cronológicos de auditoría. |
 
-La interfaz solo consulta series y ofrece las dos acciones de borrado cuando la serie tiene partidas. Crear series, registrar partidas, corregir equipos y asignar ganadores se hace mediante la API. No se crean series de muestra al iniciar.
+La interfaz consulta series, muestra la clasificación global y permite asignar ganadores. Ofrece las dos acciones de borrado cuando la serie tiene partidas. Crear series, registrar partidas y corregir equipos se hace mediante la API. No se crean series de muestra al iniciar.
+
+`GET /api/stats/champions` devuelve `success`, `completedGames`, `pendingGames` y
+`champions`, con `{championId, wins, gamesPlayed}` por campeón con alguna victoria.
+`gamesPlayed` solo cuenta partidas con ganador confirmado; una partida pendiente no
+suma victorias ni entra en el porcentaje. Cada campeón del equipo ganador recibe una
+victoria por partida. Se suman todas las series persistidas, también las archivadas,
+sin paginación ni dependencia del catálogo remoto. Los registros se ordenan por
+victorias descendentes, porcentaje descendente y ID. La web resuelve nombres y
+desempata por nombre. El recuento se calcula directamente desde las partidas, por
+lo que corregir equipos o ganadores, vaciar series y borrar partidas o series se
+refleja en la siguiente consulta. Si falla la base de datos, responde `503
+database_unavailable`, igual que las otras consultas.
 
 ## Cuerpos de escritura
 

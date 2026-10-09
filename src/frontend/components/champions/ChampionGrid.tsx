@@ -2,6 +2,7 @@ import { ChevronDown, Search, Shuffle } from 'lucide-preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import type { Champion, Role } from '../../types/fearless';
 import ChampionCard from './ChampionCard';
+import OrnamentalFrame from '../ui/OrnamentalFrame';
 
 interface ChampionGridProps {
   champions: Champion[];
@@ -29,6 +30,7 @@ export default function ChampionGrid({ champions, totalCount }: ChampionGridProp
 
   return (
     <section class={`content-panel champion-panel${filtered.length <= 24 ? ' champion-panel--compact' : ''}`} aria-labelledby="champions-heading">
+      <OrnamentalFrame />
       <div class="panel-header champion-panel-header">
         <div class="panel-title">
           <Shuffle size={27} strokeWidth={1.7} aria-hidden="true" />
@@ -52,7 +54,7 @@ export default function ChampionGrid({ champions, totalCount }: ChampionGridProp
       </div>
       <div class="champion-scroll" ref={scrollArea} role="region" aria-label="Campeones disponibles" tabIndex={0}>
       {filtered.length ? (
-        <div class="champion-grid">{filtered.map((champion, index) => <ChampionCard key={champion.id} champion={champion} eager={index < 24} />)}</div>
+        <div class="champion-grid">{filtered.map((champion, index) => <ChampionCard key={champion.id} champion={champion} eager={index < 48} />)}</div>
       ) : (
         <div class="empty-champions">No hay campeones que coincidan con la búsqueda.</div>
       )}

@@ -3,6 +3,10 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { FearlessApiError } from '../../services/api/client';
 import { setGameWinner } from '../../services/api/series';
 import type { Game, TeamSide } from '../../types/fearless';
+import { AlertCircle, Check, KeyRound, LoaderCircle, Minus, Trophy, X } from 'lucide-preact';
+import OrnamentalFrame from '../ui/OrnamentalFrame';
+import PortraitImage from '../champions/PortraitImage';
+import './WinnerDialog.css';
 
 interface Props {
   seriesId: string;
@@ -20,8 +24,13 @@ export default function WinnerDialog({ seriesId, game, onClose, onSaved }: Props
 
   useEffect(() => {
     const previousFocus = document.activeElement as HTMLElement | null;
-    dialog.current?.querySelector<HTMLInputElement>('input[type="radio"]')?.focus();
-    return () => previousFocus?.focus();
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    dialog.current?.querySelector<HTMLInputElement>('input[type="radio"]:checked')?.focus();
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      previousFocus?.focus();
+    };
   }, []);
 
   const close = () => {
@@ -59,25 +68,41 @@ export default function WinnerDialog({ seriesId, game, onClose, onSaved }: Props
     } finally { setSaving(false); }
   };
 
-  return <div class="modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) close(); }}>
-    <section ref={dialog} class="clear-modal winner-modal" role="dialog" aria-modal="true" aria-labelledby="winner-title" aria-describedby="winner-description" onKeyDown={keyDown}>
-      <button class="modal-close" type="button" aria-label="Cerrar" disabled={saving} onClick={close}>×</button>
-      <p class="modal-eyebrow">RESULTADO DE PARTIDA</p>
-      <h2 id="winner-title">Ganador de la partida {game.gameNumber}</h2>
-      <p id="winner-description">Selecciona el equipo ganador e introduce la clave de administrador para guardarlo.</p>
+  return <div class="modal-backdrop winner-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) close(); }}>
+    <section ref={dialog} class="winner-modal" role="dialog" aria-modal="true" aria-labelledby="winner-title" aria-describedby="winner-description" onKeyDown={keyDown}>
+      <OrnamentalFrame />
+      <button class="winner-modal-close" type="button" aria-label="Cerrar" disabled={saving} onClick={close}><X size={20} aria-hidden="true" /></button>
+      <header class="winner-modal-header">
+        <div class="winner-modal-heading">
+          <Trophy size={34} aria-hidden="true" />
+          <div><p class="winner-modal-eyebrow">RESULTADO DE PARTIDA</p><h2 id="winner-title">Ganador de la partida {game.gameNumber}</h2></div>
+        </div>
+        <p id="winner-description">Selecciona el equipo ganador para actualizar el historial.</p>
+      </header>
       <form onSubmit={(event) => void submit(event)}>
-        <fieldset class="winner-options" disabled={saving}>
-          <legend>Equipo ganador</legend>
-          <label><input type="radio" name="winner" checked={winner === 'blue'} onChange={() => setWinner('blue')} /> Equipo Azul</label>
-          <label><input type="radio" name="winner" checked={winner === 'red'} onChange={() => setWinner('red')} /> Equipo Rojo</label>
-          <label><input type="radio" name="winner" checked={winner === null} onChange={() => setWinner(null)} /> Sin ganador</label>
-        </fieldset>
-        <label for="winner-token">Clave de administrador</label>
-        <input id="winner-token" type="password" autoComplete="current-password" required disabled={saving} value={token} onInput={(event) => setToken(event.currentTarget.value)} />
-        {error && <p class="modal-error" role="alert">{error}</p>}
-        <div class="modal-actions">
-          <button type="button" class="cancel-button" disabled={saving} onClick={close}>Cancelar</button>
-          <button type="submit" class="winner-save" disabled={saving || !token.trim() || winner === game.winner}>{saving ? 'Guardando…' : 'Guardar ganador'}</button>
+        <div class="winner-modal-body">
+          <fieldset class="winner-options" disabled={saving}>
+            <legend class="sr-only">Equipo ganador</legend>
+            {(['blue', 'red'] as const).map(side => <label key={side} class={`winner-team-option winner-team-option--${side}`}>
+              <input class="winner-choice-input" type="radio" name="winner" aria-label={side === 'blue' ? 'Equipo Azul' : 'Equipo Rojo'} checked={winner === side} onChange={() => setWinner(side)} />
+              <span class="winner-team-head"><span class="winner-team-gem" aria-hidden="true" /><strong>Equipo {side === 'blue' ? 'Azul' : 'Rojo'}</strong><span class="winner-choice-check" aria-hidden="true"><Check size={14} /></span></span>
+              <span class="winner-team-roster" aria-hidden="true">{game.champions.filter(champion => champion.team === side).map(champion => <PortraitImage key={champion.championId} name={champion.championName} src={champion.imageUrl} eager />)}</span>
+            </label>)}
+            <label class="winner-pending-option">
+              <input class="winner-choice-input" type="radio" name="winner" aria-label="Sin ganador" checked={winner === null} onChange={() => setWinner(null)} />
+              <Minus size={24} aria-hidden="true" />
+              <span><strong>Sin ganador</strong><small>Dejar el resultado pendiente</small></span>
+              <span class="winner-choice-check" aria-hidden="true"><Check size={14} /></span>
+            </label>
+          </fieldset>
+          <p class="winner-choice-hint">{winner === null ? 'La partida quedará pendiente y no sumará victorias.' : `Los campeones del equipo ${winner === 'blue' ? 'Azul' : 'Rojo'} sumarán una victoria.`}</p>
+          <label class="winner-token-label" for="winner-token">Clave de administrador</label>
+          <div class="winner-token-field"><KeyRound size={18} aria-hidden="true" /><input id="winner-token" type="password" autoComplete="current-password" placeholder="Introduce tu clave" required disabled={saving} aria-describedby={error ? 'winner-error' : undefined} value={token} onInput={(event) => setToken(event.currentTarget.value)} /></div>
+          {error && <p id="winner-error" class="winner-modal-error" role="alert"><AlertCircle size={18} aria-hidden="true" />{error}</p>}
+        </div>
+        <div class="winner-modal-actions">
+          <button type="button" class="winner-cancel" disabled={saving} onClick={close}>Cancelar</button>
+          <button type="submit" class="winner-save" disabled={saving || !token.trim() || winner === game.winner}>{saving ? <LoaderCircle class="winner-saving-icon" size={17} aria-hidden="true" /> : <Check size={17} aria-hidden="true" />}{saving ? 'Guardando…' : 'Guardar ganador'}</button>
         </div>
       </form>
     </section>

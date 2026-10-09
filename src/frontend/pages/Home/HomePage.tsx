@@ -3,7 +3,7 @@ import HowItWorksDialog from './HowItWorksDialog';
 import "./Home.css";
 
 const exampleLineup = [
-  { champion: "Sett", role: "top", label: "TOP" },
+  { champion: "Sett", role: "top", label: "TOP", image: "/home/champions/sett-personal.jpg" },
   { champion: "Viego", role: "jungle", label: "JUNGLA" },
   { champion: "Akali", role: "mid", label: "MID" },
   { champion: "Aphelios", role: "adc", label: "ADC" },
@@ -73,7 +73,7 @@ export default function HomePage({ onStart }: { onStart: () => void }) {
         <div className="welcome-introduction welcome-windows-only">
           <p className="welcome-eyebrow">ESTRATEGIA <b>·</b> EQUIPOS <b>·</b> DRAFT FEARLESS</p>
           <h1 className="welcome-desktop-heading">Tus equipos<br /><span>Mis reglas</span></h1>
-          <p className="welcome-description">Crea equipos, prepara tus drafts Fearless, gestiona<br className="welcome-copy-break" /> la selección de campeones y lleva tu estrategia<br className="welcome-copy-break" /> al siguiente nivel.</p>
+          <p className="welcome-description">Crea equipos, prepara tus drafts Fearless, gestiona<br className="welcome-copy-break" /> la selección de campeones y lleva los lloros al siguiente nivel.</p>
         </div>
         <div className="welcome-actions">
           <button className="gold-button welcome-button" type="button" onClick={onStart}>
@@ -94,15 +94,15 @@ export default function HomePage({ onStart }: { onStart: () => void }) {
         <div className="welcome-lineup-heading">
           <div>
             <div className="welcome-lineup-kicker"><Glyph name="shield-check" /><span>MIS NORMAS, EN UN MISMO EQUIPO.</span></div>
-            <h2 id="welcome-lineup-title">La Grieta te espera.</h2>
+            <h2 id="welcome-lineup-title">La perso te espera</h2>
           </div>
           <span className="welcome-fearless-badge"><Glyph name="crosshair" /> Modo Fearless</span>
         </div>
         <ul className="welcome-champions" aria-label="Ejemplo de composición de equipo">
-          {exampleLineup.map(({ champion, role, label }) => (
+          {exampleLineup.map(({ champion, role, label, image }) => (
             <li key={role}>
               <span className="role-icon" style={{ "--role-icon": `url('/home/roles/${role}.svg')` }} aria-hidden="true" />
-              <img src={`/home/champions/${champion}.png`} alt="" width="120" height="120" loading="lazy" />
+              <img src={image ?? `/home/champions/${champion}.png`} alt="" width="120" height="120" loading="lazy" />
               <strong>{champion}</strong><span>{label}</span>
             </li>
           ))}

@@ -1,5 +1,5 @@
 import type { ChampionCatalog, ChampionCatalogProvider } from '../types.ts';
-import snapshot from '../../frontend/data/championCatalog.json';
+import snapshot from '../../frontend/data/championCatalog.json' with { type: 'json' };
 
 const dragon = 'https://ddragon.leagueoflegends.com';
 const bundledCatalog: ChampionCatalog = {

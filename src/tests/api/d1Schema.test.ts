@@ -4,6 +4,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { ensureD1Schema } from '../../server/d1Schema.ts';
 import { D1SeriesRepository, type D1DatabaseLike, type D1StatementLike } from '../../server/repositories/d1Repository.ts';
 import { createApiHandler } from '../../server/routes/api.ts';
+import { verifyGlobalChampionWins } from './championWins.contract';
 
 const databases: DatabaseSync[] = [];
 
@@ -72,6 +73,12 @@ function createD1(): SqliteD1 {
 }
 
 describe('esquema D1 de producción', () => {
+  it('calcula las victorias globales con el mismo contrato que SQLite', async () => {
+    const db = createD1();
+    await ensureD1Schema(db);
+    await verifyGlobalChampionWins(new D1SeriesRepository(db));
+  });
+
   it('añade el estado Fearless a una base ya migrada y conserva la serie activa al reiniciar', async () => {
     const db = createD1();
     await ensureD1Schema(db);

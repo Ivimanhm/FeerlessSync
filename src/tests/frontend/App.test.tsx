@@ -8,12 +8,15 @@ import { mapStoredSeries } from '../../frontend/services/api/series';
 import type { FearlessSeries } from '../../frontend/types/fearless';
 import { clearSeriesGames, getFearlessSeries, setGameWinner } from '../../frontend/services/api/series';
 import { FearlessApiError } from '../../frontend/services/api/client';
+import { getChampionWinStats } from '../../frontend/services/api/championWins';
 
 vi.mock('../../frontend/services/api/series', async (importOriginal) => ({ ...(await importOriginal<typeof import('../../frontend/services/api/series')>()), getFearlessSeries: vi.fn(), clearSeriesGames: vi.fn(), setGameWinner: vi.fn() }));
+vi.mock('../../frontend/services/api/championWins', () => ({ getChampionWinStats: vi.fn() }));
 
 const getSeriesMock = vi.mocked(getFearlessSeries);
 const clearGamesMock = vi.mocked(clearSeriesGames);
 const setWinnerMock = vi.mocked(setGameWinner);
+const championWinsMock = vi.mocked(getChampionWinStats);
 
 let testSeries: FearlessSeries;
 
@@ -33,6 +36,8 @@ beforeEach(async () => {
   getSeriesMock.mockReset();
   clearGamesMock.mockReset();
   setWinnerMock.mockReset();
+  championWinsMock.mockReset();
+  championWinsMock.mockResolvedValue({ champions: [], completedGames: 0, pendingGames: 7 });
   getSeriesMock.mockImplementation(async (id) => {
     if (!id.trim()) throw new Error('ID vacío');
     return { ...testSeries, seriesId: id.trim() };
@@ -87,6 +92,8 @@ describe('Fearless Sync', () => {
     expect(screen.getByRole('status', { name: 'Cargando serie' })).toBeTruthy();
     await screen.findByRole('region', { name: 'Campeones disponibles' });
     expect(screen.queryByRole('table')).toBeNull();
+    expect(screen.queryByRole('navigation', { name: 'Navegación principal' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Abrir menú' }));
     expect(within(screen.getByRole('navigation', { name: 'Navegación principal' })).getAllByRole('button')).toHaveLength(2);
 
     fireEvent.click(within(screen.getByRole('navigation', { name: 'Navegación principal' })).getByRole('button', { name: 'Historial' }));
@@ -95,6 +102,7 @@ describe('Fearless Sync', () => {
     expect(screen.getAllByRole('table')).toHaveLength(7);
     expect(within(screen.getByRole('table', { name: 'Partida 1: equipos por posición' })).getAllByRole('row')).toHaveLength(6);
 
+    fireEvent.click(screen.getByRole('button', { name: 'Abrir menú' }));
     fireEvent.click(within(screen.getByRole('navigation', { name: 'Navegación principal' })).getByRole('button', { name: 'Campeones' }));
     expect(window.location.hash).toBe('#/campeones');
     expect(screen.getByRole('heading', { name: 'Fearless Sync', level: 1 })).toBeTruthy();
@@ -116,11 +124,13 @@ describe('Fearless Sync', () => {
   it('busca otra serie, ignora IDs vacíos como Sites y permite reintentar errores', async () => {
     render(<App />);
     await screen.findByRole('region', { name: 'Campeones disponibles' });
+    fireEvent.click(screen.getByRole('button', { name: 'Cambiar serie' }));
     const input = screen.getByRole('textbox', { name: 'ID de serie' });
 
     fireEvent.input(input, { target: { value: 'fearless-42' } });
     fireEvent.click(screen.getByRole('button', { name: 'Buscar' }));
     await waitFor(() => expect(getSeriesMock).toHaveBeenLastCalledWith('fearless-42'));
+    fireEvent.click(screen.getByRole('button', { name: 'Abrir menú' }));
     fireEvent.click(within(screen.getByRole('navigation', { name: 'Navegación principal' })).getByRole('button', { name: 'Historial' }));
     await waitFor(() => expect(screen.getByText('fearless-42')).toBeTruthy());
 
@@ -220,6 +230,7 @@ describe('Fearless Sync', () => {
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
     expect(clearGamesMock).toHaveBeenCalledExactlyOnceWith('fearless-001', 'admin-test');
     await waitFor(() => expect(screen.getByRole('status').textContent).toBe('Partidas borradas: 7'));
+    fireEvent.click(screen.getByRole('button', { name: 'Abrir menú' }));
     fireEvent.click(within(screen.getByRole('navigation', { name: 'Navegación principal' })).getByRole('button', { name: 'Historial' }));
     expect(screen.getByRole('heading', { name: 'Esperando la primera partida' })).toBeTruthy();
     expect(screen.queryByRole('heading', { name: 'Campeones utilizados' })).toBeNull();

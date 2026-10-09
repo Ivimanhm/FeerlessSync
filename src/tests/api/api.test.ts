@@ -8,6 +8,7 @@ import { createApiHandler } from '../../server/routes/api.ts';
 import { SqliteSeriesRepository } from '../../server/repositories/sqliteRepository.ts';
 import { createLocalServer } from '../../server/nodeServer.ts';
 import type { ChampionCatalogProvider } from '../../server/types.ts';
+import { verifyGlobalChampionWins } from './championWins.contract';
 
 const databases: DatabaseSync[] = [];
 const temporaryDirectories: string[] = [];
@@ -43,6 +44,10 @@ const firstGame = {
 const secondGame = { gameNumber: 2, blueTeam: [20, 21, 22, 23, 24], redTeam: [25, 26, 27, 28, 29] };
 
 describe('API local de series', () => {
+  it('calcula victorias globales y refleja ganadores corregidos, archivos y borrados', async () => {
+    await verifyGlobalChampionWins(setup().repository);
+  });
+
   it('usa /fearless para consultar y guardar; archiva solo cuando quedan menos de diez', async () => {
     const championIds = Array.from({ length: 20 }, (_, index) => index + 1);
     const { call, repository, database } = setup({ getCatalog: async () => ({ version: '20', championIds }) });

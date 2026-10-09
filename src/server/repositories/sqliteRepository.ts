@@ -1,6 +1,7 @@
 import { DatabaseSync } from 'node:sqlite';
 import { ApiFault } from '../errors.ts';
 import { fearlessSchema } from '../fearlessSchema.ts';
+import { championWinsQuery, statsFromRows, type ChampionWinsRow } from './championWinsQuery.ts';
 import type { NewGame, Page, SeriesEvent, SeriesRepository, SeriesSummary, StoredGame, StoredSeries } from '../types.ts';
 
 interface SeriesRow { series_id: string; created_at: string; updated_at: string }
@@ -65,6 +66,10 @@ export class SqliteSeriesRepository implements SeriesRepository {
 
   countSeries(): number {
     return (this.database.prepare('SELECT COUNT(*) AS count FROM series').get() as { count: number }).count;
+  }
+
+  getChampionWinStats() {
+    return statsFromRows(this.database.prepare(championWinsQuery).all() as unknown as ChampionWinsRow[]);
   }
 
   listSeries(limit: number, offset: number): Page<SeriesSummary> {

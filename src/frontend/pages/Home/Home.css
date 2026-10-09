@@ -409,6 +409,7 @@
   width: 100%;
   height: auto;
   aspect-ratio: 1;
+  object-fit: cover;
   border: 1px solid #688192;
   border-radius: 1px;
   box-shadow: 0 0 0 2px #020910, 0 3px 12px #0006;

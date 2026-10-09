@@ -9,7 +9,10 @@ POST registra una partida. Cuando quedan menos de diez campeones, el servidor
 archiva la serie conservando su historial y abre automáticamente una nueva.
 
 La interfaz muestra una portada y dos páginas de consulta: **Campeones**, con búsqueda, estadísticas y los
-campeones disponibles; e **Historial**, con las partidas de la serie. Cuando una
+campeones disponibles; e **Historial**, con las partidas de la serie y una clasificación
+de campeones por victorias en todas las series. Solo cuentan los resultados con ganador:
+cada campeón del equipo ganador suma una victoria. La clasificación se actualiza al
+cambiar ganadores y refleja las correcciones y los borrados. Cuando una
 serie tiene partidas, ofrece acciones para borrar sus partidas o eliminarla por
 completo. Ambas requieren una clave de administrador y confirmación en pantalla.
 

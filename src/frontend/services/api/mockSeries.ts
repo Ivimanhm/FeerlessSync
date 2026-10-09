@@ -1,6 +1,7 @@
 import { FearlessApiError } from './client';
 import type { StoredSeries } from './series';
 import type { TeamSide } from '../../types/fearless';
+import { countChampionWins } from '../../../shared/championWins';
 
 const storageKey = 'fearless-sync-local-preview-v1';
 
@@ -28,6 +29,10 @@ function saveSeries(series: StoredSeries | null): void {
 
 export function resetMockSeries(): void {
   window.localStorage.removeItem(storageKey);
+}
+
+export function getMockChampionWinStats() {
+  return countChampionWins(readSeries()?.games ?? []);
 }
 
 export function getMockSeries(seriesId: string): StoredSeries {

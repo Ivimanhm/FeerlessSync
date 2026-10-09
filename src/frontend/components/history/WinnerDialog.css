@@ -1,0 +1,72 @@
+.modal-backdrop.winner-backdrop { padding: 16px; background: #010810cc; backdrop-filter: blur(5px); }
+.winner-modal { position: relative; display: flex; flex-direction: column; width: min(100%, 640px); max-height: calc(100dvh - 32px); overflow: hidden; color: #eef4f9; border: 1px solid #c6a258; border-radius: 12px; background: #05141e; box-shadow: inset 0 0 0 4px #031019, 0 24px 90px #0009; }
+.winner-modal::before { content: ''; position: absolute; inset: 5px; z-index: 1; border: 1px solid #b48e434d; border-radius: 8px; pointer-events: none; }
+.winner-modal > .ornamental-frame { inset: 2px; }
+.winner-modal > .ornamental-frame svg { width: 35px; height: 35px; }
+.winner-modal-close { position: absolute; top: 18px; right: 18px; z-index: 3; display: grid; place-items: center; width: 36px; height: 36px; padding: 0; color: #adbdca; border: 1px solid #51606b80; border-radius: 6px; background: #061720bb; }
+.winner-modal-close:hover { color: #f0ca75; border-color: #b48e43; }
+.winner-modal-header { position: relative; isolation: isolate; flex-shrink: 0; padding: 28px 64px 22px 28px; border-bottom: 1px solid #b48e4333; background: linear-gradient(110deg, #092232, #04121d); }
+.winner-modal-header::after { content: ''; position: absolute; inset: 0; z-index: -1; opacity: .18; background: var(--page-background-image) right center / cover; mask-image: linear-gradient(90deg, transparent 25%, #000); pointer-events: none; }
+.winner-modal-heading { display: flex; align-items: center; gap: 16px; }
+.winner-modal-heading > svg { flex-shrink: 0; color: #e4c071; }
+.winner-modal-eyebrow { margin: 0 0 7px; color: #c5a568; font-size: 10px; font-weight: 700; letter-spacing: 1.8px; }
+.winner-modal h2 { margin: 0; color: #fff0bb; font: 700 28px/1.15 Georgia, serif; }
+.winner-modal-header > p { margin: 14px 0 0; color: #b8c9d6; font-size: 13px; line-height: 1.5; }
+.winner-modal form { display: flex; flex-direction: column; min-height: 0; }
+.winner-modal-body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 24px 28px 22px; scrollbar-width: thin; scrollbar-color: #c29951 #06131b; }
+.winner-modal .winner-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; min-width: 0; margin: 0; padding: 0; border: 0; }
+.winner-modal .winner-choice-input { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.winner-modal .winner-choice-input:disabled { cursor: wait; }
+.winner-modal .winner-team-option { --team-color: #69c9f2; --team-tint: 34, 135, 190; position: relative; display: flex; flex-direction: column; gap: 20px; min-width: 0; margin: 0; padding: 18px; color: var(--team-color); border: 1px solid #385970; border-radius: 8px; background: linear-gradient(145deg, rgba(var(--team-tint), .16), #03131b); cursor: pointer; }
+.winner-modal .winner-team-option--red { --team-color: #f397a3; --team-tint: 179, 53, 83; border-color: #6c404b; }
+.winner-team-head { display: flex; align-items: center; gap: 9px; }
+.winner-team-head strong { color: inherit; font: 700 19px/1.2 Georgia, serif; }
+.winner-team-gem { flex: 0 0 9px; width: 9px; height: 16px; background: currentColor; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+.winner-choice-check { display: grid; place-items: center; flex: 0 0 18px; width: 18px; height: 18px; margin-left: auto; border: 1px solid #627b8c; border-radius: 4px; color: #04131c; }
+.winner-choice-check > svg { opacity: 0; }
+.winner-modal .winner-options label:hover { border-color: var(--team-color, #c6a258); }
+.winner-modal .winner-options label:has(input:checked) { border-color: var(--team-color, #c6a258); box-shadow: inset 0 0 0 1px var(--team-color, #c6a258); }
+.winner-modal .winner-options label:has(input:checked) .winner-choice-check { border-color: var(--team-color, #e4c071); background: var(--team-color, #e4c071); }
+.winner-modal .winner-options label:has(input:checked) .winner-choice-check > svg { opacity: 1; }
+.winner-modal .winner-options label:has(input:focus-visible) { outline: 2px solid #f2d085; outline-offset: 3px; }
+.winner-modal .winner-options:disabled label { opacity: .65; cursor: wait; }
+.winner-team-roster { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.winner-team-roster .portrait-image { width: 100%; height: auto; aspect-ratio: 1; border: 1px solid #b693537d; border-radius: 4px; }
+.winner-team-roster img { padding: 2px; border-radius: 4px; }
+.winner-team-roster .portrait-image-fallback { font-size: 11px; }
+.winner-modal .winner-pending-option { position: relative; display: flex; align-items: center; grid-column: 1 / -1; gap: 14px; margin: 0; padding: 14px 18px; color: #c5a568; border: 1px solid #455b67; border-radius: 7px; background: #081a24; cursor: pointer; }
+.winner-pending-option strong { display: block; color: #d7e1e9; font-size: 13px; }
+.winner-pending-option small { display: block; margin-top: 3px; color: #829baa; font-size: 11px; }
+.winner-choice-hint { margin: 14px 0 22px; color: #a5bbca; font-size: 12px; line-height: 1.5; }
+.winner-token-label { display: block; margin: 0 0 9px; color: #d3dfeb; font-size: 12px; font-weight: 600; }
+.winner-token-field { display: flex; align-items: center; gap: 12px; padding: 0 14px; border: 1px solid #426071; border-radius: 7px; background: #031019; }
+.winner-token-field > svg { flex-shrink: 0; color: #b69a63; }
+.winner-token-field:focus-within { outline: 2px solid #f2d085; outline-offset: 2px; border-color: #c6a258; }
+.winner-token-field input { width: 100%; min-width: 0; height: 46px; padding: 0; color: #eef4f9; border: 0; outline: none; background: transparent; font-size: 14px; }
+.winner-token-field input::placeholder { color: #6f889c; }
+.winner-modal-error { display: flex; align-items: start; gap: 9px; margin: 14px 0 0; padding: 12px; color: #ffb9c3; border: 1px solid #a6536066; border-radius: 6px; background: #35172080; font-size: 12px; line-height: 1.5; }
+.winner-modal-error > svg { flex-shrink: 0; }
+.winner-modal-actions { display: flex; justify-content: flex-end; flex-shrink: 0; gap: 12px; padding: 18px 28px 24px; border-top: 1px solid #b48e4333; background: #04111a; }
+.winner-modal .winner-cancel, .winner-modal .winner-save { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 18px; border: 1px solid #8f7547; border-radius: 6px; font-size: 13px; font-weight: 650; }
+.winner-modal .winner-cancel { color: #c9d4dd; background: transparent; }
+.winner-modal .winner-cancel:hover { color: #f2d085; border-color: #d1ad65; background: #b9944214; }
+.winner-modal .winner-save { color: #182028; border-color: #e2c07a; background: linear-gradient(120deg, #f0d291, #c5a261); }
+.winner-modal .winner-save:hover:not(:disabled) { background: linear-gradient(120deg, #ffe5ac, #d7b575); }
+.winner-modal button:disabled { cursor: not-allowed; opacity: .45; }
+.winner-saving-icon { animation: winner-saving-spin 1s linear infinite; }
+@keyframes winner-saving-spin { to { transform: rotate(360deg); } }
+@media (max-width: 560px) {
+  .winner-modal-header { padding: 24px 54px 18px 22px; }
+  .winner-modal-heading > svg { display: none; }
+  .winner-modal h2 { font-size: 25px; }
+  .winner-modal-header > p { margin-top: 10px; font-size: 12px; }
+  .winner-modal-body { padding: 20px 22px; }
+  .winner-modal .winner-options { grid-template-columns: 1fr; gap: 10px; }
+  .winner-modal .winner-team-option { gap: 12px; padding: 14px; }
+  .winner-team-roster { max-width: 240px; }
+  .winner-modal .winner-pending-option { padding: 12px 14px; }
+  .winner-choice-hint { margin: 12px 0 18px; }
+  .winner-modal-actions { padding: 16px 22px 20px; gap: 10px; }
+  .winner-modal .winner-save { flex: 1; padding-inline: 12px; }
+  .winner-modal .winner-cancel { padding-inline: 14px; }
+}

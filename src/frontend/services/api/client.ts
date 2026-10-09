@@ -130,6 +130,10 @@ export function createFearlessApiClient({ baseUrl, getAccessToken }: FearlessApi
       return request(`/series/${encodeURIComponent(seriesId)}/availability`);
     },
 
+    getChampionWinStats(): Promise<unknown> {
+      return request('/stats/champions');
+    },
+
     /** Stable endpoint: the server owns the active series and its rollover. */
     getFearless(): Promise<unknown> {
       return request('/fearless');

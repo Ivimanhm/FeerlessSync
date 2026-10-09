@@ -1,3 +1,5 @@
+import type { ChampionWinStats } from '../shared/championWins.ts';
+
 export interface StoredGame {
   gameNumber: number;
   blueTeam: number[];
@@ -55,6 +57,7 @@ export type RepositoryResult<T> = T | Promise<T>;
 export interface SeriesRepository {
   checkHealth(): RepositoryResult<void>;
   countSeries(): RepositoryResult<number>;
+  getChampionWinStats(): RepositoryResult<ChampionWinStats>;
   listSeries(limit: number, offset: number): RepositoryResult<Page<SeriesSummary>>;
   createSeries(seriesId: string): RepositoryResult<StoredSeries>;
   getOrCreateFearlessSeries(): RepositoryResult<StoredSeries>;

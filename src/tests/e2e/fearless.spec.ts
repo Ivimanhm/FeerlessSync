@@ -110,6 +110,7 @@ test('consulta los equipos completos y guarda el ganador desde Historial', async
 test('muestra serie no encontrada y permite volver a consultar', async ({ page }) => {
   await page.goto('/#/historial');
   await expect(page.getByRole('table')).toHaveCount(2);
+  await page.getByRole('button', { name: 'Cambiar serie' }).click();
   await page.getByRole('textbox', { name: 'ID de serie' }).fill('missing');
   await page.getByRole('button', { name: 'Buscar', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'No hay datos de esta serie' })).toBeVisible();

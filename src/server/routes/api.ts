@@ -83,6 +83,9 @@ export function createApiHandler(repository: SeriesRepository, options: ApiOptio
       requireAdmin(request, options.adminToken ?? '');
       return json({ valid: true });
     }
+    if (path === '/api/stats/champions' && method === 'GET') {
+      return json({ success: true, ...await databaseCall(() => repository.getChampionWinStats()) });
+    }
     if (path === '/api/fearless' && method === 'GET') {
       const catalog = await getCatalog();
       return json({ success: true, ...await databaseCall(() => getActiveFearless(repository, catalog)) });

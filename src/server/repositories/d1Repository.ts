@@ -1,4 +1,5 @@
 import { ApiFault } from '../errors.ts';
+import { championWinsQuery, statsFromRows, type ChampionWinsRow } from './championWinsQuery.ts';
 import type { NewGame, Page, SeriesEvent, SeriesRepository, SeriesSummary, StoredGame, StoredSeries } from '../types.ts';
 
 type SqlValue = string | number | null;
@@ -55,6 +56,11 @@ export class D1SeriesRepository implements SeriesRepository {
   async countSeries(): Promise<number> {
     const row = await this.database.prepare('SELECT COUNT(*) AS count FROM series').first<{ count: number }>();
     return row?.count ?? 0;
+  }
+
+  async getChampionWinStats() {
+    const rows = await this.database.prepare(championWinsQuery).all<ChampionWinsRow>();
+    return statsFromRows(rows.results);
   }
 
   async listSeries(limit: number, offset: number): Promise<Page<SeriesSummary>> {
