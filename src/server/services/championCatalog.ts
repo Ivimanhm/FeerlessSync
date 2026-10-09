@@ -1,6 +1,11 @@
 import type { ChampionCatalog, ChampionCatalogProvider } from '../types.ts';
+import snapshot from '../../frontend/data/championCatalog.json';
 
 const dragon = 'https://ddragon.leagueoflegends.com';
+const bundledCatalog: ChampionCatalog = {
+  version: `local-${snapshot.version}`,
+  championIds: snapshot.champions.map((champion) => champion.id).sort((a, b) => a - b),
+};
 
 export class DataDragonCatalogProvider implements ChampionCatalogProvider {
   private readonly fetcher: typeof fetch;
@@ -16,13 +21,24 @@ export class DataDragonCatalogProvider implements ChampionCatalogProvider {
     if (this.cached && Date.now() < this.expiresAt) return Promise.resolve(this.cached);
     this.loading ??= this.load().then((catalog) => {
       this.cached = catalog;
-      this.expiresAt = Date.now() + 60 * 60 * 1000;
+      this.expiresAt = Date.now() + (catalog.version.startsWith('local-') ? 5 : 60) * 60 * 1000;
       return catalog;
     }).finally(() => { this.loading = null; });
     return this.loading;
   }
 
   private async load(): Promise<ChampionCatalog> {
+    try {
+      return await this.loadFromDataDragon();
+    } catch {
+      if (bundledCatalog.championIds.length < 100 || new Set(bundledCatalog.championIds).size !== bundledCatalog.championIds.length) {
+        throw new Error('No se pudo cargar un catálogo de campeones válido.');
+      }
+      return bundledCatalog;
+    }
+  }
+
+  private async loadFromDataDragon(): Promise<ChampionCatalog> {
     const versionsResponse = await this.fetcher(`${dragon}/api/versions.json`, { signal: AbortSignal.timeout(10_000) });
     if (!versionsResponse.ok) throw new Error('No se pudo consultar la versión del catálogo.');
     const versions: unknown = await versionsResponse.json();
