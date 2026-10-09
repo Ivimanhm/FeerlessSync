@@ -21,6 +21,44 @@ export interface StoredSeries {
   usedChampions: number[];
 }
 
+/** Finds the highest numbered Fearless series (for example, fearless-012). */
+export async function getLatestFearlessSeriesId(): Promise<string> {
+  if (mockMode) return 'fearless-001';
+
+  const baseUrl = import.meta.env.VITE_API_BASE_URL?.trim() || window.location.origin;
+  const client = createFearlessApiClient({ baseUrl });
+  const pageSize = 100;
+  let offset = 0;
+  let total = Number.POSITIVE_INFINITY;
+  let latestId: string | null = null;
+  let latestNumber = 0n;
+
+  while (offset < total) {
+    const page: unknown = await client.listSeries(pageSize, offset);
+    if (!page || typeof page !== 'object' || !('series' in page) || !Array.isArray(page.series) ||
+        !('total' in page) || typeof page.total !== 'number' || !Number.isSafeInteger(page.total) || page.total < 0) {
+      throw new Error('La API devolvió un listado de series no válido.');
+    }
+
+    total = page.total;
+    for (const item of page.series) {
+      if (!item || typeof item !== 'object' || !('seriesId' in item) || typeof item.seriesId !== 'string') continue;
+      const match = /^fearless-(\d+)$/i.exec(item.seriesId);
+      if (!match) continue;
+      const number = BigInt(match[1]);
+      if (latestId === null || number > latestNumber) {
+        latestId = item.seriesId;
+        latestNumber = number;
+      }
+    }
+
+    if (page.series.length === 0) break;
+    offset += page.series.length;
+  }
+
+  return latestId ?? 'fearless-001';
+}
+
 function isStoredSeries(value: unknown): value is StoredSeries {
   if (!value || typeof value !== 'object') return false;
   const series = value as Partial<StoredSeries>;

@@ -6,14 +6,15 @@ import MatchHistory from '../../frontend/components/history/MatchHistory';
 import { getChampionCatalog } from '../../frontend/services/championCatalog';
 import { mapStoredSeries } from '../../frontend/services/api/series';
 import type { FearlessSeries } from '../../frontend/types/fearless';
-import { clearSeriesGames, getFearlessSeries, setGameWinner } from '../../frontend/services/api/series';
+import { clearSeriesGames, getFearlessSeries, getLatestFearlessSeriesId, setGameWinner } from '../../frontend/services/api/series';
 import { FearlessApiError } from '../../frontend/services/api/client';
 import { getChampionWinStats } from '../../frontend/services/api/championWins';
 
-vi.mock('../../frontend/services/api/series', async (importOriginal) => ({ ...(await importOriginal<typeof import('../../frontend/services/api/series')>()), getFearlessSeries: vi.fn(), clearSeriesGames: vi.fn(), setGameWinner: vi.fn() }));
+vi.mock('../../frontend/services/api/series', async (importOriginal) => ({ ...(await importOriginal<typeof import('../../frontend/services/api/series')>()), getFearlessSeries: vi.fn(), getLatestFearlessSeriesId: vi.fn(), clearSeriesGames: vi.fn(), setGameWinner: vi.fn() }));
 vi.mock('../../frontend/services/api/championWins', () => ({ getChampionWinStats: vi.fn() }));
 
 const getSeriesMock = vi.mocked(getFearlessSeries);
+const getLatestSeriesMock = vi.mocked(getLatestFearlessSeriesId);
 const clearGamesMock = vi.mocked(clearSeriesGames);
 const setWinnerMock = vi.mocked(setGameWinner);
 const championWinsMock = vi.mocked(getChampionWinStats);
@@ -35,6 +36,8 @@ beforeEach(async () => {
   }, catalog);
   window.history.replaceState(null, '', '/#/campeones');
   getSeriesMock.mockReset();
+  getLatestSeriesMock.mockReset();
+  getLatestSeriesMock.mockResolvedValue('fearless-001');
   clearGamesMock.mockReset();
   setWinnerMock.mockReset();
   championWinsMock.mockReset();
@@ -46,7 +49,18 @@ beforeEach(async () => {
 });
 
 describe('Fearless Sync', () => {
-  it('recuerda la última serie seleccionada entre Campeones, Historial y la portada', async () => {
+  it('selecciona la serie Fearless con número más alto al iniciar', async () => {
+    window.localStorage.setItem('fearless-sync:selected-series-id', 'fearless-001');
+    getLatestSeriesMock.mockResolvedValue('fearless-012');
+
+    render(<App />);
+    await screen.findByRole('region', { name: 'Campeones disponibles' });
+
+    expect(getLatestSeriesMock).toHaveBeenCalledOnce();
+    expect(getSeriesMock).toHaveBeenLastCalledWith('fearless-012');
+  });
+
+  it('mantiene la serie seleccionada entre Campeones e Historial', async () => {
     render(<App />);
     await screen.findByRole('region', { name: 'Campeones disponibles' });
 
@@ -54,16 +68,10 @@ describe('Fearless Sync', () => {
     fireEvent.input(screen.getByRole('textbox', { name: 'ID de serie' }), { target: { value: 'fearless-42' } });
     fireEvent.click(screen.getByRole('button', { name: 'Buscar' }));
     await waitFor(() => expect(getSeriesMock).toHaveBeenLastCalledWith('fearless-42'));
-    expect(window.localStorage.getItem('fearless-sync:selected-series-id')).toBe('fearless-42');
-
-    fireEvent.click(within(screen.getByRole('navigation', { name: 'Ruta de navegación' })).getByRole('button', { name: 'Inicio' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Comenzar ahora' }));
-    await waitFor(() => expect(getSeriesMock).toHaveBeenLastCalledWith('fearless-42'));
 
     fireEvent.click(screen.getByRole('button', { name: 'Abrir menú' }));
     fireEvent.click(within(screen.getByRole('navigation', { name: 'Navegación principal' })).getByRole('button', { name: 'Historial' }));
-    await screen.findAllByRole('table');
-    expect(screen.getByText('fearless-42')).toBeTruthy();
+    await waitFor(() => expect(screen.getByText('fearless-42')).toBeTruthy());
   });
 
   it('muestra la portada sin consultar series y enlaza las releases de PersoBuilder', () => {
