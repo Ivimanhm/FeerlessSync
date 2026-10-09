@@ -21,6 +21,7 @@ const championWinsMock = vi.mocked(getChampionWinStats);
 let testSeries: FearlessSeries;
 
 beforeEach(async () => {
+  window.localStorage.clear();
   const catalog = await getChampionCatalog();
   const usedIds = catalog.slice(-70).map(champion => champion.id);
   testSeries = mapStoredSeries({
@@ -45,6 +46,26 @@ beforeEach(async () => {
 });
 
 describe('Fearless Sync', () => {
+  it('recuerda la última serie seleccionada entre Campeones, Historial y la portada', async () => {
+    render(<App />);
+    await screen.findByRole('region', { name: 'Campeones disponibles' });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Cambiar serie' }));
+    fireEvent.input(screen.getByRole('textbox', { name: 'ID de serie' }), { target: { value: 'fearless-42' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Buscar' }));
+    await waitFor(() => expect(getSeriesMock).toHaveBeenLastCalledWith('fearless-42'));
+    expect(window.localStorage.getItem('fearless-sync:selected-series-id')).toBe('fearless-42');
+
+    fireEvent.click(within(screen.getByRole('navigation', { name: 'Ruta de navegación' })).getByRole('button', { name: 'Inicio' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Comenzar ahora' }));
+    await waitFor(() => expect(getSeriesMock).toHaveBeenLastCalledWith('fearless-42'));
+
+    fireEvent.click(screen.getByRole('button', { name: 'Abrir menú' }));
+    fireEvent.click(within(screen.getByRole('navigation', { name: 'Navegación principal' })).getByRole('button', { name: 'Historial' }));
+    await screen.findAllByRole('table');
+    expect(screen.getByText('fearless-42')).toBeTruthy();
+  });
+
   it('muestra la portada sin consultar series y enlaza las releases de PersoBuilder', () => {
     window.history.replaceState(null, '', '/');
     const open = vi.spyOn(window, 'open');
