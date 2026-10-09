@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'preact/hooks';
 import type { Page } from '../navigation';
 
-const pageFromHash = (): Page => window.location.hash === '#/historial' ? 'Historial' : 'Inicio';
+const pageFromHash = (): Page => {
+  if (window.location.hash === '#/historial') return 'Historial';
+  if (window.location.hash === '#/campeones') return 'Campeones';
+  return 'Inicio';
+};
 
 export function useNavigation() {
   const [page, setPage] = useState<Page>(pageFromHash);
@@ -13,7 +17,7 @@ export function useNavigation() {
   }, []);
 
   const navigate = (nextPage: Page) => {
-    window.location.hash = nextPage === 'Historial' ? '/historial' : '/';
+    window.location.hash = nextPage === 'Inicio' ? '/' : `/${nextPage.toLowerCase()}`;
     setPage(nextPage);
   };
 

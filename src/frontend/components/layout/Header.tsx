@@ -1,3 +1,4 @@
+import appPackage from '../../../../package.json';
 import { Bell, ChevronDown, ChevronRight, Menu, UserRound } from 'lucide-preact';
 import { useState } from 'preact/hooks';
 import type { Page } from '../../app/navigation';
@@ -18,7 +19,7 @@ export default function Header({ activePage, onOpenMobile, onGoHome }: HeaderPro
         <nav class="breadcrumb" aria-label="Ruta de navegación">
           <button type="button" onClick={onGoHome}>Inicio</button>
           <ChevronRight size={17} strokeWidth={1.5} aria-hidden="true" />
-          <span>{activePage === 'Inicio' ? 'Fearless Sync' : activePage}</span>
+          <span>{activePage === 'Campeones' ? 'Fearless Sync' : activePage}</span>
         </nav>
       </div>
       <div class="header-actions">
@@ -36,7 +37,7 @@ export default function Header({ activePage, onOpenMobile, onGoHome }: HeaderPro
             <span>Invocador</span>
             <ChevronDown size={18} strokeWidth={1.6} aria-hidden="true" />
           </button>
-          {openMenu === 'profile' && <div class="header-popover profile-popover">PersoBuilder<br /><small>Fearless Sync v1.0.0</small></div>}
+          {openMenu === 'profile' && <div class="header-popover profile-popover">PersoBuilder<br /><small>Fearless Sync v{appPackage.version}</small></div>}
         </div>
       </div>
     </header>

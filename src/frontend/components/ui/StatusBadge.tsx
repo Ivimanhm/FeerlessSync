@@ -1,3 +1,4 @@
+import appPackage from '../../../../package.json';
 import { CloudCheck } from 'lucide-preact';
 
 export default function StatusBadge({ status }: { status: string }) {
@@ -8,7 +9,7 @@ export default function StatusBadge({ status }: { status: string }) {
         <span>{status}</span>
         <span class="status-dot" />
       </div>
-      <span class="status-version">Fearless Sync v1.0.0</span>
+      <span class="status-version">Fearless Sync v{appPackage.version}</span>
     </div>
   );
 }

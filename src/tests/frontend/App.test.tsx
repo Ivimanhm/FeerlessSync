@@ -29,7 +29,7 @@ beforeEach(async () => {
       createdAt: '2026-09-23T21:33:00Z',
     })),
   }, catalog);
-  window.history.replaceState(null, '', '/');
+  window.history.replaceState(null, '', '/#/campeones');
   getSeriesMock.mockReset();
   clearGamesMock.mockReset();
   setWinnerMock.mockReset();
@@ -40,7 +40,48 @@ beforeEach(async () => {
 });
 
 describe('Fearless Sync', () => {
-  it('muestra solo dos páginas y pasa del resumen al historial completo', async () => {
+  it('muestra la portada sin consultar series y enlaza las releases de PersoBuilder', () => {
+    window.history.replaceState(null, '', '/');
+    const open = vi.spyOn(window, 'open');
+    render(<App />);
+    expect(screen.getByRole('heading', { name: /Tus equipos.*Mis reglas/, level: 1 })).toBeTruthy();
+    expect(screen.getByRole('list', { name: 'Ejemplo de composición de equipo' }).textContent).toMatch(/Sett.*Viego.*Akali.*Aphelios.*Thresh/);
+    const buttons = screen.getAllByRole('button');
+    expect(buttons).toHaveLength(7);
+    for (const button of buttons.filter(button => !/Comenzar ahora|cómo funciona/i.test(button.textContent ?? ''))) fireEvent.click(button);
+    const download = screen.getByRole('link', { name: 'Descargar app' });
+    expect(download.getAttribute('href')).toBe('https://github.com/Ivimanhm/PersoBuilder/releases');
+    expect(download.getAttribute('target')).toBe('_blank');
+    expect(download.getAttribute('rel')).toBe('noopener noreferrer');
+    expect(window.location.hash).toBe('');
+    expect(open).not.toHaveBeenCalled();
+    expect(getSeriesMock).not.toHaveBeenCalled();
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(screen.queryByRole('textbox')).toBeNull();
+  });
+
+  it('abre los campeones al comenzar y permite volver a la portada', async () => {
+    window.history.replaceState(null, '', '/');
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Comenzar ahora' }));
+    expect(window.location.hash).toBe('#/campeones');
+    await screen.findByRole('region', { name: 'Campeones disponibles' });
+    expect(getSeriesMock).toHaveBeenCalledTimes(1);
+    fireEvent.click(within(screen.getByRole('navigation', { name: 'Ruta de navegación' })).getByRole('button', { name: 'Inicio' }));
+    expect(window.location.hash).toBe('#/');
+    expect(screen.getByRole('heading', { name: /Tus equipos.*Mis reglas/, level: 1 })).toBeTruthy();
+  });
+
+  it('conserva la ruta del historial y vuelve a la nueva portada', async () => {
+    window.history.replaceState(null, '', '/#/historial');
+    render(<App />);
+    await screen.findAllByRole('table');
+    fireEvent.click(within(screen.getByRole('navigation', { name: 'Ruta de navegación' })).getByRole('button', { name: 'Inicio' }));
+    expect(screen.getByRole('heading', { name: /Tus equipos.*Mis reglas/, level: 1 })).toBeTruthy();
+    expect(screen.queryByRole('table')).toBeNull();
+  });
+
+  it('abre directamente los campeones y pasa al historial completo', async () => {
     render(<App />);
 
     expect(screen.getByRole('status', { name: 'Cargando serie' })).toBeTruthy();
@@ -54,7 +95,8 @@ describe('Fearless Sync', () => {
     expect(screen.getAllByRole('table')).toHaveLength(7);
     expect(within(screen.getByRole('table', { name: 'Partida 1: equipos por posición' })).getAllByRole('row')).toHaveLength(6);
 
-    fireEvent.click(within(screen.getByRole('navigation', { name: 'Navegación principal' })).getByRole('button', { name: 'Inicio' }));
+    fireEvent.click(within(screen.getByRole('navigation', { name: 'Navegación principal' })).getByRole('button', { name: 'Campeones' }));
+    expect(window.location.hash).toBe('#/campeones');
     expect(screen.getByRole('heading', { name: 'Fearless Sync', level: 1 })).toBeTruthy();
     expect(screen.queryByRole('table')).toBeNull();
   });

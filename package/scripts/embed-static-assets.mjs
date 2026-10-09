@@ -12,6 +12,7 @@ const mimeTypes = {
   '.svg': 'image/svg+xml',
   '.jpg': 'image/jpeg',
   '.png': 'image/png',
+  '.woff2': 'font/woff2',
 };
 const files = new Map([['/', path.join(dist, 'index.html')]]);
 for (const assetPath of assetPaths) {
@@ -29,6 +30,16 @@ files.set('/landscape.jpg', path.join(dist, 'landscape.jpg'));
 for (const filename of fs.readdirSync(path.join(dist, 'champions')).filter((name) => name.endsWith('.jpg'))) {
   files.set(`/champions/${filename}`, path.join(dist, 'champions', filename));
 }
+
+// Include the welcome assets in the standalone Worker as well as the Vite build.
+function includeHomeAssets(directory) {
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    const filename = path.join(directory, entry.name);
+    if (entry.isDirectory()) includeHomeAssets(filename);
+    else files.set('/' + path.relative(dist, filename).split(path.sep).join('/'), filename);
+  }
+}
+includeHomeAssets(path.join(dist, 'home'));
 
 const entries = [...files].map(([url, filename]) => {
   const content = fs.readFileSync(filename);

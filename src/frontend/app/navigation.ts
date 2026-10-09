@@ -1,1 +1,1 @@
-export type Page = 'Inicio' | 'Historial';
+export type Page = 'Inicio' | 'Campeones' | 'Historial';

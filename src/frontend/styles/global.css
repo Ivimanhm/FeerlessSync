@@ -16,6 +16,9 @@
   --text-primary: #f4f6fa;
   --text-secondary: #aeb9c9;
   --border: #294556;
+  --page-background-image: url('/home/background-v3.jpg');
+  --page-background-shade: linear-gradient(90deg, rgba(3, 11, 18, .2), rgba(3, 11, 18, .72) 22%, rgba(3, 11, 18, .55) 65%, rgba(3, 11, 18, .2));
+  --page-background-depth: linear-gradient(180deg, rgba(3, 11, 18, .2), rgba(3, 11, 18, .45));
 }
 
 * { box-sizing: border-box; }
@@ -60,7 +63,14 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
 .sidebar--collapsed .nav-item { justify-content: center; padding: 0; }
 .sidebar--collapsed .nav-item--active::before { left: -9px; }
 
-.app-main { min-width: 0; min-height: 100vh; background: linear-gradient(180deg, rgba(3, 11, 18, .25), rgba(3, 11, 18, .15)), url('/landscape.jpg') center top / cover fixed; }
+.app-main {
+  min-width: 0;
+  min-height: 100vh;
+  background:
+    var(--page-background-shade),
+    var(--page-background-depth),
+    var(--page-background-image) center top / cover fixed;
+}
 .mock-banner { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; padding: 10px 14px; border: 1px solid rgba(244, 195, 77, .45); border-radius: 9px; background: rgba(40, 31, 10, .86); color: #f8e7b6; font-size: 13px; }
 .mock-banner button { flex: 0 0 auto; padding: 6px 10px; border: 1px solid #d9a945; border-radius: 6px; background: rgba(244, 195, 77, .12); color: #ffe5a0; }
 @media (max-width: 650px) { .mock-banner { align-items: flex-start; flex-direction: column; } }

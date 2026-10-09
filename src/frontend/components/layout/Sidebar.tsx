@@ -15,7 +15,7 @@ interface SidebarProps {
 }
 
 const items = [
-  { label: 'Inicio', Icon: House },
+  { label: 'Campeones', Icon: House },
   { label: 'Historial', Icon: Clock3 },
 ] as const;
 
