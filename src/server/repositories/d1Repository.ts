@@ -1,4 +1,5 @@
 import { ApiFault } from '../errors.ts';
+import { championWinsQuery, statsFromRows, type ChampionWinsRow } from './championWinsQuery.ts';
 import type { NewGame, Page, SeriesEvent, SeriesRepository, SeriesSummary, StoredGame, StoredSeries } from '../types.ts';
 
 type SqlValue = string | number | null;
@@ -57,6 +58,11 @@ export class D1SeriesRepository implements SeriesRepository {
     return row?.count ?? 0;
   }
 
+  async getChampionWinStats() {
+    const rows = await this.database.prepare(championWinsQuery).all<ChampionWinsRow>();
+    return statsFromRows(rows.results);
+  }
+
   async listSeries(limit: number, offset: number): Promise<Page<SeriesSummary>> {
     const rows = await this.database.prepare(`
       SELECT s.series_id AS seriesId, s.updated_at AS updatedAt, COUNT(g.game_number) AS gamesCount
@@ -82,6 +88,36 @@ export class D1SeriesRepository implements SeriesRepository {
     if (!row) return null;
     const games = await this.readGames(seriesId);
     return { seriesId: row.series_id, createdAt: row.created_at, updatedAt: row.updated_at, games, usedChampions: usedChampionIds(games) };
+  }
+
+  async getOrCreateFearlessSeries(): Promise<StoredSeries> {
+    const existing = await this.database.prepare('SELECT series_id FROM fearless_series WHERE archived_at IS NULL').first<{ series_id: string }>();
+    if (existing) {
+      const series = await this.getSeries(existing.series_id);
+      if (series) return series;
+    }
+    const seriesId = `fearless-${crypto.randomUUID()}`;
+    const now = new Date().toISOString();
+    // D1 batches are transactional. Only the first concurrent request creates a row.
+    await this.database.batch([
+      this.database.prepare(`INSERT INTO series (series_id, created_at, updated_at)
+        SELECT ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM fearless_series WHERE archived_at IS NULL)`)
+        .bind(seriesId, now, now),
+      this.database.prepare(`INSERT INTO fearless_series (series_id)
+        SELECT series_id FROM series WHERE series_id = ?`).bind(seriesId),
+      this.database.prepare(`INSERT INTO events (series_id, type, game_number, timestamp, details)
+        SELECT series_id, 'series_created', NULL, ?, '{}' FROM series WHERE series_id = ?`).bind(now, seriesId),
+    ]);
+    const active = await this.database.prepare('SELECT series_id FROM fearless_series WHERE archived_at IS NULL').first<{ series_id: string }>();
+    if (!active) throw new Error('No hay una serie Fearless activa.');
+    const series = await this.getSeries(active.series_id);
+    if (!series) throw new Error('No existe la serie Fearless activa.');
+    return series;
+  }
+
+  async archiveFearlessSeries(seriesId: string): Promise<void> {
+    await this.database.prepare('UPDATE fearless_series SET archived_at = ? WHERE series_id = ? AND archived_at IS NULL')
+      .bind(new Date().toISOString(), seriesId).run();
   }
 
   async deleteSeries(seriesId: string): Promise<boolean> {

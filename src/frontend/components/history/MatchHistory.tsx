@@ -3,6 +3,7 @@ import { useMemo, useState } from 'preact/hooks';
 import type { Game, PlayedChampion, Role, TeamSide } from '../../types/fearless';
 import WinnerDialog from './WinnerDialog';
 import PortraitImage from '../champions/PortraitImage';
+import OrnamentalFrame from '../ui/OrnamentalFrame';
 
 interface MatchHistoryProps {
   games: Game[];
@@ -40,14 +41,16 @@ export default function MatchHistory({ games, seriesId, onWinnerChanged }: Match
   return (
     <>
     <section class="content-panel history-panel" aria-labelledby="history-heading">
+      <OrnamentalFrame />
       <div class="panel-header history-panel-header">
-        <div class="panel-title"><Clock3 size={27} strokeWidth={1.9} aria-hidden="true" /><h2 id="history-heading"><span>Historial</span> de partidas jugadas</h2></div>
+        <div class="panel-title"><Clock3 size={27} strokeWidth={1.9} aria-hidden="true" /><h2 id="history-heading">Partidas jugadas</h2><span class="count-badge">{games.length}</span></div>
         <button class="history-sort" type="button" onClick={() => setAscending(!ascending)} aria-label="Cambiar orden del historial" title={ascending ? 'Más antiguas primero' : 'Más recientes primero'}>
           {ascending ? 'Más antiguas primero' : 'Más recientes primero'} <ChevronsUpDown size={16} strokeWidth={1.5} aria-hidden="true" />
         </button>
       </div>
       <div class="history-games">
-        {sortedGames.map((game, index) => <article class="history-game" key={game.gameNumber} aria-labelledby={'game-heading-' + game.gameNumber}>
+        {sortedGames.map((game, index) => <article class={`history-game history-game--${game.winner ?? 'pending'}`} key={game.gameNumber} aria-labelledby={'game-heading-' + game.gameNumber}>
+          <OrnamentalFrame />
           <header class="history-game-header">
             <div>
               <h3 id={'game-heading-' + game.gameNumber}>Partida {game.gameNumber}</h3>
@@ -66,9 +69,9 @@ export default function MatchHistory({ games, seriesId, onWinnerChanged }: Match
           <div class="table-scroll">
             <table class="history-table" aria-label={'Partida ' + game.gameNumber + ': equipos por posición'}>
               <thead><tr>
-                <th scope="col" class="team-heading--blue"><span class="history-team-heading"><span class="history-team-gem" />Equipo Azul</span></th>
-                <th scope="col" class="history-position-heading"><span class="sr-only">Posición</span></th>
-                <th scope="col" class="team-heading--red"><span class="history-team-heading"><span class="history-team-gem" />Equipo Rojo</span></th>
+                <th scope="col" class="team-heading--blue"><span class="history-team-heading"><span class="history-team-gem" aria-hidden="true" />Equipo Azul{game.winner === 'blue' && <Trophy class="history-team-trophy" size={15} aria-hidden="true" />}</span></th>
+                <th scope="col" class="history-position-heading"><span class="sr-only">Posición</span><span class="history-versus" aria-hidden="true">VS</span></th>
+                <th scope="col" class="team-heading--red"><span class="history-team-heading"><span class="history-team-gem" aria-hidden="true" />Equipo Rojo{game.winner === 'red' && <Trophy class="history-team-trophy" size={15} aria-hidden="true" />}</span></th>
               </tr></thead>
               <tbody>{roleOrder.map((role) => <tr key={role}>
                 <td><ChampionCell champion={championAt(game, 'blue', role)} side="blue" eager={index === 0} /></td>

@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { DatabaseSync } from 'node:sqlite';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -8,6 +8,7 @@ import { createApiHandler } from '../../server/routes/api.ts';
 import { SqliteSeriesRepository } from '../../server/repositories/sqliteRepository.ts';
 import { createLocalServer } from '../../server/nodeServer.ts';
 import type { ChampionCatalogProvider } from '../../server/types.ts';
+import { verifyGlobalChampionWins } from './championWins.contract';
 
 const databases: DatabaseSync[] = [];
 const temporaryDirectories: string[] = [];
@@ -43,6 +44,122 @@ const firstGame = {
 const secondGame = { gameNumber: 2, blueTeam: [20, 21, 22, 23, 24], redTeam: [25, 26, 27, 28, 29] };
 
 describe('API local de series', () => {
+  it('calcula victorias globales y refleja ganadores corregidos, archivos y borrados', async () => {
+    await verifyGlobalChampionWins(setup().repository);
+  });
+
+  it('usa /fearless para consultar y guardar; archiva solo cuando quedan menos de diez', async () => {
+    const championIds = Array.from({ length: 20 }, (_, index) => index + 1);
+    const { call, repository, database } = setup({ getCatalog: async () => ({ version: '20', championIds }) });
+    const initial = await (await call('/api/fearless')).json() as { seriesId: string };
+    expect(initial).toMatchObject({ games: [], availableChampionsCount: 20, nextGameNumber: 1 });
+    expect(await (await call('/api/fearless')).json()).toMatchObject({ seriesId: initial.seriesId });
+    const first = { seriesId: initial.seriesId, gameNumber: 1, blueTeam: [1, 2, 3, 4, 5], redTeam: [6, 7, 8, 9, 10] };
+    expect(await (await call('/api/fearless', 'POST', first)).json()).toMatchObject({ seriesId: initial.seriesId, seriesArchived: false });
+    expect(await (await call('/api/fearless')).json()).toMatchObject({ seriesId: initial.seriesId, availableChampionsCount: 10, nextGameNumber: 2 });
+    const second = { seriesId: initial.seriesId, gameNumber: 2, blueTeam: [11, 12, 13, 14, 15], redTeam: [16, 17, 18, 19, 20] };
+    const saved = await call('/api/fearless', 'POST', second);
+    expect(saved.status).toBe(201);
+    expect(await saved.json()).toMatchObject({ seriesId: initial.seriesId, seriesArchived: true });
+    const next = await (await call('/api/fearless')).json() as { seriesId: string };
+    expect(next.seriesId).not.toBe(initial.seriesId);
+    expect(next).toMatchObject({ availableChampionsCount: 20, usedChampions: [], nextGameNumber: 1 });
+    expect(repository.getSeries(initial.seriesId)?.games).toHaveLength(2);
+    expect(database.prepare('SELECT archived_at FROM fearless_series WHERE series_id = ?').get(initial.seriesId)).toMatchObject({ archived_at: expect.any(String) });
+    expect(await (await call('/api/fearless', 'POST', second)).json()).toMatchObject({ error: 'fearless_series_changed' });
+    expect(repository.getSeries(next.seriesId)?.games).toHaveLength(0);
+    expect((await call('/api/fearless', 'POST', { ...first, seriesId: next.seriesId })).status).toBe(201);
+    const reloaded = createApiHandler(new SqliteSeriesRepository(database), { catalogProvider: { getCatalog: async () => ({ version: '20', championIds }) } });
+    expect(await (await reloaded(new Request('http://localhost/api/fearless'))).json()).toMatchObject({ seriesId: next.seriesId, nextGameNumber: 2 });
+    repository.clearGames(initial.seriesId);
+    expect(await (await call('/api/fearless')).json()).toMatchObject({ seriesId: next.seriesId });
+  });
+
+  it('comparte una única serie activa en consultas simultáneas', async () => {
+    const { call, repository } = setup();
+    const results = await Promise.all(Array.from({ length: 5 }, () => call('/api/fearless')));
+    const bodies = await Promise.all(results.map((response) => response.json())) as Array<{ seriesId: string }>;
+    expect(new Set(bodies.map((body) => body.seriesId)).size).toBe(1);
+    expect(repository.countSeries()).toBe(1);
+  });
+
+  it('no crea series con el catálogo caído y rechaza drafts inválidos', async () => {
+    const offline = setup({ getCatalog: async () => { throw new Error('offline'); } });
+    expect((await offline.call('/api/fearless')).status).toBe(503);
+    expect(offline.repository.countSeries()).toBe(0);
+    const { call, repository } = setup();
+    const initial = await (await call('/api/fearless')).json() as { seriesId: string };
+    expect((await call('/api/fearless', 'POST', firstGame)).status).toBe(400);
+    const unknown = await call('/api/fearless', 'POST', { ...firstGame, seriesId: initial.seriesId, blueTeam: [9999, 1, 2, 3, 4] });
+    expect(await unknown.json()).toMatchObject({ error: 'unknown_champion_ids' });
+    expect(repository.getSeries(initial.seriesId)?.games).toHaveLength(0);
+  });
+
+  it('mantiene la serie con exactamente diez campeones disponibles', async () => {
+    const championIds = Array.from({ length: 20 }, (_, index) => index + 1);
+    const { call, repository } = setup({ getCatalog: async () => ({ version: 'boundary', championIds }) });
+    repository.createSeries('boundary');
+    repository.addGame('boundary', { gameNumber: 1, blueTeam: [1, 2, 3, 4, 5], redTeam: [6, 7, 8, 9, 10] });
+    const result = await call('/api/series/boundary/prepare', 'POST');
+    expect(result.status).toBe(200);
+    expect(await result.json()).toMatchObject({ seriesId: 'boundary', seriesChanged: false, canStartGame: true, availableChampionsCount: 10, nextGameNumber: 2 });
+    expect(repository.countSeries()).toBe(1);
+  });
+
+  it.each(Array.from({ length: 10 }, (_, index) => index))('cambia de serie con %i campeones restantes y reutiliza el nuevo ID', async (remaining) => {
+    const championIds = Array.from({ length: 10 + remaining }, (_, index) => index + 1);
+    const { call, repository } = setup({ getCatalog: async () => ({ version: 'boundary', championIds }) });
+    repository.createSeries('exhausted');
+    repository.addGame('exhausted', { gameNumber: 1, blueTeam: [1, 2, 3, 4, 5], redTeam: [6, 7, 8, 9, 10] });
+    const availability = await (await call('/api/series/exhausted/availability')).json();
+    expect(availability).toMatchObject({ canStartGame: false, availableChampionsCount: remaining });
+    const responses = await Promise.all([call('/api/series/exhausted/prepare', 'POST'), call('/api/series/exhausted/prepare', 'POST')]);
+    expect(responses.map((response) => response.status)).toEqual([200, 200]);
+    const [first, second] = await Promise.all(responses.map((response) => response.json())) as Array<{ seriesId: string }>;
+    expect(first).toMatchObject({ previousSeriesId: 'exhausted', seriesChanged: true, usedChampions: [], availableChampions: championIds, nextGameNumber: 1 });
+    expect(first.seriesId).not.toBe('exhausted');
+    expect(second.seriesId).toBe(first.seriesId);
+    expect(repository.countSeries()).toBe(2);
+    expect(repository.getSeries('exhausted')?.games).toHaveLength(1);
+    expect(await (await call(`/api/series/${first.seriesId}/prepare`, 'POST')).json()).toMatchObject({ seriesId: first.seriesId, seriesChanged: false });
+  });
+
+  it('resuelve continuaciones agotadas y permite reutilizar campeones en la nueva serie', async () => {
+    const championIds = Array.from({ length: 173 }, (_, index) => index + 1);
+    const { call, repository } = setup({ getCatalog: async () => ({ version: '173', championIds }) });
+    repository.createSeries('long-series');
+    for (let gameNumber = 1; gameNumber <= 17; gameNumber++) {
+      const ids = Array.from({ length: 10 }, (_, index) => (gameNumber - 1) * 10 + index + 1);
+      repository.addGame('long-series', { gameNumber, blueTeam: ids.slice(0, 5), redTeam: ids.slice(5) });
+    }
+    const first = await (await call('/api/series/long-series/prepare', 'POST')).json() as { seriesId: string };
+    expect(first).toMatchObject({ seriesChanged: true, availableChampionsCount: 173, nextGameNumber: 1 });
+    for (const game of repository.getSeries('long-series')!.games) {
+      expect((await call(`/api/series/${first.seriesId}/games`, 'POST', game)).status).toBe(201);
+    }
+    const second = await (await call('/api/series/long-series/prepare', 'POST')).json() as { seriesId: string };
+    expect(second.seriesId).not.toBe(first.seriesId);
+    expect(repository.countSeries()).toBe(3);
+    expect(await (await call('/api/series/long-series/prepare', 'POST')).json()).toMatchObject({ seriesId: second.seriesId });
+  });
+
+  it('no crea series cuando falla el catálogo, hay IDs desconocidos o falta la serie', async () => {
+    const offline = setup({ getCatalog: async () => { throw new Error('offline'); } });
+    offline.repository.createSeries('offline');
+    expect((await offline.call('/api/series/offline/prepare', 'POST')).status).toBe(503);
+    expect(offline.repository.countSeries()).toBe(1);
+    expect((await offline.call('/api/series/missing/prepare', 'POST')).status).toBe(404);
+    const invalid = setup({ getCatalog: async () => ({ version: 'small', championIds: [1, 2, 3] }) });
+    invalid.repository.createSeries('small');
+    expect((await invalid.call('/api/series/small/prepare', 'POST')).status).toBe(503);
+    expect(invalid.repository.countSeries()).toBe(1);
+    const unknown = setup({ getCatalog: async () => ({ version: 'unknown', championIds: Array.from({ length: 20 }, (_, index) => index + 1) }) });
+    unknown.repository.createSeries('unknown');
+    unknown.repository.addGame('unknown', firstGame);
+    expect(await (await unknown.call('/api/series/unknown/prepare', 'POST')).json()).toMatchObject({ error: 'unknown_champion_ids' });
+    expect(unknown.repository.countSeries()).toBe(1);
+  });
+
   it('cuenta series persistidas y permite crearlas sin token', async () => {
     const { call } = setup();
     expect(await (await call('/api/series/count')).json()).toEqual({ success: true, count: 0 });
@@ -269,6 +386,77 @@ describe('API local de series', () => {
     expect((await call(path)).status).toBe(401);
     expect((await call(path, 'GET', undefined, true)).status).toBe(401);
     expect(await (await call(path, 'GET', undefined, 'admin')).json()).toEqual({ valid: true });
+  });
+
+  it('recuerda una clave válida con una cookie HttpOnly y permite cambiar otros ganadores', async () => {
+    const { handler, call } = setup();
+    await call('/api/series', 'POST', { seriesId: 'session-test' });
+    await call('/api/series/session-test/games', 'POST', firstGame);
+    const path = '/api/series/session-test/games/1/winner';
+    const saved = await call(path, 'PUT', { winner: 'blue' }, 'admin');
+    expect(saved.status).toBe(200);
+    const setCookie = saved.headers.get('Set-Cookie')!;
+    expect(setCookie).toContain('HttpOnly');
+    expect(setCookie).toContain('SameSite=Strict');
+    expect(setCookie).toContain('Path=/api');
+    expect(setCookie).toContain('Max-Age=2592000');
+    expect(setCookie).not.toContain(adminToken);
+    const cookie = setCookie.split(';')[0];
+    const request = (route: string, method = 'GET', body?: unknown, origin = 'http://localhost:5173') => handler(new Request(`http://localhost${route}`, {
+      method, headers: { Cookie: cookie, Origin: origin, 'Content-Type': 'application/json' },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    }));
+    expect(await (await request('/api/admin/winner-session')).json()).toEqual({ active: true });
+    expect((await request(path, 'PUT', { winner: 'red' })).status).toBe(200);
+    expect((await request(path, 'PUT', { winner: null }, 'https://untrusted.example')).status).toBe(403);
+    expect((await request('/api/series/session-test', 'DELETE')).status).toBe(401);
+    expect((await request('/api/series/session-test/games', 'DELETE')).status).toBe(401);
+    const logout = await request('/api/admin/winner-session', 'DELETE');
+    expect(logout.headers.get('Set-Cookie')).toContain('Max-Age=0');
+    expect(logout.headers.get('Access-Control-Allow-Credentials')).toBe('true');
+    expect(logout.headers.get('Access-Control-Allow-Origin')).toBe('http://localhost:5173');
+  });
+
+  it('rechaza cookies falsas, caducadas o firmadas con una clave anterior', async () => {
+    const { handler, call, repository } = setup();
+    await call('/api/series', 'POST', { seriesId: 'session-test' });
+    await call('/api/series/session-test/games', 'POST', firstGame);
+    const path = '/api/series/session-test/games/1/winner';
+    const failed = await call(path, 'PUT', { winner: 'blue' }, true);
+    expect(failed.status).toBe(401);
+    expect(failed.headers.get('Set-Cookie')).toBeNull();
+    const saved = await call(path, 'PUT', { winner: 'blue' }, 'admin');
+    const cookie = saved.headers.get('Set-Cookie')!.split(';')[0];
+    const request = (value = cookie) => new Request(`http://localhost${path}`, {
+      method: 'PUT', headers: { Cookie: value, 'Content-Type': 'application/json' }, body: JSON.stringify({ winner: 'red' }),
+    });
+    expect((await handler(request(`${cookie.slice(0, -1)}${cookie.endsWith('0') ? '1' : '0'}`))).status).toBe(401);
+    const rotated = createApiHandler(repository, { adminToken: 'new-admin-key' });
+    expect((await rotated(request())).status).toBe(401);
+    const now = Date.now();
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(now + 31 * 24 * 60 * 60 * 1000);
+    try { expect((await handler(request())).status).toBe(401); }
+    finally { clock.mockRestore(); }
+    const invalidBearer = request();
+    invalidBearer.headers.set('Authorization', 'Bearer wrong');
+    expect((await handler(invalidBearer)).status).toBe(401);
+    const missingGame = await call('/api/series/session-test/games/99/winner', 'PUT', { winner: 'blue' }, 'admin');
+    expect(missingGame.status).toBe(404);
+    expect(missingGame.headers.get('Set-Cookie')).toBeNull();
+  });
+
+  it('marca la cookie como Secure en HTTPS y no usa CORS con credenciales para comodines', async () => {
+    const { repository } = setup();
+    repository.createSeries('secure-session');
+    repository.addGame('secure-session', firstGame);
+    const handler = createApiHandler(repository, { adminToken });
+    const response = await handler(new Request('https://app.example/api/series/secure-session/games/1/winner', {
+      method: 'PUT', headers: { Authorization: `Bearer ${adminToken}`, Origin: 'https://app.example', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ winner: 'blue' }),
+    }));
+    expect(response.status).toBe(200);
+    expect(response.headers.get('Set-Cookie')).toContain('; Secure');
+    expect(response.headers.get('Access-Control-Allow-Credentials')).toBeNull();
   });
 
   it('sirve health y preflight CORS', async () => {

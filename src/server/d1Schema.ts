@@ -1,4 +1,5 @@
 import type { D1DatabaseLike, D1StatementLike } from './repositories/d1Repository.ts';
+import { fearlessSchema } from './fearlessSchema.ts';
 
 const migrationVersion = 'series-games-events-v1';
 const wait = (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -105,7 +106,7 @@ function migrationStatements(db: D1DatabaseLike, legacy: boolean): D1StatementLi
 }
 
 /** Upgrade the earlier Sites schema in-place, retaining all series and matches. */
-export async function ensureD1Schema(db: D1DatabaseLike): Promise<void> {
+async function ensureSeriesSchema(db: D1DatabaseLike): Promise<void> {
   await db.prepare(`CREATE TABLE IF NOT EXISTS _fearless_site_migrations (
     version TEXT PRIMARY KEY,
     state TEXT NOT NULL,
@@ -163,4 +164,9 @@ export async function ensureD1Schema(db: D1DatabaseLike): Promise<void> {
       .bind(migrationVersion, lockId, 'running').run();
     throw error;
   }
+}
+
+export async function ensureD1Schema(db: D1DatabaseLike): Promise<void> {
+  await ensureSeriesSchema(db);
+  await db.batch(fearlessSchema.map((sql) => db.prepare(sql)));
 }

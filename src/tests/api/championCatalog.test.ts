@@ -20,16 +20,24 @@ describe('catálogo versionado del servicio', () => {
     expect(fetcher).toHaveBeenCalledTimes(2);
   });
 
-  it('rechaza catálogos incompletos y permite reintentar', async () => {
-    const fetcher = vi.fn<typeof fetch>()
-      .mockResolvedValueOnce(response(['16.19.1']))
-      .mockResolvedValueOnce(response({ data: { One: { key: '1' } } }))
-      .mockResolvedValueOnce(response(['16.19.1']))
-      .mockResolvedValueOnce(response({ data: Object.fromEntries(Array.from({ length: 100 }, (_, index) => [`C${index}`, { key: String(index + 1) }])) }));
+  it('usa el catálogo local completo si Data Dragon no está disponible', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockRejectedValue(new Error('fetch failed'));
     const provider = new DataDragonCatalogProvider(fetcher);
 
-    await expect(provider.getCatalog()).rejects.toThrow('incompleto');
-    expect((await provider.getCatalog()).championIds).toHaveLength(100);
-    expect(fetcher).toHaveBeenCalledTimes(4);
+    const catalog = await provider.getCatalog();
+    expect(catalog.version).toBe('local-16.18.1');
+    expect(catalog.championIds).toHaveLength(173);
+    expect(catalog.championIds).toContain(266);
+    expect((await provider.getCatalog()).championIds).toEqual(catalog.championIds);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+
+  it('usa el catálogo local cuando Data Dragon devuelve datos incompletos', async () => {
+    const fetcher = vi.fn<typeof fetch>()
+      .mockResolvedValueOnce(response(['16.19.1']))
+      .mockResolvedValueOnce(response({ data: { One: { key: '1' } } }));
+    const provider = new DataDragonCatalogProvider(fetcher);
+
+    expect(await provider.getCatalog()).toMatchObject({ version: 'local-16.18.1', championIds: expect.arrayContaining([266]) });
   });
 });

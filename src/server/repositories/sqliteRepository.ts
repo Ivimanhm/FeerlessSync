@@ -1,5 +1,7 @@
 import { DatabaseSync } from 'node:sqlite';
 import { ApiFault } from '../errors.ts';
+import { fearlessSchema } from '../fearlessSchema.ts';
+import { championWinsQuery, statsFromRows, type ChampionWinsRow } from './championWinsQuery.ts';
 import type { NewGame, Page, SeriesEvent, SeriesRepository, SeriesSummary, StoredGame, StoredSeries } from '../types.ts';
 
 interface SeriesRow { series_id: string; created_at: string; updated_at: string }
@@ -55,6 +57,7 @@ export class SqliteSeriesRepository implements SeriesRepository {
       ) STRICT;
       CREATE INDEX IF NOT EXISTS events_by_series ON events(series_id, id);
     `);
+    for (const sql of fearlessSchema) this.database.exec(sql);
   }
 
   checkHealth(): void {
@@ -63,6 +66,10 @@ export class SqliteSeriesRepository implements SeriesRepository {
 
   countSeries(): number {
     return (this.database.prepare('SELECT COUNT(*) AS count FROM series').get() as { count: number }).count;
+  }
+
+  getChampionWinStats() {
+    return statsFromRows(this.database.prepare(championWinsQuery).all() as unknown as ChampionWinsRow[]);
   }
 
   listSeries(limit: number, offset: number): Page<SeriesSummary> {
@@ -82,6 +89,24 @@ export class SqliteSeriesRepository implements SeriesRepository {
       this.event(seriesId, 'series_created', null, now, {});
       return { seriesId, createdAt: now, updatedAt: now, games: [], usedChampions: [] };
     });
+  }
+
+  getOrCreateFearlessSeries(): StoredSeries {
+    return this.transaction(() => {
+      const active = this.database.prepare('SELECT series_id FROM fearless_series WHERE archived_at IS NULL').get() as { series_id: string } | undefined;
+      if (active) return this.getSeries(active.series_id)!;
+      const seriesId = `fearless-${crypto.randomUUID()}`;
+      const now = new Date().toISOString();
+      this.database.prepare('INSERT INTO series (series_id, created_at, updated_at) VALUES (?, ?, ?)').run(seriesId, now, now);
+      this.database.prepare('INSERT INTO fearless_series (series_id) VALUES (?)').run(seriesId);
+      this.event(seriesId, 'series_created', null, now, {});
+      return this.getSeries(seriesId)!;
+    });
+  }
+
+  archiveFearlessSeries(seriesId: string): void {
+    this.database.prepare('UPDATE fearless_series SET archived_at = ? WHERE series_id = ? AND archived_at IS NULL')
+      .run(new Date().toISOString(), seriesId);
   }
 
   getSeries(seriesId: string): StoredSeries | null {

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { getFearlessSeries, mapStoredSeries } from '../../frontend/services/api/series';
+import { getFearlessSeries, getLatestFearlessSeriesId, getSeriesIds, mapStoredSeries } from '../../frontend/services/api/series';
 import { getChampionCatalog } from '../../frontend/services/championCatalog';
 
 afterEach(() => {
@@ -8,6 +8,31 @@ afterEach(() => {
 });
 
 describe('servicio de series', () => {
+  it('incluye todas las páginas y series personalizadas, sin duplicados y con orden numérico', async () => {
+    const fetcher = vi.fn<typeof fetch>()
+      .mockResolvedValueOnce(new Response(JSON.stringify({ total: 5, series: [{ seriesId: 'fearless-9' }, { seriesId: 'fearless-10' }] })))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ total: 5, series: [{ seriesId: 'custom-99' }, { seriesId: 'fearless-9' }, { seriesId: 'fearless-2' }] })));
+    vi.stubGlobal('fetch', fetcher);
+    expect(await getSeriesIds()).toEqual(['fearless-10', 'fearless-9', 'fearless-2', 'custom-99']);
+    expect(String(fetcher.mock.calls[1][0])).toContain('offset=2');
+  });
+  it('elige el mayor número Fearless, sin depender del orden del listado', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response(JSON.stringify({
+      success: true,
+      total: 4,
+      series: [
+        { seriesId: 'fearless-9' },
+        { seriesId: 'fearless-10' },
+        { seriesId: 'custom-99' },
+        { seriesId: 'fearless-2' },
+      ],
+    })));
+    vi.stubGlobal('fetch', fetcher);
+
+    await expect(getLatestFearlessSeriesId()).resolves.toBe('fearless-10');
+    expect(String(fetcher.mock.calls[0][0])).toContain('/api/series?limit=100&offset=0');
+  });
+
   it('normaliza el ID buscado y devuelve una serie utilizable', async () => {
     const fetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response(JSON.stringify({ success: true, seriesId: 'fearless-42', games: [], usedChampions: [] })));
     vi.stubGlobal('fetch', fetcher);

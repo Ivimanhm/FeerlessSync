@@ -29,9 +29,9 @@ export function createFearlessApiClient({ baseUrl, getAccessToken }: FearlessApi
   const origin = baseUrl.trim().replace(/\/+$/, '');
   if (!origin) throw new Error('Falta la URL base de la API.');
 
-  const request = async (path: string, options: RequestInit = {}, authenticated = false): Promise<unknown> => {
+  const request = async (path: string, options: RequestInit = {}, authenticated = false, useWinnerSession = false): Promise<unknown> => {
     const token = authenticated ? getAccessToken?.() : null;
-    if (authenticated && !token) throw new FearlessApiError(0, 'authentication_required', 'Esta operación requiere autenticación.');
+    if (authenticated && !token && !useWinnerSession) throw new FearlessApiError(0, 'authentication_required', 'Esta operación requiere autenticación.');
 
     const headers = new Headers(options.headers);
     headers.set('Accept', 'application/json');
@@ -41,6 +41,7 @@ export function createFearlessApiClient({ baseUrl, getAccessToken }: FearlessApi
     const response = await fetch(`${origin}/api${path}`, {
       ...options,
       headers,
+      ...(useWinnerSession ? { credentials: 'include' as const } : {}),
     });
     const body: unknown = await response.json().catch(() => null);
     if (!response.ok) {
@@ -123,11 +124,37 @@ export function createFearlessApiClient({ baseUrl, getAccessToken }: FearlessApi
     },
 
     setWinner(seriesId: string, gameNumber: number, input: SetWinnerRequest): Promise<unknown> {
-      return request(`/series/${encodeURIComponent(seriesId)}/games/${gameNumber}/winner`, { method: 'PUT', body: JSON.stringify(input) }, true);
+      return request(`/series/${encodeURIComponent(seriesId)}/games/${gameNumber}/winner`, { method: 'PUT', body: JSON.stringify(input) }, true, true);
+    },
+
+    getWinnerSession(): Promise<unknown> {
+      return request('/admin/winner-session', {}, false, true);
+    },
+
+    forgetWinnerSession(): Promise<unknown> {
+      return request('/admin/winner-session', { method: 'DELETE' }, false, true);
     },
 
     getAvailability(seriesId: string): Promise<unknown> {
       return request(`/series/${encodeURIComponent(seriesId)}/availability`);
+    },
+
+    getChampionWinStats(): Promise<unknown> {
+      return request('/stats/champions');
+    },
+
+    /** Stable endpoint: the server owns the active series and its rollover. */
+    getFearless(): Promise<unknown> {
+      return request('/fearless');
+    },
+
+    createFearlessGame(seriesId: string, input: CreateGameRequest): Promise<unknown> {
+      return request('/fearless', { method: 'POST', body: JSON.stringify({ ...input, seriesId }) });
+    },
+
+    /** Resolves the series and champion pool to use before drafting the next game. */
+    prepareSeries(seriesId: string): Promise<unknown> {
+      return request(`/series/${encodeURIComponent(seriesId)}/prepare`, { method: 'POST' });
     },
 
     getEvents(seriesId: string, limit = 20, offset = 0): Promise<unknown> {
