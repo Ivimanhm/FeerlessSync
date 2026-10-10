@@ -4,22 +4,22 @@
 .dashboard--styled.dashboard--history > .series-context { min-height: 44px; align-items: center; }
 .dashboard--styled.dashboard--history .series-context-actions, .dashboard--styled.dashboard--history .series-destructive-actions { gap: var(--history-gap); }
 .history-panel { margin-top: 16px; padding: 16px 19px 20px; }
-.history-panel-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+.history-panel-header { display: flex; flex: 0 0 auto; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
 .history-sort { display: inline-flex; align-items: center; gap: 9px; padding: 8px 12px; color: #d7e0ec; border: 1px solid #355568; border-radius: 8px; background: #102c3d; cursor: pointer; white-space: nowrap; }
 .history-sort:hover { color: var(--gold); border-color: var(--gold); }
 .history-games { display: grid; gap: 16px; }
 .history-game { --frame-color: #bb9551; position: relative; overflow: hidden; border: 1px solid #a9874d; border-radius: 8px; background: #06151d; box-shadow: inset 0 0 0 3px #031018, 0 6px 16px #0003; }
 .history-game > .ornamental-frame { inset: 3px; opacity: .75; }
 .history-game > .ornamental-frame svg { width: 22px; height: 22px; }
-.history-game-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; padding: 18px; background: linear-gradient(110deg, #a9874d14, #03121bc9 70%); }
-.history-game-header h3 { margin: 0 0 5px; color: #fff0bb; font: 700 22px/1.2 var(--ui-font-family); }
-.history-game-header time { color: #96adbd; font-size: 11px; }
-.history-winner-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
-.winner-status { display: inline-flex; align-items: center; gap: 7px; padding: 7px 10px; border: 1px solid #51606b; border-radius: 5px; color: #b4c3cd; background: #0a1c26; font-size: 11px; white-space: nowrap; }
+.history-game-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 12px; padding: 12px 14px; background: linear-gradient(110deg, #a9874d14, #03121bc9 70%); }
+.history-game-header h3 { margin: 0 0 4px; color: #fff0bb; font: 700 18px/1.2 var(--ui-font-family); }
+.history-game-header time { display: block; color: #96adbd; font-size: 11px; line-height: 1.35; }
+.history-winner-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.winner-status { display: inline-flex; align-items: center; gap: 6px; min-height: 28px; padding: 5px 8px; border: 1px solid #51606b; border-radius: 5px; color: #b4c3cd; background: #0a1c26; font-size: 11px; line-height: 1.2; white-space: nowrap; }
 .winner-status--blue { border-color: #348caf; color: #a3dfff; background: #0a2839; }
 .winner-status--red { border-color: #a65360; color: #ffc0c6; background: #301821; }
 .winner-status > svg { color: #f0ca75; }
-.history-game .winner-edit { color: #ead7a9; background: #071720; border-color: #92774b; border-radius: 5px; font-size: 11px; }
+.history-game .winner-edit { min-height: 28px; padding: 5px 8px; color: #ead7a9; background: #071720; border-color: #92774b; border-radius: 5px; font-size: 11px; line-height: 1.2; }
 .history-game .winner-edit:hover { color: #ffe4a1; background: #b994421c; border-color: #d9b465; }
 .winner-edit, .winner-save { padding: 8px 11px; border: 1px solid #5580a0; border-radius: 7px; color: #d5ecff; background: #15344a; font-size: 12px; cursor: pointer; }
 .winner-edit:hover, .winner-save:hover { border-color: #8ec7ec; background: #1d4864; }
@@ -67,7 +67,7 @@
 .history-layout .history-panel > .ornamental-frame svg, .champion-win-panel > .ornamental-frame svg { width: 35px; height: 35px; }
 .history-layout .history-sort { color: #d4e0ec; background: #071923; border-color: #496270; font-size: 12px; }
 .history-layout .history-games { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--history-gap, 20px); }
-.history-layout .history-game-header { align-items: start; }
+.history-layout .history-game-header { align-items: center; }
 .history-layout .history-winner-actions { justify-content: flex-end; margin-left: auto; gap: 8px; }
 .champion-win-column { min-width: 0; }
 .champion-win-panel { display: flex; flex-direction: column; min-width: 0; min-height: 0; overflow: hidden; }
@@ -98,7 +98,16 @@
 .champion-win-empty > svg { color: #bb9551; }
 .champion-win-empty small { color: #8ca5b8; }
 @media (min-width: 1001px) {
-  .champion-win-column .champion-win-panel { position: fixed; top: var(--champion-panel-top); left: var(--champion-panel-left); bottom: 24px; width: var(--champion-panel-width); }
+  .history-layout { position: fixed; top: var(--history-panels-top); bottom: 24px; left: var(--history-layout-left); width: var(--history-layout-width); min-height: 0; align-items: stretch; z-index: 1; }
+  .history-layout .history-matches, .history-layout .champion-win-column { height: 100%; min-height: 0; }
+  .history-layout .history-panel, .history-layout .champion-win-panel { position: relative; box-sizing: border-box; height: 100%; min-height: 0; }
+  .history-layout .history-panel { display: flex; flex-direction: column; overflow: hidden; }
+  .history-layout .history-panel-header { position: relative; z-index: 1; }
+  .history-layout .history-games { flex: 1 1 0; grid-auto-rows: max-content; align-content: start; min-height: 0; padding-right: 6px; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-width: thin; scrollbar-color: #c29951 #06131b; }
+  .history-layout .history-games::-webkit-scrollbar { width: 8px; }
+  .history-layout .history-games::-webkit-scrollbar-track { background: #06131b; border-radius: 8px; }
+  .history-layout .history-games::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #e3ba6c, #a77d39); border: 2px solid #06131b; border-radius: 8px; }
+  .champion-win-column .champion-win-panel { width: 100%; }
 }
 @media (min-width: 1001px) and (max-height: 740px) {
   .history-summary-card { min-height: 72px; padding-block: 10px; }
@@ -108,14 +117,10 @@
 }
 @media (max-width: 1450px) {
   .history-layout { grid-template-columns: minmax(0, 1fr) 370px; }
-  .history-layout .history-game-header { flex-direction: column; gap: 10px; }
-  .history-layout .history-winner-actions { justify-content: flex-start; margin-left: 0; }
   .history-layout .history-table td { padding-inline: 8px; }
 }
 @media (max-width: 1180px) {
   .history-layout .history-games { grid-template-columns: 1fr; }
-  .history-layout .history-game-header { flex-direction: row; }
-  .history-layout .history-winner-actions { margin-left: auto; }
 }
 @media (max-width: 1000px) {
   .history-layout { grid-template-columns: 1fr; }
@@ -138,7 +143,7 @@
 }
 @media (max-width: 540px) {
   .history-panel { padding-left: 12px; padding-right: 12px; }
-  .history-game-header { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .history-game-header { align-items: flex-start; flex-direction: column; gap: 8px; }
   .history-table td { padding-inline: 5px; }
   .history-champion { gap: 4px; }
   .history-champion .portrait-image { width: 34px; height: 34px; flex-basis: 34px; }
@@ -147,7 +152,7 @@
   .history-summary-card h2 { font-size: 11px; line-height: 1.35; }
   .history-summary-card strong { font-size: 28px; }
   .history-summary-icon { display: none; }
-  .history-layout .history-game-header { flex-direction: column; }
+  .history-layout .history-game-header { align-items: flex-start; flex-direction: column; }
   .history-layout .history-winner-actions { margin-left: 0; }
   .history-layout .history-champion { gap: 6px; }
   .history-layout .history-champion strong { white-space: normal; overflow: visible; overflow-wrap: anywhere; font-size: 11px; line-height: 1.35; }

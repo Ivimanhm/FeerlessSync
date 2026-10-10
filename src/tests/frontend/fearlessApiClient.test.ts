@@ -9,6 +9,22 @@ const jsonResponse = (body: unknown, status = 200) => new Response(JSON.stringif
 afterEach(() => vi.unstubAllGlobals());
 
 describe('cliente de API Fearless', () => {
+  it('envía cookies para recordar ganadores sin exponer la clave guardada', async () => {
+    const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(jsonResponse({ active: true }));
+    vi.stubGlobal('fetch', fetchMock);
+    const client = createFearlessApiClient({ baseUrl: 'https://example.test' });
+    await client.getWinnerSession();
+    await client.setWinner('series-1', 1, { winner: 'blue' });
+    await client.forgetWinnerSession();
+    expect(fetchMock.mock.calls.map(([url, options]) => [url, options?.method ?? 'GET', options?.credentials])).toEqual([
+      ['https://example.test/api/admin/winner-session', 'GET', 'include'],
+      ['https://example.test/api/series/series-1/games/1/winner', 'PUT', 'include'],
+      ['https://example.test/api/admin/winner-session', 'DELETE', 'include'],
+    ]);
+    for (const [, options] of fetchMock.mock.calls) expect(new Headers(options?.headers).get('Authorization')).toBeNull();
+    await expect(client.deleteSeries('series-1')).rejects.toMatchObject({ code: 'authentication_required' });
+  });
+
   it('consulta y registra partidas Fearless usando siempre la misma ruta', async () => {
     const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(jsonResponse({ success: true }));
     vi.stubGlobal('fetch', fetchMock);

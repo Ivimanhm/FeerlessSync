@@ -2,6 +2,7 @@ import type { Champion, FearlessSeries, Game, PlayedChampion, Role, TeamSide } f
 import { getChampionCatalog } from '../championCatalog';
 import { createFearlessApiClient } from './client';
 import { mockMode } from './mode';
+import { rememberMockWinnerSession } from './winnerSession';
 import { clearMockGames, deleteMockSeries, getMockSeries, getMockSeriesIds, setMockWinner } from './mockSeries';
 
 export interface StoredGame {
@@ -146,9 +147,9 @@ export async function clearSeriesGames(seriesId: string, token: string): Promise
   return result.deletedGames;
 }
 
-/** Saves a game's winner with an admin key kept only for this request. */
-export async function setGameWinner(seriesId: string, gameNumber: number, winner: TeamSide | null, token: string): Promise<void> {
-  if (mockMode) { setMockWinner(seriesId, gameNumber, winner); return; }
+/** Saves a game's winner with an admin key or a remembered winner session. */
+export async function setGameWinner(seriesId: string, gameNumber: number, winner: TeamSide | null, token = ''): Promise<void> {
+  if (mockMode) { setMockWinner(seriesId, gameNumber, winner); rememberMockWinnerSession(); return; }
   const baseUrl = import.meta.env.VITE_API_BASE_URL?.trim() || window.location.origin;
   const client = createFearlessApiClient({ baseUrl, getAccessToken: () => token });
   const result = await client.setWinner(seriesId, gameNumber, { winner });

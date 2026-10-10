@@ -44,6 +44,10 @@
 .winner-token-field:focus-within { outline: 2px solid #f2d085; outline-offset: 2px; border-color: #c6a258; }
 .winner-token-field input { width: 100%; min-width: 0; height: 46px; padding: 0; color: #eef4f9; border: 0; outline: none; background: transparent; font-size: 14px; }
 .winner-token-field input::placeholder { color: #6f889c; }
+.winner-session-hint { margin: 8px 0 0; color: #829baa; font-size: 11px; line-height: 1.5; }
+.winner-session { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; padding: 12px 14px; color: #b8c9d6; border: 1px solid #426071; border-radius: 7px; background: #081a24; font-size: 12px; }
+.winner-session > svg { flex-shrink: 0; color: #b69a63; }
+.winner-session > button { margin-left: auto; padding: 6px 8px; color: #f0ca75; border: 1px solid #8f7547; border-radius: 5px; background: transparent; font-size: 12px; }
 .winner-modal-error { display: flex; align-items: start; gap: 9px; margin: 14px 0 0; padding: 12px; color: #ffb9c3; border: 1px solid #a6536066; border-radius: 6px; background: #35172080; font-size: 12px; line-height: 1.5; }
 .winner-modal-error > svg { flex-shrink: 0; }
 .winner-modal-actions { display: flex; justify-content: flex-end; flex-shrink: 0; gap: 12px; padding: 18px 28px 24px; border-top: 1px solid #b48e4333; background: #04111a; }

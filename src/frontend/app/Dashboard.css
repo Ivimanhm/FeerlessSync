@@ -25,13 +25,13 @@
 .dashboard--styled .series-context { --control-text-size: 13px; min-height: 58px; margin: 18px 0 0; padding-inline: 0; gap: 16px; align-items: flex-start; }
 .dashboard--styled .series-context-copy { flex-direction: row; align-items: center; gap: 8px; text-align: center; }
 .series-select-label { position: relative; display: block; width: 160px; max-width: 100%; }
-.series-select { appearance: none; display: block; width: 100%; min-width: 0; height: 44px; padding: 0 28px; border: 1px solid #bd934b; border-radius: 7px; color: transparent; background: #06141cbd; box-shadow: inset 0 0 0 2px #06141b; font-family: inherit; font-size: 13px; font-weight: 650; line-height: 1.3; cursor: pointer; color-scheme: dark; }
+.series-select { appearance: none; display: block; width: 100%; min-width: 0; height: 44px; padding: 0 12px; border: 1px solid #bd934b; border-radius: 7px; color: transparent; background: #06141cbd; box-shadow: inset 0 0 0 2px #06141b; font-family: inherit; font-size: 13px; font-weight: 650; line-height: 1.3; text-align: center; text-align-last: center; cursor: pointer; color-scheme: dark; }
 .series-select-current { position: absolute; inset: 0 12px; display: flex; align-items: center; justify-content: center; gap: 6px; overflow: hidden; color: #ffd378; font-size: var(--control-text-size, 13px); font-weight: 650; line-height: 1.3; pointer-events: none; }
 .series-select-current > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .series-select-arrow { flex: 0 0 auto; color: #d3b46e; }
 .series-select:hover:not(:disabled) { border-color: #efca76; background: linear-gradient(180deg, #1b3035, #0b1d25); }
 .series-select:focus-visible { outline: none; border-color: #ffe3a0; box-shadow: inset 0 0 0 2px #efca7670; }
-.series-select option { padding: 6px 12px; color: #f1e5c8; background: #0b1b24; text-align: center; }
+.series-select option { padding: 6px 12px; color: #f1e5c8; background: #0b1b24; text-align: center; text-align-last: center; }
 .series-select:disabled { opacity: .6; cursor: default; }
 .series-select:disabled + .series-select-current { opacity: .6; }
 .dashboard--styled .series-context-copy strong { font-size: 16px; color: #f3ca65; }

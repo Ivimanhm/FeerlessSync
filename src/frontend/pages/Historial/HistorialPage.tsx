@@ -14,10 +14,20 @@ export default function HistorialPage({ series, loading, onWinnerChanged }: { se
     let frame = 0;
     const measure = () => {
       frame = 0;
-      const bounds = column.getBoundingClientRect();
-      column.style.setProperty('--champion-panel-top', `${Math.max(20, bounds.top)}px`);
-      column.style.setProperty('--champion-panel-left', `${bounds.left}px`);
-      column.style.setProperty('--champion-panel-width', `${bounds.width}px`);
+      const layout = column.parentElement;
+      const layoutBounds = layout?.getBoundingClientRect();
+      const previousSection = layout?.previousElementSibling;
+      const sectionBounds = previousSection?.getBoundingClientRect();
+      const dashboard = layout?.parentElement;
+      const sectionGap = dashboard ? Number.parseFloat(getComputedStyle(dashboard).rowGap) || 0 : 0;
+      const naturalTop = sectionBounds ? sectionBounds.bottom + sectionGap : layoutBounds?.top ?? 20;
+      const panelTop = `${Math.max(20, naturalTop)}px`;
+      layout?.style.setProperty('--history-panels-top', panelTop);
+      const layoutBoundsToUse = sectionBounds ?? layoutBounds;
+      if (layoutBoundsToUse) {
+        layout?.style.setProperty('--history-layout-left', `${layoutBoundsToUse.left}px`);
+        layout?.style.setProperty('--history-layout-width', `${layoutBoundsToUse.width}px`);
+      }
     };
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(measure);

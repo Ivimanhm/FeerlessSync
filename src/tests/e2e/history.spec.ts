@@ -100,7 +100,7 @@ for (const viewport of [{ width: 1672, height: 941 }, { width: 1366, height: 768
     await page.getByRole('button', { name: 'Cambiar ganador de la partida 1' }).click();
     dialog = page.getByRole('dialog');
     await dialog.getByRole('radio', { name: 'Sin ganador' }).check();
-    await dialog.getByLabel('Clave de administrador').fill('browser-test-token');
+    await expect(dialog.getByText('Clave recordada en este navegador')).toBeVisible();
     await dialog.getByRole('button', { name: 'Guardar ganador' }).click();
     await expect(dialog).toHaveCount(0);
     await expect(leaderboard.getByText('2 partidas con ganador · 2 pendientes')).toBeVisible();

@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { DatabaseSync } from 'node:sqlite';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -386,6 +386,77 @@ describe('API local de series', () => {
     expect((await call(path)).status).toBe(401);
     expect((await call(path, 'GET', undefined, true)).status).toBe(401);
     expect(await (await call(path, 'GET', undefined, 'admin')).json()).toEqual({ valid: true });
+  });
+
+  it('recuerda una clave válida con una cookie HttpOnly y permite cambiar otros ganadores', async () => {
+    const { handler, call } = setup();
+    await call('/api/series', 'POST', { seriesId: 'session-test' });
+    await call('/api/series/session-test/games', 'POST', firstGame);
+    const path = '/api/series/session-test/games/1/winner';
+    const saved = await call(path, 'PUT', { winner: 'blue' }, 'admin');
+    expect(saved.status).toBe(200);
+    const setCookie = saved.headers.get('Set-Cookie')!;
+    expect(setCookie).toContain('HttpOnly');
+    expect(setCookie).toContain('SameSite=Strict');
+    expect(setCookie).toContain('Path=/api');
+    expect(setCookie).toContain('Max-Age=2592000');
+    expect(setCookie).not.toContain(adminToken);
+    const cookie = setCookie.split(';')[0];
+    const request = (route: string, method = 'GET', body?: unknown, origin = 'http://localhost:5173') => handler(new Request(`http://localhost${route}`, {
+      method, headers: { Cookie: cookie, Origin: origin, 'Content-Type': 'application/json' },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    }));
+    expect(await (await request('/api/admin/winner-session')).json()).toEqual({ active: true });
+    expect((await request(path, 'PUT', { winner: 'red' })).status).toBe(200);
+    expect((await request(path, 'PUT', { winner: null }, 'https://untrusted.example')).status).toBe(403);
+    expect((await request('/api/series/session-test', 'DELETE')).status).toBe(401);
+    expect((await request('/api/series/session-test/games', 'DELETE')).status).toBe(401);
+    const logout = await request('/api/admin/winner-session', 'DELETE');
+    expect(logout.headers.get('Set-Cookie')).toContain('Max-Age=0');
+    expect(logout.headers.get('Access-Control-Allow-Credentials')).toBe('true');
+    expect(logout.headers.get('Access-Control-Allow-Origin')).toBe('http://localhost:5173');
+  });
+
+  it('rechaza cookies falsas, caducadas o firmadas con una clave anterior', async () => {
+    const { handler, call, repository } = setup();
+    await call('/api/series', 'POST', { seriesId: 'session-test' });
+    await call('/api/series/session-test/games', 'POST', firstGame);
+    const path = '/api/series/session-test/games/1/winner';
+    const failed = await call(path, 'PUT', { winner: 'blue' }, true);
+    expect(failed.status).toBe(401);
+    expect(failed.headers.get('Set-Cookie')).toBeNull();
+    const saved = await call(path, 'PUT', { winner: 'blue' }, 'admin');
+    const cookie = saved.headers.get('Set-Cookie')!.split(';')[0];
+    const request = (value = cookie) => new Request(`http://localhost${path}`, {
+      method: 'PUT', headers: { Cookie: value, 'Content-Type': 'application/json' }, body: JSON.stringify({ winner: 'red' }),
+    });
+    expect((await handler(request(`${cookie.slice(0, -1)}${cookie.endsWith('0') ? '1' : '0'}`))).status).toBe(401);
+    const rotated = createApiHandler(repository, { adminToken: 'new-admin-key' });
+    expect((await rotated(request())).status).toBe(401);
+    const now = Date.now();
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(now + 31 * 24 * 60 * 60 * 1000);
+    try { expect((await handler(request())).status).toBe(401); }
+    finally { clock.mockRestore(); }
+    const invalidBearer = request();
+    invalidBearer.headers.set('Authorization', 'Bearer wrong');
+    expect((await handler(invalidBearer)).status).toBe(401);
+    const missingGame = await call('/api/series/session-test/games/99/winner', 'PUT', { winner: 'blue' }, 'admin');
+    expect(missingGame.status).toBe(404);
+    expect(missingGame.headers.get('Set-Cookie')).toBeNull();
+  });
+
+  it('marca la cookie como Secure en HTTPS y no usa CORS con credenciales para comodines', async () => {
+    const { repository } = setup();
+    repository.createSeries('secure-session');
+    repository.addGame('secure-session', firstGame);
+    const handler = createApiHandler(repository, { adminToken });
+    const response = await handler(new Request('https://app.example/api/series/secure-session/games/1/winner', {
+      method: 'PUT', headers: { Authorization: `Bearer ${adminToken}`, Origin: 'https://app.example', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ winner: 'blue' }),
+    }));
+    expect(response.status).toBe(200);
+    expect(response.headers.get('Set-Cookie')).toContain('; Secure');
+    expect(response.headers.get('Access-Control-Allow-Credentials')).toBeNull();
   });
 
   it('sirve health y preflight CORS', async () => {

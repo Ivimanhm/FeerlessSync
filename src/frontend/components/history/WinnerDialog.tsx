@@ -1,7 +1,9 @@
 import type { JSX } from 'preact';
+import { createPortal } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { FearlessApiError } from '../../services/api/client';
 import { setGameWinner } from '../../services/api/series';
+import { forgetWinnerSession, getWinnerSession } from '../../services/api/winnerSession';
 import type { Game, TeamSide } from '../../types/fearless';
 import { AlertCircle, Check, KeyRound, LoaderCircle, Minus, Trophy, X } from 'lucide-preact';
 import OrnamentalFrame from '../ui/OrnamentalFrame';
@@ -18,16 +20,20 @@ interface Props {
 export default function WinnerDialog({ seriesId, game, onClose, onSaved }: Props) {
   const [winner, setWinner] = useState<TeamSide | null>(game.winner);
   const [token, setToken] = useState('');
+  const [remembered, setRemembered] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const dialog = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    let disposed = false;
+    void getWinnerSession().then(active => { if (!disposed) setRemembered(active); }).catch(() => {});
     const previousFocus = document.activeElement as HTMLElement | null;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     dialog.current?.querySelector<HTMLInputElement>('input[type="radio"]:checked')?.focus();
     return () => {
+      disposed = true;
       document.body.style.overflow = previousOverflow;
       previousFocus?.focus();
     };
@@ -52,23 +58,37 @@ export default function WinnerDialog({ seriesId, game, onClose, onSaved }: Props
 
   const submit = async (event: JSX.TargetedSubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!token.trim() || winner === game.winner || saving) return;
+    if ((!remembered && !token.trim()) || winner === game.winner || saving) return;
     setSaving(true);
     setError('');
     try {
-      await setGameWinner(seriesId, game.gameNumber, winner, token.trim());
+      await setGameWinner(seriesId, game.gameNumber, winner, remembered ? '' : token.trim());
       setToken('');
       await onSaved();
       onClose();
     } catch (reason) {
-      setError(reason instanceof FearlessApiError && reason.status === 401 ? 'La clave de administrador no es válida.'
+      const unauthorized = reason instanceof FearlessApiError && reason.status === 401;
+      if (unauthorized) { setRemembered(false); setToken(''); }
+      setError(unauthorized ? remembered ? 'La sesión ha caducado. Introduce de nuevo la clave de administrador.' : 'La clave de administrador no es válida.'
         : reason instanceof FearlessApiError && reason.status === 503 ? 'Falta configurar la clave de administrador en el servidor.'
           : reason instanceof FearlessApiError && reason.status === 404 ? 'La partida ya no existe. Actualiza el historial.'
             : 'No se pudo guardar el ganador. Inténtalo de nuevo.');
     } finally { setSaving(false); }
   };
 
-  return <div class="modal-backdrop winner-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) close(); }}>
+  const forget = async () => {
+    if (saving) return;
+    setSaving(true);
+    setError('');
+    try {
+      await forgetWinnerSession();
+      setRemembered(false);
+      setToken('');
+    } catch { setError('No se pudo olvidar la clave. Inténtalo de nuevo.'); }
+    finally { setSaving(false); }
+  };
+
+  return createPortal(<div class="modal-backdrop winner-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) close(); }}>
     <section ref={dialog} class="winner-modal" role="dialog" aria-modal="true" aria-labelledby="winner-title" aria-describedby="winner-description" onKeyDown={keyDown}>
       <OrnamentalFrame />
       <button class="winner-modal-close" type="button" aria-label="Cerrar" disabled={saving} onClick={close}><X size={20} aria-hidden="true" /></button>
@@ -96,15 +116,22 @@ export default function WinnerDialog({ seriesId, game, onClose, onSaved }: Props
             </label>
           </fieldset>
           <p class="winner-choice-hint">{winner === null ? 'La partida quedará pendiente y no sumará victorias.' : `Los campeones del equipo ${winner === 'blue' ? 'Azul' : 'Rojo'} sumarán una victoria.`}</p>
-          <label class="winner-token-label" for="winner-token">Clave de administrador</label>
-          <div class="winner-token-field"><KeyRound size={18} aria-hidden="true" /><input id="winner-token" type="password" autoComplete="current-password" placeholder="Introduce tu clave" required disabled={saving} aria-describedby={error ? 'winner-error' : undefined} value={token} onInput={(event) => setToken(event.currentTarget.value)} /></div>
+          {remembered ? <div class="winner-session">
+            <KeyRound size={18} aria-hidden="true" />
+            <span>Clave recordada en este navegador</span>
+            <button type="button" disabled={saving} onClick={() => void forget()}>Olvidar clave</button>
+          </div> : <>
+            <label class="winner-token-label" for="winner-token">Clave de administrador</label>
+            <div class="winner-token-field"><KeyRound size={18} aria-hidden="true" /><input id="winner-token" type="password" autoComplete="current-password" placeholder="Introduce tu clave" required disabled={saving} aria-describedby={error ? 'winner-error' : 'winner-session-hint'} value={token} onInput={(event) => setToken(event.currentTarget.value)} /></div>
+            <p id="winner-session-hint" class="winner-session-hint">Se recordará en este navegador durante 30 días.</p>
+          </>}
           {error && <p id="winner-error" class="winner-modal-error" role="alert"><AlertCircle size={18} aria-hidden="true" />{error}</p>}
         </div>
         <div class="winner-modal-actions">
           <button type="button" class="winner-cancel" disabled={saving} onClick={close}>Cancelar</button>
-          <button type="submit" class="winner-save" disabled={saving || !token.trim() || winner === game.winner}>{saving ? <LoaderCircle class="winner-saving-icon" size={17} aria-hidden="true" /> : <Check size={17} aria-hidden="true" />}{saving ? 'Guardando…' : 'Guardar ganador'}</button>
+          <button type="submit" class="winner-save" disabled={saving || (!remembered && !token.trim()) || winner === game.winner}>{saving ? <LoaderCircle class="winner-saving-icon" size={17} aria-hidden="true" /> : <Check size={17} aria-hidden="true" />}{saving ? 'Guardando…' : 'Guardar ganador'}</button>
         </div>
       </form>
     </section>
-  </div>;
+  </div>, document.body);
 }

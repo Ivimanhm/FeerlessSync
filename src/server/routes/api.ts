@@ -1,4 +1,5 @@
 import { requireAdmin } from '../services/authentication.ts';
+import { clearWinnerSessionCookie, createWinnerSessionCookie, hasWinnerSession, requireSessionOrigin, requireWinnerAdmin } from '../services/winnerSession.ts';
 import { validateGame, seriesIdFrom, gameNumberFrom } from '../services/seriesValidation.ts';
 import { DataDragonCatalogProvider } from '../services/championCatalog.ts';
 import { availableChampionIds, minimumChampionsPerGame, prepareSeries } from '../services/seriesContinuation.ts';
@@ -82,6 +83,15 @@ export function createApiHandler(repository: SeriesRepository, options: ApiOptio
     if (path === '/api/admin/validate' && method === 'GET') {
       requireAdmin(request, options.adminToken ?? '');
       return json({ valid: true });
+    }
+    if (path === '/api/admin/winner-session' && method === 'GET') {
+      return json({ active: await hasWinnerSession(request, options.adminToken ?? '') });
+    }
+    if (path === '/api/admin/winner-session' && method === 'DELETE') {
+      requireSessionOrigin(request, options.allowedOrigin);
+      const response = json({ active: false });
+      response.headers.set('Set-Cookie', clearWinnerSessionCookie(request));
+      return response;
     }
     if (path === '/api/stats/champions' && method === 'GET') {
       return json({ success: true, ...await databaseCall(() => repository.getChampionWinStats()) });
@@ -222,12 +232,16 @@ export function createApiHandler(repository: SeriesRepository, options: ApiOptio
           return json({ success: true, seriesId, gameNumber, deleted: true });
         }
         if (parts.length === 6 && parts[5] === 'winner' && method === 'PUT') {
-          requireAdmin(request, options.adminToken ?? '');
+          await requireWinnerAdmin(request, options.adminToken ?? '', options.allowedOrigin);
           const body = await bodyObject(request);
           if (!('winner' in body) || (body.winner !== 'blue' && body.winner !== 'red' && body.winner !== null)) {
             throw new ApiFault(400, 'invalid_winner', 'winner debe ser blue, red o null.');
           }
-          return json({ success: true, seriesId, ...await databaseCall(() => repository.setWinner(seriesId, gameNumber, body.winner as 'blue' | 'red' | null)) });
+          const response = json({ success: true, seriesId, ...await databaseCall(() => repository.setWinner(seriesId, gameNumber, body.winner as 'blue' | 'red' | null)) });
+          if (request.headers.has('Authorization')) {
+            response.headers.set('Set-Cookie', await createWinnerSessionCookie(request, options.adminToken ?? ''));
+          }
+          return response;
         }
       }
     }
@@ -250,6 +264,7 @@ export function createApiHandler(repository: SeriesRepository, options: ApiOptio
       response.headers.set('Access-Control-Allow-Origin', '*');
     } else if (origin && allowedOrigins.includes(origin)) {
       response.headers.set('Access-Control-Allow-Origin', origin);
+      response.headers.set('Access-Control-Allow-Credentials', 'true');
       response.headers.set('Vary', 'Origin');
     }
     return response;

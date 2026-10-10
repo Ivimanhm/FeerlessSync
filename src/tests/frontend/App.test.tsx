@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/preact';
+import { fireEvent as nativeFireEvent } from '@testing-library/dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import App from '../../frontend/app/App';
 import ChampionCard from '../../frontend/components/champions/ChampionCard';
@@ -12,6 +13,7 @@ import { getChampionWinStats } from '../../frontend/services/api/championWins';
 
 vi.mock('../../frontend/services/api/series', async (importOriginal) => ({ ...(await importOriginal<typeof import('../../frontend/services/api/series')>()), getFearlessSeries: vi.fn(), getLatestFearlessSeriesId: vi.fn(), getSeriesIds: vi.fn(), clearSeriesGames: vi.fn(), setGameWinner: vi.fn() }));
 vi.mock('../../frontend/services/api/championWins', () => ({ getChampionWinStats: vi.fn() }));
+vi.mock('../../frontend/services/api/winnerSession', () => ({ getWinnerSession: async () => false, forgetWinnerSession: async () => {} }));
 
 const getSeriesMock = vi.mocked(getFearlessSeries);
 const getLatestSeriesMock = vi.mocked(getLatestFearlessSeriesId);
@@ -67,12 +69,13 @@ describe('Fearless Sync', () => {
     render(<App />);
     await screen.findByRole('region', { name: 'Campeones disponibles' });
 
-    fireEvent.change(screen.getByRole('combobox', { name: 'Seleccionar serie' }), { target: { value: 'fearless-42' } });
+    // The Preact helper remaps change to input under compat; selects still emit native change.
+    nativeFireEvent.change(screen.getByRole('combobox', { name: 'Seleccionar serie' }), { target: { value: 'fearless-42' } });
     await waitFor(() => expect(getSeriesMock).toHaveBeenLastCalledWith('fearless-42'));
 
     fireEvent.click(screen.getByRole('button', { name: 'Abrir menú' }));
     fireEvent.click(within(screen.getByRole('navigation', { name: 'Navegación principal' })).getByRole('button', { name: 'Historial' }));
-    await waitFor(() => expect(screen.getByText('fearless-42')).toBeTruthy());
+    await waitFor(() => expect((screen.getByRole('combobox', { name: 'Seleccionar serie' }) as HTMLSelectElement).value).toBe('fearless-42'));
   });
 
   it('muestra la portada sin consultar series y enlaza las releases de PersoBuilder', () => {
@@ -157,17 +160,17 @@ describe('Fearless Sync', () => {
     const input = screen.getByRole('combobox', { name: 'Seleccionar serie' });
     expect(within(input).getAllByRole('option').map(option => option.getAttribute('value'))).toEqual(['', 'fearless-42', 'fearless-012', 'fearless-001', 'offline']);
 
-    fireEvent.change(input, { target: { value: 'fearless-42' } });
+    nativeFireEvent.change(input, { target: { value: 'fearless-42' } });
     await waitFor(() => expect(getSeriesMock).toHaveBeenLastCalledWith('fearless-42'));
     fireEvent.click(screen.getByRole('button', { name: 'Abrir menú' }));
     fireEvent.click(within(screen.getByRole('navigation', { name: 'Navegación principal' })).getByRole('button', { name: 'Historial' }));
-    await waitFor(() => expect(screen.getByText('fearless-42')).toBeTruthy());
+    await waitFor(() => expect((screen.getByRole('combobox', { name: 'Seleccionar serie' }) as HTMLSelectElement).value).toBe('fearless-42'));
 
     const calls = getSeriesMock.mock.calls.length;
-    fireEvent.change(input, { target: { value: '' } });
+    nativeFireEvent.change(input, { target: { value: '' } });
     expect(getSeriesMock).toHaveBeenCalledTimes(calls);
     getSeriesMock.mockRejectedValueOnce(new Error('offline'));
-    fireEvent.change(input, { target: { value: 'offline' } });
+    nativeFireEvent.change(input, { target: { value: 'offline' } });
     expect(await screen.findByRole('alert')).toHaveProperty('textContent', expect.stringContaining('No se ha podido cargar la serie'));
 
     fireEvent.click(screen.getByRole('button', { name: 'Reintentar' }));
@@ -199,22 +202,22 @@ describe('Fearless Sync', () => {
     expect(screen.getByText('Ahri')).toBeTruthy();
     expect(screen.queryByText('Aatrox')).toBeNull();
 
-    fireEvent.change(screen.getByRole('combobox', { name: 'Filtrar por posición' }), { target: { value: 'TOP' } });
+    nativeFireEvent.change(screen.getByRole('combobox', { name: 'Filtrar por posición' }), { target: { value: 'TOP' } });
     expect(screen.getByText('No hay campeones que coincidan con la búsqueda.')).toBeTruthy();
-    fireEvent.change(screen.getByRole('combobox', { name: 'Filtrar por posición' }), { target: { value: 'MID' } });
+    nativeFireEvent.change(screen.getByRole('combobox', { name: 'Filtrar por posición' }), { target: { value: 'MID' } });
     expect(screen.getByText('Ahri')).toBeTruthy();
 
     fireEvent.input(screen.getByRole('textbox', { name: 'Buscar campeón' }), { target: { value: 'Lux' } });
     expect(screen.getByText('Lux')).toBeTruthy();
-    fireEvent.change(screen.getByRole('combobox', { name: 'Filtrar por posición' }), { target: { value: 'SUP' } });
+    nativeFireEvent.change(screen.getByRole('combobox', { name: 'Filtrar por posición' }), { target: { value: 'SUP' } });
     expect(screen.getByText('Lux')).toBeTruthy();
 
     fireEvent.input(screen.getByRole('textbox', { name: 'Buscar campeón' }), { target: { value: 'kai sa' } });
-    fireEvent.change(screen.getByRole('combobox', { name: 'Filtrar por posición' }), { target: { value: 'ADC' } });
+    nativeFireEvent.change(screen.getByRole('combobox', { name: 'Filtrar por posición' }), { target: { value: 'ADC' } });
     expect(screen.getByText("Kai'Sa")).toBeTruthy();
 
     fireEvent.input(screen.getByRole('textbox', { name: 'Buscar campeón' }), { target: { value: 'master yi' } });
-    fireEvent.change(screen.getByRole('combobox', { name: 'Filtrar por posición' }), { target: { value: 'JG' } });
+    nativeFireEvent.change(screen.getByRole('combobox', { name: 'Filtrar por posición' }), { target: { value: 'JG' } });
     expect(screen.getByText('Maestro Yi')).toBeTruthy();
   });
 
