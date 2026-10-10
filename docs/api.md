@@ -30,7 +30,7 @@ Todas las rutas están bajo `/api` y usan JSON. En Sites, la API y `/api/health`
 La interfaz consulta series, muestra la clasificación global y permite asignar ganadores. Ofrece las dos acciones de borrado cuando la serie tiene partidas. Crear series, registrar partidas y corregir equipos se hace mediante la API. No se crean series de muestra al iniciar.
 
 `GET /api/stats/champions` devuelve `success`, `completedGames`, `pendingGames` y
-`champions`, con `{championId, wins, gamesPlayed}` por campeón con alguna victoria.
+`champions`, con `{championId, wins, gamesPlayed}` por campeón que haya jugado alguna partida con ganador, incluidos los que tienen cero victorias. La web completa la clasificación con todo el catálogo y muestra cero victorias, cero partidas y 0 % para los campeones que aún no han jugado.
 `gamesPlayed` solo cuenta partidas con ganador confirmado; una partida pendiente no
 suma victorias ni entra en el porcentaje. Cada campeón del equipo ganador recibe una
 victoria por partida. Se suman todas las series persistidas, también las archivadas,

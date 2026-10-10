@@ -1,9 +1,14 @@
 import { expect, test } from '@playwright/test';
+import catalog from '../../frontend/data/championCatalog.json' with { type: 'json' };
+
+const championCount = catalog.champions.length;
 
 const api = 'http://127.0.0.1:8789/api';
 const authorization = { Authorization: 'Bearer browser-test-token' };
 
-test.beforeEach(async ({ request }) => {
+test.beforeEach(async ({ page, request }) => {
+  // Keep this spec on the two-game fixture while other series contribute global stats.
+  await page.route('**/api/series?*', route => route.fulfill({ json: { success: true, series: [{ seriesId: 'fearless-001' }, { seriesId: 'no-such-series' }], total: 2 } }));
   // Other browser specs exercise clearing this series; restore its two games.
   const currentSeries = await request.get(`${api}/series/fearless-001`);
   const currentGames = (await currentSeries.json()).games as { gameNumber: number }[];
@@ -24,14 +29,37 @@ test.beforeEach(async ({ request }) => {
   }
 });
 
-for (const viewport of [{ width: 1672, height: 941 }, { width: 1366, height: 768 }, { width: 1024, height: 768 }, { width: 390, height: 844 }, { width: 320, height: 700 }]) {
+for (const viewport of [{ width: 1672, height: 941 }, { width: 1366, height: 768 }, { width: 1366, height: 620 }, { width: 1024, height: 768 }, { width: 390, height: 844 }, { width: 320, height: 700 }]) {
   test(`Historial: diseño y victorias globales a ${viewport.width}×${viewport.height}px`, async ({ page }, testInfo) => {
     await page.setViewportSize(viewport);
     await page.goto('/#/historial');
     await expect(page.getByRole('table')).toHaveCount(2);
     const leaderboard = page.getByRole('region', { name: 'Campeones con más victorias' });
+    await expect(leaderboard.getByText('TODAS LAS SERIES')).toHaveCount(0);
+    await expect(leaderboard.getByText('Cada campeón del equipo ganador suma una victoria.')).toHaveCount(0);
     const list = leaderboard.getByRole('list', { name: 'Clasificación de campeones por victorias' });
-    await expect(list.getByRole('listitem')).toHaveCount(10);
+    await expect(list.getByRole('listitem')).toHaveCount(championCount);
+    await expect(list.getByRole('listitem').filter({ hasText: 'Zyra' }).getByLabel('0 victorias', { exact: true })).toBeAttached();
+    await expect(list.getByRole('listitem').filter({ hasText: 'Zyra' }).getByLabel('0 % de victorias')).toBeAttached();
+    await expect(list.getByRole('listitem').filter({ hasText: 'Zyra' })).toContainText('0 partidas resueltas');
+    if (viewport.width > 1000) {
+      const matchesTop = await page.locator('.history-matches').evaluate(element => element.getBoundingClientRect().top);
+      await expect.poll(() => leaderboard.evaluate((element, top) => Math.abs(element.getBoundingClientRect().top - top), matchesTop)).toBeLessThanOrEqual(1);
+      await expect.poll(() => leaderboard.evaluate(element => window.innerHeight - element.getBoundingClientRect().bottom)).toBeCloseTo(24, 0);
+      const pageScroll = await page.evaluate(() => window.scrollY);
+      await list.evaluate(element => { element.scrollTop = element.scrollHeight; });
+      await expect(list.getByRole('listitem').last()).toBeVisible();
+      expect(await page.evaluate(() => window.scrollY)).toBe(pageScroll);
+      const gamesOverflow = await page.locator('.history-games').evaluate(element => getComputedStyle(element).overflowY);
+      expect(gamesOverflow).toBe('visible');
+      expect(await page.evaluate(() => document.documentElement.scrollHeight > window.innerHeight)).toBe(true);
+      await list.evaluate(element => { element.scrollTop = 0; });
+      await page.evaluate(() => window.scrollTo(0, 200));
+      await expect.poll(() => leaderboard.evaluate(element => window.innerHeight - element.getBoundingClientRect().bottom)).toBeCloseTo(24, 0);
+      await expect(leaderboard).toBeVisible();
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await expect.poll(() => leaderboard.evaluate((element, top) => Math.abs(element.getBoundingClientRect().top - top), matchesTop)).toBeLessThanOrEqual(1);
+    }
     await expect(leaderboard.getByText('3 partidas con ganador · 1 pendiente')).toBeVisible();
     const aatrox = list.getByRole('listitem').filter({ hasText: 'Aatrox' });
     await expect(aatrox.getByLabel('2 victorias')).toBeVisible();
@@ -81,28 +109,51 @@ for (const viewport of [{ width: 1672, height: 941 }, { width: 1366, height: 768
   });
 }
 
+test('Historial: mantiene alineados los paneles cuando cambia la altura de la cabecera', async ({ page }) => {
+  await page.setViewportSize({ width: 1672, height: 941 });
+  await page.goto('/#/historial');
+  await expect(page.getByRole('table')).toHaveCount(2);
+  await expect(page.locator('.champion-win-list li')).toHaveCount(championCount);
+  const panelOffset = () => page.evaluate(() => Math.abs(
+    document.querySelector('.history-panel')!.getBoundingClientRect().top
+    - document.querySelector('.champion-win-panel')!.getBoundingClientRect().top,
+  ));
+  await expect.poll(panelOffset).toBeLessThanOrEqual(1);
+  const originalTop = await page.locator('.history-panel').evaluate(element => element.getBoundingClientRect().top);
+  // Simulate late wrapping/font changes without a window resize or a Preact render.
+  await page.locator('.page-heading p').evaluate(element => { element.style.maxWidth = '240px'; });
+  expect(await page.locator('.history-panel').evaluate(element => element.getBoundingClientRect().top)).toBeGreaterThan(originalTop);
+  await expect.poll(panelOffset).toBeLessThanOrEqual(1);
+  await expect.poll(() => page.locator('.champion-win-panel').evaluate(element => window.innerHeight - element.getBoundingClientRect().bottom)).toBeCloseTo(24, 0);
+  await page.locator('.page-heading p').evaluate(element => { element.style.removeProperty('max-width'); });
+  await expect.poll(panelOffset).toBeLessThanOrEqual(1);
+});
+
 test('Historial: muestra errores, permite reintentar y mantiene la clasificación sin serie', async ({ page }) => {
   await page.goto('/#/historial');
   await expect(page.getByRole('table')).toHaveCount(2);
-  await expect(page.getByRole('list', { name: 'Clasificación de campeones por victorias' }).getByRole('listitem')).toHaveCount(10);
+  await expect(page.getByRole('list', { name: 'Clasificación de campeones por victorias' }).getByRole('listitem')).toHaveCount(championCount);
+  await expect(page.getByRole('region', { name: 'Campeones con más victorias' })).toHaveAttribute('aria-busy', 'false');
   await page.route('**/api/stats/champions', route => route.fulfill({ status: 503, json: { success: false, error: 'database_unavailable' } }));
   await page.getByRole('button', { name: 'Actualizar clasificación' }).click();
   await expect(page.getByText('No se pudo cargar la clasificación.')).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Campeones con más victorias' })).toHaveAttribute('aria-busy', 'false');
   await page.unroute('**/api/stats/champions');
   await page.getByRole('button', { name: 'Reintentar clasificación' }).click();
-  await expect(page.getByRole('list', { name: 'Clasificación de campeones por victorias' }).getByRole('listitem')).toHaveCount(10);
+  await expect(page.getByRole('list', { name: 'Clasificación de campeones por victorias' }).getByRole('listitem')).toHaveCount(championCount);
 
-  await page.getByRole('button', { name: 'Cambiar serie' }).click();
-  await page.getByRole('textbox', { name: 'ID de serie' }).fill('no-such-series');
-  await page.getByRole('button', { name: 'Buscar', exact: true }).click();
+  await page.getByRole('combobox', { name: 'Seleccionar serie' }).selectOption('no-such-series');
   await expect(page.getByRole('heading', { name: 'No hay datos de esta serie' })).toBeVisible();
-  await expect(page.getByRole('list', { name: 'Clasificación de campeones por victorias' }).getByRole('listitem')).toHaveCount(10);
+  await expect(page.getByRole('list', { name: 'Clasificación de campeones por victorias' }).getByRole('listitem')).toHaveCount(championCount);
 
   await page.route('**/api/stats/champions', route => route.fulfill({ json: { success: true, champions: [], completedGames: 0, pendingGames: 4 } }));
   await page.getByRole('button', { name: 'Actualizar clasificación' }).click();
-  await expect(page.getByText('Aún no hay victorias registradas.')).toBeVisible();
+  const emptyList = page.getByRole('list', { name: 'Clasificación de campeones por victorias' });
+  await expect(emptyList.getByRole('listitem')).toHaveCount(championCount);
+  await expect(emptyList.getByLabel('0 victorias', { exact: true })).toHaveCount(championCount);
+  await expect(emptyList.getByLabel('0 % de victorias')).toHaveCount(championCount);
   await expect(page.getByText('0 partidas con ganador · 4 pendientes')).toBeVisible();
   await page.unroute('**/api/stats/champions');
   await page.getByRole('button', { name: 'Actualizar clasificación' }).click();
-  await expect(page.getByRole('list', { name: 'Clasificación de campeones por victorias' }).getByRole('listitem')).toHaveCount(10);
+  await expect(page.getByRole('list', { name: 'Clasificación de campeones por victorias' }).getByRole('listitem')).toHaveCount(championCount);
 });

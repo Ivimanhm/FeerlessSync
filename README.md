@@ -16,6 +16,8 @@ cambiar ganadores y refleja las correcciones y los borrados. Cuando una
 serie tiene partidas, ofrece acciones para borrar sus partidas o eliminarla por
 completo. Ambas requieren una clave de administrador y confirmación en pantalla.
 
+El selector de series muestra todas las series existentes, incluidas las archivadas, y cambia la vista al seleccionar una opción.
+
 ## Desarrollo local
 
 Requiere Node.js 24. En la raíz del proyecto:

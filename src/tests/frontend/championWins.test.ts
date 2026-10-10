@@ -31,12 +31,29 @@ describe('clasificación global de campeones', () => {
     respond({ completedGames: 2, pendingGames: 0, champions: [
       { championId: 12, wins: 1, gamesPlayed: 2 }, { championId: 266, wins: 1, gamesPlayed: 2 },
     ] });
-    expect((await getChampionWinStats()).champions.map(champion => champion.name)).toEqual(['Aatrox', 'Alistar']);
+    expect((await getChampionWinStats()).champions.map(champion => champion.name)).toEqual(['Aatrox', 'Alistar', 'Ahri']);
   });
 
-  it('admite una clasificación vacía con partidas pendientes', async () => {
+  it('incluye todo el catálogo con cero victorias cuando solo hay partidas pendientes', async () => {
     respond({ completedGames: 0, pendingGames: 4, champions: [] });
-    expect(await getChampionWinStats()).toEqual({ completedGames: 0, pendingGames: 4, champions: [] });
+    const stats = await getChampionWinStats();
+    expect(stats).toMatchObject({ completedGames: 0, pendingGames: 4 });
+    expect(stats.champions.map(({ name, wins, gamesPlayed }) => ({ name, wins, gamesPlayed }))).toEqual([
+      { name: 'Aatrox', wins: 0, gamesPlayed: 0 },
+      { name: 'Ahri', wins: 0, gamesPlayed: 0 },
+      { name: 'Alistar', wins: 0, gamesPlayed: 0 },
+    ]);
+  });
+
+  it('conserva las partidas perdidas y ordena los campeones sin victorias por nombre', async () => {
+    respond({ completedGames: 2, pendingGames: 0, champions: [
+      { championId: 103, wins: 0, gamesPlayed: 2 },
+      { championId: 12, wins: 1, gamesPlayed: 2 },
+      { championId: 999, wins: 0, gamesPlayed: 1 },
+    ] });
+    const stats = await getChampionWinStats();
+    expect(stats.champions.map(champion => champion.name)).toEqual(['Alistar', 'Aatrox', 'Ahri', 'Campeón 999']);
+    expect(stats.champions[2]).toMatchObject({ wins: 0, gamesPlayed: 2 });
   });
 
   it.each([

@@ -32,7 +32,7 @@ export function countChampionWins(games: Iterable<Result>): ChampionWinStats {
       counts.set(championId, count);
     }
   }
-  const champions = [...counts.values()].filter(champion => champion.wins > 0)
+  const champions = [...counts.values()]
     .sort((a, b) => b.wins - a.wins || a.gamesPlayed - b.gamesPlayed || a.championId - b.championId);
   return { champions, completedGames, pendingGames };
 }

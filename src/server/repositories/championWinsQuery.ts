@@ -16,7 +16,7 @@ export const championWinsQuery = `
     FROM appearances GROUP BY series_id, game_number, championId
   ), counts AS (
     SELECT championId, SUM(won) AS wins, COUNT(*) AS gamesPlayed
-    FROM per_game GROUP BY championId HAVING SUM(won) > 0
+    FROM per_game GROUP BY championId
   ), totals AS (
     SELECT COUNT(CASE WHEN winner IN ('blue', 'red') THEN 1 END) AS completedGames,
       COUNT(CASE WHEN winner IS NULL THEN 1 END) AS pendingGames FROM games

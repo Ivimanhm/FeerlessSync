@@ -1,5 +1,7 @@
 :root {
-  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  --ui-font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: var(--ui-font-family);
+  font-variant-numeric: lining-nums tabular-nums;
   color: #f4f6fa;
   background: #020b12;
   font-synthesis: none;
@@ -89,7 +91,6 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
 .dashboard { max-width: 1580px; margin: 0 auto; padding: 17px 54px 28px 39px; }
 .page-heading h1 { margin: 0; font-size: 37px; line-height: 1.19; letter-spacing: .1px; font-weight: 750; }
 .page-heading p { margin: 2px 0 0; color: #c5ccd6; font-size: 17px; letter-spacing: .05px; }
-.series-search { margin-top: 17px; display: grid; grid-template-columns: minmax(0, 2.08fr) minmax(220px, 1fr); gap: 11px; }
 .search-field { height: 53px; display: flex; align-items: center; gap: 17px; padding: 0 20px; color: #b4c3d5; border: 1px solid #8a661f; border-radius: 9px; background: rgba(7, 21, 31, .83); box-shadow: inset 0 1px 4px rgba(0,0,0,.12); }
 .search-field:focus-within { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(241, 188, 67, .13); }
 .search-field svg { flex: 0 0 auto; }
@@ -167,7 +168,6 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
   .topbar { padding: 0 17px; }
   .page-heading h1 { font-size: 31px; }
   .page-heading p { font-size: 14px; }
-  .series-search { grid-template-columns: 1fr; }
 }
 @media (max-width: 540px) {
   .header-divider, .profile-button > span:not(.avatar), .profile-button > svg { display: none; }

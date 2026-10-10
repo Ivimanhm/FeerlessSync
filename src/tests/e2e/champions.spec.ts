@@ -23,7 +23,7 @@ for (const viewport of [{ width: 1672, height: 941 }, { width: 1366, height: 768
     const scroll = page.getByRole('region', { name: 'Campeones disponibles' });
     await expect(scroll.locator('.champion-card')).toHaveCount(103);
     await expect(page.locator('.stat-copy strong')).toHaveText(['7', '70', '103']);
-    await expect(page.getByRole('textbox', { name: 'ID de serie' })).toBeHidden();
+    await expect(page.getByRole('combobox', { name: 'Seleccionar serie' })).toBeVisible();
     await expect(page.getByRole('navigation', { name: 'Navegación principal' })).toHaveCount(0);
     await expect(page.locator('.champion-card .portrait-image--loaded').first()).toBeVisible();
     await page.evaluate(() => Promise.all([document.fonts.ready, ...Array.from(document.querySelectorAll<HTMLImageElement>('.champion-card img[loading=eager]')).map(image => image.decode())]));
@@ -47,11 +47,8 @@ for (const viewport of [{ width: 1672, height: 941 }, { width: 1366, height: 768
     await expect(scroll.locator('.champion-card')).toHaveCount(1);
     await page.getByRole('textbox', { name: 'Buscar campeón' }).fill('');
     await page.getByRole('combobox', { name: 'Filtrar por posición' }).selectOption('Todos');
-    await page.getByRole('button', { name: 'Cambiar serie' }).click();
-    await page.getByRole('textbox', { name: 'ID de serie' }).fill('fearless-002');
-    await page.getByRole('button', { name: 'Buscar', exact: true }).click();
-    await expect(page.getByRole('button', { name: 'Cambiar serie' })).toContainText('fearless-002');
-    await page.getByRole('button', { name: 'Cambiar serie' }).click();
+    await page.getByRole('combobox', { name: 'Seleccionar serie' }).selectOption('fearless-002');
+    await expect(page.getByRole('combobox', { name: 'Seleccionar serie' })).toHaveValue('fearless-002');
     const menuButton = page.getByRole('button', { name: 'Abrir menú' });
     const menu = page.getByRole('dialog', { name: 'Menú principal' });
     await menuButton.click();

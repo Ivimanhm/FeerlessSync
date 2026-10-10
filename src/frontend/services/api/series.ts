@@ -2,7 +2,7 @@ import type { Champion, FearlessSeries, Game, PlayedChampion, Role, TeamSide } f
 import { getChampionCatalog } from '../championCatalog';
 import { createFearlessApiClient } from './client';
 import { mockMode } from './mode';
-import { clearMockGames, deleteMockSeries, getMockSeries, setMockWinner } from './mockSeries';
+import { clearMockGames, deleteMockSeries, getMockSeries, getMockSeriesIds, setMockWinner } from './mockSeries';
 
 export interface StoredGame {
   gameNumber: number;
@@ -21,17 +21,16 @@ export interface StoredSeries {
   usedChampions: number[];
 }
 
-/** Finds the highest numbered Fearless series (for example, fearless-012). */
-export async function getLatestFearlessSeriesId(): Promise<string> {
-  if (mockMode) return 'fearless-001';
+/** Reads every page so the selector includes archived and custom series too. */
+export async function getSeriesIds(): Promise<string[]> {
+  if (mockMode) return getMockSeriesIds();
 
   const baseUrl = import.meta.env.VITE_API_BASE_URL?.trim() || window.location.origin;
   const client = createFearlessApiClient({ baseUrl });
   const pageSize = 100;
   let offset = 0;
   let total = Number.POSITIVE_INFINITY;
-  let latestId: string | null = null;
-  let latestNumber = 0n;
+  const ids = new Set<string>();
 
   while (offset < total) {
     const page: unknown = await client.listSeries(pageSize, offset);
@@ -43,20 +42,29 @@ export async function getLatestFearlessSeriesId(): Promise<string> {
     total = page.total;
     for (const item of page.series) {
       if (!item || typeof item !== 'object' || !('seriesId' in item) || typeof item.seriesId !== 'string') continue;
-      const match = /^fearless-(\d+)$/i.exec(item.seriesId);
-      if (!match) continue;
-      const number = BigInt(match[1]);
-      if (latestId === null || number > latestNumber) {
-        latestId = item.seriesId;
-        latestNumber = number;
-      }
+      if (item.seriesId.trim()) ids.add(item.seriesId);
     }
 
     if (page.series.length === 0) break;
     offset += page.series.length;
   }
 
-  return latestId ?? 'fearless-001';
+  return [...ids].sort((a, b) => b.localeCompare(a, 'es', { numeric: true }));
+}
+
+/** Finds the highest numbered Fearless series (for example, fearless-012). */
+export async function getLatestFearlessSeriesId(ids?: string[]): Promise<string> {
+  const available = ids ?? await getSeriesIds();
+  let latestId: string | null = null;
+  let latestNumber = -1n;
+  for (const id of available) {
+    const match = /^fearless-(\d+)$/i.exec(id);
+    if (match && BigInt(match[1]) > latestNumber) {
+      latestId = id;
+      latestNumber = BigInt(match[1]);
+    }
+  }
+  return latestId ?? available[0] ?? 'fearless-001';
 }
 
 function isStoredSeries(value: unknown): value is StoredSeries {

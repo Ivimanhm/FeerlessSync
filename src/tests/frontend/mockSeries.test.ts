@@ -10,13 +10,13 @@ describe('vista local de ejemplo', () => {
     expect(initial.games).toHaveLength(3);
     expect(initial.usedChampions).toHaveLength(30);
     expect(getMockChampionWinStats()).toMatchObject({ completedGames: 2, pendingGames: 1 });
-    expect(getMockChampionWinStats().champions).toHaveLength(10);
+    expect(getMockChampionWinStats().champions).toHaveLength(20);
     expect(() => getMockSeries('otra-serie')).toThrow('La serie no existe');
 
     setMockWinner('fearless-001', 3, 'red');
     expect(getMockSeries('fearless-001').games[2].winner).toBe('red');
     expect(getMockChampionWinStats()).toMatchObject({ completedGames: 3, pendingGames: 0 });
-    expect(getMockChampionWinStats().champions).toHaveLength(15);
+    expect(getMockChampionWinStats().champions).toHaveLength(30);
     setMockWinner('fearless-001', 1, null);
     expect(getMockChampionWinStats()).toMatchObject({ completedGames: 2, pendingGames: 1 });
     expect(getMockChampionWinStats().champions.some(champion => champion.championId === 266)).toBe(false);

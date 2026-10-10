@@ -55,8 +55,7 @@
   .dashboard--home { padding-top: 12px; padding-bottom: 16px; }
   .dashboard--home .page-heading h1 { font-size: 31px; line-height: 1.15; }
   .dashboard--home .page-heading p { font-size: 14px; }
-  .dashboard--home .series-search { margin-top: 12px; }
-  .dashboard--home .series-search .search-field, .dashboard--home .gold-button { height: 45px; min-height: 45px; }
+  .dashboard--home .gold-button { height: 45px; min-height: 45px; }
   .dashboard--home .series-context { min-height: 38px; margin-top: 8px; }
   .dashboard--home .stats-grid { margin-top: 12px; }
   .dashboard--home .stat-card { height: 90px; gap: 13px; padding: 10px; }

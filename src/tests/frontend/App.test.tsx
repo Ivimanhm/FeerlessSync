@@ -6,15 +6,16 @@ import MatchHistory from '../../frontend/components/history/MatchHistory';
 import { getChampionCatalog } from '../../frontend/services/championCatalog';
 import { mapStoredSeries } from '../../frontend/services/api/series';
 import type { FearlessSeries } from '../../frontend/types/fearless';
-import { clearSeriesGames, getFearlessSeries, getLatestFearlessSeriesId, setGameWinner } from '../../frontend/services/api/series';
+import { clearSeriesGames, getFearlessSeries, getLatestFearlessSeriesId, getSeriesIds, setGameWinner } from '../../frontend/services/api/series';
 import { FearlessApiError } from '../../frontend/services/api/client';
 import { getChampionWinStats } from '../../frontend/services/api/championWins';
 
-vi.mock('../../frontend/services/api/series', async (importOriginal) => ({ ...(await importOriginal<typeof import('../../frontend/services/api/series')>()), getFearlessSeries: vi.fn(), getLatestFearlessSeriesId: vi.fn(), clearSeriesGames: vi.fn(), setGameWinner: vi.fn() }));
+vi.mock('../../frontend/services/api/series', async (importOriginal) => ({ ...(await importOriginal<typeof import('../../frontend/services/api/series')>()), getFearlessSeries: vi.fn(), getLatestFearlessSeriesId: vi.fn(), getSeriesIds: vi.fn(), clearSeriesGames: vi.fn(), setGameWinner: vi.fn() }));
 vi.mock('../../frontend/services/api/championWins', () => ({ getChampionWinStats: vi.fn() }));
 
 const getSeriesMock = vi.mocked(getFearlessSeries);
 const getLatestSeriesMock = vi.mocked(getLatestFearlessSeriesId);
+const getSeriesIdsMock = vi.mocked(getSeriesIds);
 const clearGamesMock = vi.mocked(clearSeriesGames);
 const setWinnerMock = vi.mocked(setGameWinner);
 const championWinsMock = vi.mocked(getChampionWinStats);
@@ -38,6 +39,8 @@ beforeEach(async () => {
   getSeriesMock.mockReset();
   getLatestSeriesMock.mockReset();
   getLatestSeriesMock.mockResolvedValue('fearless-001');
+  getSeriesIdsMock.mockReset();
+  getSeriesIdsMock.mockResolvedValue(['fearless-42', 'fearless-012', 'fearless-001', 'offline']);
   clearGamesMock.mockReset();
   setWinnerMock.mockReset();
   championWinsMock.mockReset();
@@ -64,9 +67,7 @@ describe('Fearless Sync', () => {
     render(<App />);
     await screen.findByRole('region', { name: 'Campeones disponibles' });
 
-    fireEvent.click(screen.getByRole('button', { name: 'Cambiar serie' }));
-    fireEvent.input(screen.getByRole('textbox', { name: 'ID de serie' }), { target: { value: 'fearless-42' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Buscar' }));
+    fireEvent.change(screen.getByRole('combobox', { name: 'Seleccionar serie' }), { target: { value: 'fearless-42' } });
     await waitFor(() => expect(getSeriesMock).toHaveBeenLastCalledWith('fearless-42'));
 
     fireEvent.click(screen.getByRole('button', { name: 'Abrir menú' }));
@@ -150,30 +151,44 @@ describe('Fearless Sync', () => {
     expect(screen.getAllByRole('table')[0].getAttribute('aria-label')).toBe('Partida 1: equipos por posición');
   });
 
-  it('busca otra serie, ignora IDs vacíos como Sites y permite reintentar errores', async () => {
+  it('selecciona una serie existente, ignora la opción vacía y permite reintentar errores', async () => {
     render(<App />);
     await screen.findByRole('region', { name: 'Campeones disponibles' });
-    fireEvent.click(screen.getByRole('button', { name: 'Cambiar serie' }));
-    const input = screen.getByRole('textbox', { name: 'ID de serie' });
+    const input = screen.getByRole('combobox', { name: 'Seleccionar serie' });
+    expect(within(input).getAllByRole('option').map(option => option.getAttribute('value'))).toEqual(['', 'fearless-42', 'fearless-012', 'fearless-001', 'offline']);
 
-    fireEvent.input(input, { target: { value: 'fearless-42' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Buscar' }));
+    fireEvent.change(input, { target: { value: 'fearless-42' } });
     await waitFor(() => expect(getSeriesMock).toHaveBeenLastCalledWith('fearless-42'));
     fireEvent.click(screen.getByRole('button', { name: 'Abrir menú' }));
     fireEvent.click(within(screen.getByRole('navigation', { name: 'Navegación principal' })).getByRole('button', { name: 'Historial' }));
     await waitFor(() => expect(screen.getByText('fearless-42')).toBeTruthy());
 
-    fireEvent.input(input, { target: { value: '' } });
     const calls = getSeriesMock.mock.calls.length;
-    fireEvent.click(screen.getByRole('button', { name: 'Buscar' }));
+    fireEvent.change(input, { target: { value: '' } });
     expect(getSeriesMock).toHaveBeenCalledTimes(calls);
     getSeriesMock.mockRejectedValueOnce(new Error('offline'));
-    fireEvent.input(input, { target: { value: 'offline' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Buscar' }));
+    fireEvent.change(input, { target: { value: 'offline' } });
     expect(await screen.findByRole('alert')).toHaveProperty('textContent', expect.stringContaining('No se ha podido cargar la serie'));
 
     fireEvent.click(screen.getByRole('button', { name: 'Reintentar' }));
     expect(await screen.findAllByRole('table')).toHaveLength(7);
+  });
+
+  it('permite reintentar la carga del listado y muestra un selector vacío si no hay series', async () => {
+    getSeriesIdsMock.mockRejectedValueOnce(new Error('offline'));
+    render(<App />);
+    await screen.findByRole('alert');
+    fireEvent.click(screen.getByRole('button', { name: 'Reintentar' }));
+    await screen.findByRole('region', { name: 'Campeones disponibles' });
+    expect(getSeriesIdsMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('no consulta una serie inexistente cuando el listado está vacío', async () => {
+    getSeriesIdsMock.mockResolvedValue([]);
+    render(<App />);
+    await screen.findByText('No hay series disponibles', { selector: '.series-connection .sr-only' });
+    expect(getSeriesMock).not.toHaveBeenCalled();
+    expect((screen.getByRole('combobox', { name: 'Seleccionar serie' }) as HTMLSelectElement).disabled).toBe(true);
   });
 
   it('filtra campeones por nombre y posición', async () => {

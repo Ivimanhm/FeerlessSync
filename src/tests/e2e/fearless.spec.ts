@@ -1,5 +1,10 @@
 import { expect, test } from '@playwright/test';
 
+test.beforeEach(async ({ page }) => {
+  // These interaction tests use fearless-001; newer series are global stats fixtures.
+  await page.route('**/api/series?*', route => route.fulfill({ json: { success: true, series: [{ seriesId: 'fearless-001' }, { seriesId: 'missing' }], total: 2 } }));
+});
+
 for (const viewport of [{ width: 2560, height: 1370 }, { width: 1672, height: 941 }, { width: 1366, height: 768 }, { width: 1024, height: 768 }, { width: 390, height: 844 }]) {
   test(`portada y acceso a campeones a ${viewport.width}×${viewport.height}px`, async ({ page }, testInfo) => {
     const apiRequests: string[] = [];
@@ -22,6 +27,12 @@ for (const viewport of [{ width: 2560, height: 1370 }, { width: 1672, height: 94
     await page.locator('.fearless-home').evaluate(element => { element.scrollTop = 0; });
     await page.mouse.move(0, 0);
     await page.screenshot({ path: testInfo.outputPath('home.png'), fullPage: true });
+    const start = page.getByRole('button', { name: 'Comenzar ahora' });
+    await start.hover();
+    expect(await start.evaluate(element => {
+      const style = getComputedStyle(element);
+      return { animation: style.animationName, transition: style.transitionDuration, transform: style.transform };
+    })).toEqual({ animation: 'none', transition: '0s', transform: 'none' });
     await page.getByRole('button', { name: 'Comenzar ahora' }).click();
     await expect(page).toHaveURL(/#\/campeones$/);
     await expect(page.getByRole('region', { name: 'Campeones disponibles' })).toBeVisible();
@@ -110,9 +121,7 @@ test('consulta los equipos completos y guarda el ganador desde Historial', async
 test('muestra serie no encontrada y permite volver a consultar', async ({ page }) => {
   await page.goto('/#/historial');
   await expect(page.getByRole('table')).toHaveCount(2);
-  await page.getByRole('button', { name: 'Cambiar serie' }).click();
-  await page.getByRole('textbox', { name: 'ID de serie' }).fill('missing');
-  await page.getByRole('button', { name: 'Buscar', exact: true }).click();
+  await page.getByRole('combobox', { name: 'Seleccionar serie' }).selectOption('missing');
   await expect(page.getByRole('heading', { name: 'No hay datos de esta serie' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Borrar partidas', exact: true })).toHaveCount(0);
 });

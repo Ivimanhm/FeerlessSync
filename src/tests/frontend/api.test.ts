@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { getFearlessSeries, getLatestFearlessSeriesId, mapStoredSeries } from '../../frontend/services/api/series';
+import { getFearlessSeries, getLatestFearlessSeriesId, getSeriesIds, mapStoredSeries } from '../../frontend/services/api/series';
 import { getChampionCatalog } from '../../frontend/services/championCatalog';
 
 afterEach(() => {
@@ -8,6 +8,14 @@ afterEach(() => {
 });
 
 describe('servicio de series', () => {
+  it('incluye todas las páginas y series personalizadas, sin duplicados y con orden numérico', async () => {
+    const fetcher = vi.fn<typeof fetch>()
+      .mockResolvedValueOnce(new Response(JSON.stringify({ total: 5, series: [{ seriesId: 'fearless-9' }, { seriesId: 'fearless-10' }] })))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ total: 5, series: [{ seriesId: 'custom-99' }, { seriesId: 'fearless-9' }, { seriesId: 'fearless-2' }] })));
+    vi.stubGlobal('fetch', fetcher);
+    expect(await getSeriesIds()).toEqual(['fearless-10', 'fearless-9', 'fearless-2', 'custom-99']);
+    expect(String(fetcher.mock.calls[1][0])).toContain('offset=2');
+  });
   it('elige el mayor número Fearless, sin depender del orden del listado', async () => {
     const fetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response(JSON.stringify({
       success: true,

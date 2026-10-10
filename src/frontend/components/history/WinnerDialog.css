@@ -10,7 +10,7 @@
 .winner-modal-heading { display: flex; align-items: center; gap: 16px; }
 .winner-modal-heading > svg { flex-shrink: 0; color: #e4c071; }
 .winner-modal-eyebrow { margin: 0 0 7px; color: #c5a568; font-size: 10px; font-weight: 700; letter-spacing: 1.8px; }
-.winner-modal h2 { margin: 0; color: #fff0bb; font: 700 28px/1.15 Georgia, serif; }
+.winner-modal h2 { margin: 0; color: #fff0bb; font: 700 28px/1.15 var(--ui-font-family); }
 .winner-modal-header > p { margin: 14px 0 0; color: #b8c9d6; font-size: 13px; line-height: 1.5; }
 .winner-modal form { display: flex; flex-direction: column; min-height: 0; }
 .winner-modal-body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 24px 28px 22px; scrollbar-width: thin; scrollbar-color: #c29951 #06131b; }
@@ -20,7 +20,7 @@
 .winner-modal .winner-team-option { --team-color: #69c9f2; --team-tint: 34, 135, 190; position: relative; display: flex; flex-direction: column; gap: 20px; min-width: 0; margin: 0; padding: 18px; color: var(--team-color); border: 1px solid #385970; border-radius: 8px; background: linear-gradient(145deg, rgba(var(--team-tint), .16), #03131b); cursor: pointer; }
 .winner-modal .winner-team-option--red { --team-color: #f397a3; --team-tint: 179, 53, 83; border-color: #6c404b; }
 .winner-team-head { display: flex; align-items: center; gap: 9px; }
-.winner-team-head strong { color: inherit; font: 700 19px/1.2 Georgia, serif; }
+.winner-team-head strong { color: inherit; font: 700 19px/1.2 var(--ui-font-family); }
 .winner-team-gem { flex: 0 0 9px; width: 9px; height: 16px; background: currentColor; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
 .winner-choice-check { display: grid; place-items: center; flex: 0 0 18px; width: 18px; height: 18px; margin-left: auto; border: 1px solid #627b8c; border-radius: 4px; color: #04131c; }
 .winner-choice-check > svg { opacity: 0; }

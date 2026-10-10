@@ -30,26 +30,31 @@ export async function verifyGlobalChampionWins(repository: SeriesRepository) {
   await repository.setWinner('second', 1, 'blue');
   await repository.setWinner('second', 1, 'blue');
   stats = await read();
-  expect(stats.champions).toEqual(game.blueTeam.map(championId => ({ championId, wins: 2, gamesPlayed: 2 })));
+  expect(stats.champions).toEqual([
+    ...game.blueTeam.map(championId => ({ championId, wins: 2, gamesPlayed: 2 })),
+    ...game.redTeam.map(championId => ({ championId, wins: 0, gamesPlayed: 2 })),
+  ]);
   await repository.setWinner('second', 1, 'red');
   await repository.updateGame('second', { ...game, redTeam: [21, 22, 23, 24, 25] });
   stats = await read();
   expect(stats.champions).toEqual([
     ...[21, 22, 23, 24, 25].map(championId => ({ championId, wins: 1, gamesPlayed: 1 })),
     ...game.blueTeam.map(championId => ({ championId, wins: 1, gamesPlayed: 2 })),
+    ...game.redTeam.map(championId => ({ championId, wins: 0, gamesPlayed: 1 })),
   ]);
 
   // Resetting a result excludes the entire game, including its denominator.
   await repository.setWinner(first.seriesId, 1, null);
   stats = await read();
   expect(stats).toMatchObject({ completedGames: 1, pendingGames: 2 });
-  expect(stats.champions).toHaveLength(5);
+  expect(stats.champions).toHaveLength(10);
+  expect(stats.champions.find(champion => champion.championId === 1)).toEqual({ championId: 1, wins: 0, gamesPlayed: 1 });
   await repository.deleteGame('second', 1);
   expect(await read()).toEqual({ success: true, champions: [], completedGames: 0, pendingGames: 2 });
   await repository.clearGames(first.seriesId);
   await repository.addGame('second', game);
   await repository.setWinner('second', 1, 'red');
-  expect((await read()).champions).toHaveLength(5);
+  expect((await read()).champions).toHaveLength(10);
   await repository.deleteSeries('second');
   expect(await read()).toEqual({ success: true, champions: [], completedGames: 0, pendingGames: 0 });
 }

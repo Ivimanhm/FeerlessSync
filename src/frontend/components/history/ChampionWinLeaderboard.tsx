@@ -29,10 +29,9 @@ export default function ChampionWinLeaderboard({ revision }: { revision: Fearles
     <OrnamentalFrame />
     <header class="champion-win-header">
       <span class="champion-win-emblem"><Trophy size={24} aria-hidden="true" /></span>
-      <div><p class="champion-win-eyebrow">TODAS LAS SERIES</p><h2 id="champion-wins-heading">Campeones con más victorias</h2></div>
+      <div><h2 id="champion-wins-heading">Campeones con más victorias</h2></div>
       <button type="button" class="champion-win-refresh" aria-label="Actualizar clasificación" title="Actualizar clasificación" disabled={loading} onClick={() => setRefresh(refresh + 1)}><RotateCw size={17} aria-hidden="true" /></button>
     </header>
-    <p class="champion-win-description">Cada campeón del equipo ganador suma una victoria.</p>
     {error ? <div class="champion-win-empty" role="alert"><p>No se pudo cargar la clasificación.</p><button class="history-sort" type="button" onClick={() => setRefresh(refresh + 1)}>Reintentar clasificación</button></div>
       : !stats ? <p class="champion-win-empty" role="status">Cargando victorias…</p>
         : <>
@@ -45,7 +44,7 @@ export default function ChampionWinLeaderboard({ revision }: { revision: Fearles
                 <PortraitImage name={champion.name} src={champion.imageUrl} eager={index < 10} />
                 <div class="champion-win-name"><strong>{champion.name}</strong><small>{champion.gamesPlayed} {champion.gamesPlayed === 1 ? 'partida resuelta' : 'partidas resueltas'}</small></div>
                 <strong class="champion-win-count" aria-label={`${champion.wins} ${champion.wins === 1 ? 'victoria' : 'victorias'}`}>{champion.wins}</strong>
-                <span class="champion-win-rate" aria-label={`${percentage.format(champion.wins / champion.gamesPlayed)} de victorias`}>{percentage.format(champion.wins / champion.gamesPlayed)}</span>
+                <span class="champion-win-rate" aria-label={`${percentage.format(champion.gamesPlayed ? champion.wins / champion.gamesPlayed : 0)} de victorias`}>{percentage.format(champion.gamesPlayed ? champion.wins / champion.gamesPlayed : 0)}</span>
               </li>)}
             </ol>
             <p class="champion-win-footnote">Orden por victorias, porcentaje y nombre. El porcentaje solo cuenta partidas con ganador.</p>

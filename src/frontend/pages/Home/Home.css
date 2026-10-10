@@ -10,7 +10,7 @@
   isolation: isolate;
   background: #06111a;
   color: #f5f5f1;
-  font-family: Inter, system-ui, sans-serif;
+  font-family: var(--ui-font-family);
   font-synthesis: none;
   text-rendering: auto;
   -webkit-font-smoothing: auto;
@@ -145,7 +145,7 @@
 .fearless-home .welcome-brand { display: grid; gap: 7px; }
 .fearless-home .welcome-brand-name {
   color: #f5f1e8;
-  font: 700 clamp(22px, 1.5vw, 36px)/1.1 Georgia, serif;
+  font: 700 clamp(22px, 1.5vw, 36px)/1.1 var(--ui-font-family);
   letter-spacing: -.4px;
   white-space: nowrap;
 }
@@ -226,7 +226,7 @@
 .fearless-home .welcome-copy .welcome-desktop-heading {
   margin: 0;
   color: #faf8f3;
-  font: 400 clamp(64px, 5.95vw, 152px)/.98 Georgia, serif;
+  font: 400 clamp(64px, 5.95vw, 152px)/.98 var(--ui-font-family);
   letter-spacing: -.042em;
   white-space: nowrap;
   text-shadow: 0 3px 22px #020a1480;
@@ -263,11 +263,17 @@
   transition: filter 160ms ease, background-color 160ms ease;
 }
 .fearless-home .welcome-copy .welcome-button {
+  animation: none;
+  transition: none;
   width: auto;
   border: 1px solid #f1cf7a;
   color: #101006;
   background: linear-gradient(110deg, #f4d784, #d3a849);
   box-shadow: inset 0 1px #fff1ba80, 0 4px 18px #00000024;
+}
+.fearless-home .welcome-copy .welcome-button:hover,
+.fearless-home .welcome-copy .welcome-button:active {
+  transform: none;
 }
 .fearless-home .welcome-cta-arrow { display: inline-flex; }
 .fearless-home .welcome-watch {
@@ -355,7 +361,7 @@
 .fearless-home .welcome-lineup h2 {
   margin: 10px 0 0;
   color: #f8f5f0;
-  font: 400 clamp(31px, 2.52vw, 62px)/1.1 Georgia, serif;
+  font: 400 clamp(31px, 2.52vw, 62px)/1.1 var(--ui-font-family);
   letter-spacing: -.025em;
   white-space: nowrap;
 }
@@ -480,7 +486,7 @@
 .fearless-home .welcome-feature-art { width: 48px; height: 52px; }
 .fearless-home .welcome-dice { width: 48px; height: 52px; stroke: currentColor; stroke-width: 2.1; stroke-linejoin: round; }
 .fearless-home .welcome-feature-copy { display: grid; gap: 8px; }
-.fearless-home .welcome-feature-copy strong { color: #f4f0e7; font: 700 clamp(18px, 1.2vw, 28px)/1.2 Georgia, serif; }
+.fearless-home .welcome-feature-copy strong { color: #f4f0e7; font: 700 clamp(18px, 1.2vw, 28px)/1.2 var(--ui-font-family); }
 .fearless-home .welcome-feature-copy > span { color: #cbd5e1; font-size: clamp(11px, .79vw, 18px); line-height: 1.5; }
 .fearless-home .welcome-features li > button > .bi { font-size: 18px; }
 @media (min-width: 1051px) and (max-width: 1450px) {

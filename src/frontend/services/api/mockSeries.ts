@@ -35,6 +35,11 @@ export function getMockChampionWinStats() {
   return countChampionWins(readSeries()?.games ?? []);
 }
 
+export function getMockSeriesIds(): string[] {
+  const series = readSeries();
+  return series ? [series.seriesId] : [];
+}
+
 export function getMockSeries(seriesId: string): StoredSeries {
   const series = readSeries();
   if (!series || series.seriesId !== seriesId) throw new FearlessApiError(404, 'series_not_found', 'La serie no existe.');
